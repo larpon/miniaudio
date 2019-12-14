@@ -89,8 +89,8 @@ fn C.ma_device_uninit(device &C.ma_device)
 pub struct MiniAudio {
     mut:
         device_config   C.ma_device_config
-        device          C.ma_device
-        decoder         C.ma_decoder
+        device          &C.ma_device
+        decoder         &C.ma_decoder
 
         error           string
         ready           bool
@@ -100,14 +100,27 @@ pub struct MiniAudio {
 pub fn new_as(filename string) MiniAudio {
     dbgn := 'miniaudio.new_as'
 
-    mut ma := MiniAudio{error:''}
+    mut ma := MiniAudio{
+        device: 0
+        decoder: 0
 
-    mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &ma.decoder))
+        error:''
+    }
+
+    /*
+    ma.device_config = &C.ma_device_config
+    */
+    //ma.device = &C.ma_device
+    //ma.decoder = &C.ma_decoder
+
+    decoder := C.ma_decoder{}
+    mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &decoder))
 
     if result != C.MA_SUCCESS {
         ma.error = '$dbgn: (ma_decoder_init_file) $result failed to open $filename'
         return ma
     }
+    ma.decoder = &decoder
 
     mut device_config := C.ma_device_config_init(ma_device_type.ma_device_type_playback)
 
@@ -115,53 +128,64 @@ pub fn new_as(filename string) MiniAudio {
     device_config.playback.channels = ma.decoder.outputChannels
     device_config.sampleRate        = ma.decoder.outputSampleRate
     device_config.dataCallback      = C.data_callback
-    device_config.pUserData         = &ma.decoder
+    device_config.pUserData         = ma.decoder
 
     ma.device_config = device_config
 
-    result = int( C.ma_device_init(C.NULL, &ma.device_config, &ma.device) )
+    device := C.ma_device{}
+    result = int( C.ma_device_init(C.NULL, &ma.device_config, &device) )
 
     if result != C.MA_SUCCESS {
         ma.error = '$dbgn: (ma_device_init) $result failed to initialize device'
-        C.ma_decoder_uninit( &ma.decoder )
+        C.ma_decoder_uninit( ma.decoder )
         return ma
     }
+    ma.device = &device
 
     println('new()')
-    println(&ma.device)
-    println(&ma.decoder)
+    println(ma.device)
+    println(ma.decoder)
 
-    ma.ready = true
     return ma
 }
 
 pub fn (ma mut MiniAudio) play() {
     dbgn := 'miniaudio.play'
 
-    if !ma.ready {
-        ma.error = '$dbgn: backend not ready'
-    }
-
     println('play()')
-    println(&ma.device)
-    println(&ma.decoder)
+    println(ma.device)
+    println(ma.decoder)
 
-    result := int( C.ma_device_start(&ma.device) )
+    result := int( C.ma_device_start(ma.device) )
 
     if result != C.MA_SUCCESS {
         ma.error = '$dbgn: (ma_device_start) $result failed to start device playback'
-        C.ma_device_uninit(&ma.device)
-        C.ma_decoder_uninit(&ma.decoder)
+        C.ma_device_uninit(ma.device)
+        C.ma_decoder_uninit(ma.decoder)
     }
 
 }
 
+pub fn (ma mut MiniAudio) end() {
+    C.ma_device_uninit(ma.device)
+    C.ma_decoder_uninit(ma.decoder)
 
+    ma.device = 0
+    ma.decoder = 0
+}
+
+
+/*
 pub fn play_once(filename string) MiniAudio {
 
     dbgn := 'miniaudio.play_once'
 
-    mut ma := MiniAudio{error:''}
+    mut ma := MiniAudio{
+        device: &C.ma_device
+        decoder: &C.ma_decoder
+
+        error:''
+    }
 
     mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &ma.decoder))
 
@@ -212,4 +236,4 @@ pub fn play_once(filename string) MiniAudio {
 
     return ma
 
-}
+}*/
