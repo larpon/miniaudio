@@ -25,12 +25,12 @@ module miniaudio
 #include "miniaudio.h"
 #include "miniaudio_wrap.h"
 
-enum ma_device_type
+enum DeviceType
 {
-    ma_device_type_playback = 1,
-    ma_device_type_capture  = 2,
-    ma_device_type_duplex   = 3, //ma_device_type_playback | ma_device_type_capture, /* 3 */
-    ma_device_type_loopback = 4
+    playback = 1, // ma_device_type_playback
+    capture  = 2, // ma_device_type_capture
+    duplex   = 3, // ma_device_type_playback | ma_device_type_capture, /* 3 */
+    loopback = 4 // ma_device_type_loopback
 }
 
 struct C.ma_decoder
@@ -44,7 +44,7 @@ struct C.playback {
     mut:
         format  C.ma_format
         channels C.ma_uint32
-        channelMap [32 /*C.MA_MAX_CHANNELS*/]ma_channel
+        // channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
 }
 
 [typedef] struct C.ma_device {}
@@ -74,7 +74,7 @@ fn C.ma_decoder_uninit(decoder &C.ma_decoder) C.ma_result
 fn C.ma_decoder_init_file( filepath charptr, decoder_config &C.ma_decoder_config, decoder &C.ma_decoder) C.ma_result
 
 // ma_device_config ma_device_config_init(ma_device_type deviceType);
-fn C.ma_device_config_init( device_type ma_device_type) C.ma_device_config
+fn C.ma_device_config_init( device_type DeviceType) C.ma_device_config
 
 // ma_result ma_device_init(ma_context* pContext, const ma_device_config* pConfig, ma_device* pDevice);
 fn C.ma_device_init(context &C.ma_context, config &C.ma_device_config, device &C.ma_device) C.ma_result
@@ -98,7 +98,6 @@ pub struct MiniAudio {
 
 
 pub fn new_as(filename string) MiniAudio {
-    dbgn := 'miniaudio.new_as'
 
     mut ma := MiniAudio{
         device: 0
@@ -107,22 +106,16 @@ pub fn new_as(filename string) MiniAudio {
         error:''
     }
 
-    /*
-    ma.device_config = &C.ma_device_config
-    */
-    //ma.device = &C.ma_device
-    //ma.decoder = &C.ma_decoder
-
     decoder := C.ma_decoder{}
     mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &decoder))
 
     if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_decoder_init_file) $result failed to open $filename'
+        ma.error = 'miniaudio'+@FN+': (ma_decoder_init_file) $result failed to open $filename'
         return ma
     }
     ma.decoder = &decoder
 
-    mut device_config := C.ma_device_config_init(ma_device_type.ma_device_type_playback)
+    mut device_config := C.ma_device_config_init(DeviceType.playback)
 
     device_config.playback.format   = ma.decoder.outputFormat
     device_config.playback.channels = ma.decoder.outputChannels
@@ -136,34 +129,27 @@ pub fn new_as(filename string) MiniAudio {
     result = int( C.ma_device_init(C.NULL, &ma.device_config, &device) )
 
     if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_device_init) $result failed to initialize device'
+        ma.error = 'miniaudio'+@FN+': (ma_device_init) $result failed to initialize device'
         C.ma_decoder_uninit( ma.decoder )
         return ma
     }
     ma.device = &device
 
-    println('new()')
-    println(ma.device)
-    println(ma.decoder)
+    //println(ma.device)
+    //println(ma.decoder)
 
     return ma
 }
 
 pub fn (ma mut MiniAudio) play() {
-    dbgn := 'miniaudio.play'
-
-    println('play()')
-    println(ma.device)
-    println(ma.decoder)
 
     result := int( C.ma_device_start(ma.device) )
 
     if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_device_start) $result failed to start device playback'
+        ma.error = 'miniaudio'+@FN+': (ma_device_start) $result failed to start device playback'
         C.ma_device_uninit(ma.device)
         C.ma_decoder_uninit(ma.decoder)
     }
-
 }
 
 pub fn (ma mut MiniAudio) end() {
@@ -174,66 +160,3 @@ pub fn (ma mut MiniAudio) end() {
     ma.decoder = 0
 }
 
-
-/*
-pub fn play_once(filename string) MiniAudio {
-
-    dbgn := 'miniaudio.play_once'
-
-    mut ma := MiniAudio{
-        device: &C.ma_device
-        decoder: &C.ma_decoder
-
-        error:''
-    }
-
-    mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &ma.decoder))
-
-    if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_decoder_init_file) $result failed to open $filename'
-        return ma
-    }
-
-    mut device_config := C.ma_device_config_init(ma_device_type.ma_device_type_playback)
-
-    device_config.playback.format   = ma.decoder.outputFormat
-    device_config.playback.channels = ma.decoder.outputChannels
-    device_config.sampleRate        = ma.decoder.outputSampleRate
-    device_config.dataCallback      = C.data_callback
-    device_config.pUserData         = &ma.decoder
-
-    ma.device_config = device_config
-
-    result = int( C.ma_device_init(C.NULL, &ma.device_config, &ma.device) )
-
-    if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_device_init) $result failed to initialize device'
-        C.ma_decoder_uninit( &ma.decoder )
-        return ma
-    }
-
-    println('new()')
-    println(&ma.device)
-    println(&ma.decoder)
-
-    ma.ready = true
-
-    if !ma.ready {
-        ma.error = '$dbgn: backend not ready'
-    }
-
-    println('play()')
-    println(&ma.device)
-    println(&ma.decoder)
-
-    result = int( C.ma_device_start(&ma.device) )
-
-    if result != C.MA_SUCCESS {
-        ma.error = '$dbgn: (ma_device_start) $result failed to start device playback'
-        C.ma_device_uninit(&ma.device)
-        C.ma_decoder_uninit(&ma.decoder)
-    }
-
-    return ma
-
-}*/
