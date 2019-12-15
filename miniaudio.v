@@ -6,25 +6,6 @@
 
 module miniaudio
 
-#flag -I ./miniaudio/c
-#flag -I ./miniaudio/c/miniaudio
-
-#flag linux -lpthread -lm -ldl
-
-#flag -D DR_WAV_IMPLEMENTATION
-#include "extras/dr_wav.h" /* Enables WAV decoding. */
-
-#flag -D DR_MP3_IMPLEMENTATION
-#include "extras/dr_mp3.h" /* Enables MP3 decoding. */
-
-#flag -D DR_FLAC_IMPLEMENTATION
-#include "extras/dr_flac.h" /* Enables FLAC decoding. */
-
-#flag -D MINIAUDIO_IMPLEMENTATION
-
-#include "miniaudio.h"
-#include "miniaudio_wrap.h"
-
 enum DeviceType
 {
     playback = 1, // ma_device_type_playback
@@ -33,58 +14,23 @@ enum DeviceType
     loopback = 4 // ma_device_type_loopback
 }
 
-struct C.ma_decoder
-{
-    outputFormat C.ma_format
-    outputChannels C.ma_uint32
-    outputSampleRate C.ma_uint32
+/*
+pub fn play(filename string) {
+    mut ma := from(filename)
+    ma.play()
 }
 
-struct C.playback {
+pub fn length(filename string) f64 {
+    ma := from(filename)
+    return ma.length()
+}
+
+pub struct Device {
     mut:
-        format  C.ma_format
-        channels C.ma_uint32
-        // channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
+        device          &C.ma_device
+        decoder         &C.ma_decoder
 }
-
-[typedef] struct C.ma_device {}
-[typedef] struct C.ma_context {}
-[typedef] struct C.ma_decoder_config {}
-[typedef] struct C.ma_device_config {
-    mut:
-    deviceType                C.ma_device_type
-    sampleRate                C.ma_uint32
-    bufferSizeInFrames        C.ma_uint32
-    bufferSizeInMilliseconds  C.ma_uint32
-    periods                   C.ma_uint32
-    performanceProfile        C.ma_performance_profile
-    noPreZeroedOutputBuffer   C.ma_bool32
-    noClip                    C.ma_bool32
-    dataCallback              voidptr //C.ma_device_callback_proc
-    stopCallback              C.ma_stop_proc
-    pUserData                 voidptr
-
-    playback    C.playback
-}
-
-// ma_result ma_decoder_uninit(ma_decoder* pDecoder);
-fn C.ma_decoder_uninit(decoder &C.ma_decoder) C.ma_result
-
-// ma_result ma_decoder_init_file(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file( filepath charptr, decoder_config &C.ma_decoder_config, decoder &C.ma_decoder) C.ma_result
-
-// ma_device_config ma_device_config_init(ma_device_type deviceType);
-fn C.ma_device_config_init( device_type DeviceType) C.ma_device_config
-
-// ma_result ma_device_init(ma_context* pContext, const ma_device_config* pConfig, ma_device* pDevice);
-fn C.ma_device_init(context &C.ma_context, config &C.ma_device_config, device &C.ma_device) C.ma_result
-
-// ma_result ma_device_start(ma_device* pDevice);
-fn C.ma_device_start(device &C.ma_device) C.ma_result
-
-// void ma_device_uninit(ma_device* pDevice)
-fn C.ma_device_uninit(device &C.ma_device)
-
+*/
 
 pub struct MiniAudio {
     mut:
@@ -93,24 +39,24 @@ pub struct MiniAudio {
         decoder         &C.ma_decoder
 
         error           string
-        ready           bool
+        initialized     bool
 }
 
+pub fn from(filename string) MiniAudio {
 
-pub fn new_as(filename string) MiniAudio {
-
-    mut ma := MiniAudio{
+    mut ma := MiniAudio {
         device: 0
         decoder: 0
 
         error:''
+        initialized: false
     }
 
     decoder := C.ma_decoder{}
     mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &decoder))
 
     if result != C.MA_SUCCESS {
-        ma.error = 'miniaudio'+@FN+': (ma_decoder_init_file) $result failed to open $filename'
+        ma.error = 'miniaudio'+@FN+': failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )'
         return ma
     }
     ma.decoder = &decoder
@@ -129,7 +75,7 @@ pub fn new_as(filename string) MiniAudio {
     result = int( C.ma_device_init(C.NULL, &ma.device_config, &device) )
 
     if result != C.MA_SUCCESS {
-        ma.error = 'miniaudio'+@FN+': (ma_device_init) $result failed to initialize device'
+        ma.error = 'miniaudio'+@FN+': failed to initialize device (ma_device_init ${translate_error_code(result)})'
         C.ma_decoder_uninit( ma.decoder )
         return ma
     }
@@ -138,25 +84,98 @@ pub fn new_as(filename string) MiniAudio {
     //println(ma.device)
     //println(ma.decoder)
 
+    ma.initialized = true
+
     return ma
 }
 
 pub fn (ma mut MiniAudio) play() {
 
-    result := int( C.ma_device_start(ma.device) )
+    if !ma.initialized { return }
+
+    mut result := C.MA_SUCCESS
+
+    if C.ma_device_is_started( ma.device ) {
+        result = int(C.ma_device_stop(ma.device))
+        if result != C.MA_SUCCESS {
+            ma.error = 'miniaudio'+@FN+': failed to stop device (ma_device_stop ${translate_error_code(result)})'
+            ma.free()
+            return
+        }
+    }
+
+    ma.seek_frame(0)
+
+    result = int( C.ma_device_start(ma.device) )
 
     if result != C.MA_SUCCESS {
-        ma.error = 'miniaudio'+@FN+': (ma_device_start) $result failed to start device playback'
-        C.ma_device_uninit(ma.device)
-        C.ma_decoder_uninit(ma.decoder)
+        ma.error = 'miniaudio'+@FN+': failed to start device playback (ma_device_start ${translate_error_code(result)})'
+        ma.free()
     }
 }
 
-pub fn (ma mut MiniAudio) end() {
+pub fn (ma mut MiniAudio) seek(ms f64) {
+
+    if !ma.initialized { return }
+
+    if ms < 0 || ms > ma.length() { return }
+
+    ma.seek_frame( u64( (ms / f64(1000)) * f64(ma.sample_rate()) ) )
+
+}
+
+pub fn (ma mut MiniAudio) seek_frame(pcm_frame u64) {
+
+    if !ma.initialized { return }
+
+    if pcm_frame < 0 || pcm_frame > ma.pcm_frames() { return }
+
+    result := int( C.ma_decoder_seek_to_pcm_frame(ma.decoder, 0) )
+    if result != C.MA_SUCCESS {
+        ma.error = 'miniaudio'+@FN+': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${translate_error_code(result)})'
+        ma.free()
+    }
+}
+
+
+pub fn (ma MiniAudio) length() f64 {
+
+    if !ma.initialized { return f64(0) }
+
+    pcm_frames := f64(ma.pcm_frames())
+    sample_rate := f64(ma.sample_rate())
+
+    //println(pcm_frames)
+    //println(sample_rate)
+
+    return (pcm_frames / sample_rate) * f64(1000)
+}
+
+/*
+pub fn (ma MiniAudio) pos() f64 {
+    C.ma_decoder_read_pcm_frames
+}*/
+
+pub fn (ma MiniAudio) sample_rate() u32 {
+
+    if !ma.initialized { return u32(0) }
+
+    return u32(ma.decoder.outputSampleRate)
+}
+
+pub fn (ma MiniAudio) pcm_frames() u64 {
+
+    if !ma.initialized { return u64(0) }
+
+    return u64(C.ma_decoder_get_length_in_pcm_frames(ma.decoder))
+}
+
+pub fn (ma mut MiniAudio) free() {
     C.ma_device_uninit(ma.device)
     C.ma_decoder_uninit(ma.decoder)
+
+    ma.initialized = false
 
     ma.device = 0
     ma.decoder = 0
 }
-
