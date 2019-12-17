@@ -1,6 +1,9 @@
 # v-miniaudio
 Vrap of the excellent [miniaudio](https://github.com/dr-soft/miniaudio) C audio library
 
+# Status
+The project is still highly work-in-progress and experimental.
+
 Example `main.v`
 ```
 module main
