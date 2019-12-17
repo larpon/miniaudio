@@ -6,24 +6,29 @@
 
 module miniaudio
 
-#flag -I ./miniaudio/c
+//#flag -I ./miniaudio/c
 #flag -I ./miniaudio/c/miniaudio
 
 //#flag linux -lpthread -lm -ldl
 
-#flag -D DR_WAV_IMPLEMENTATION
-#include "extras/dr_wav.h" /* Enables WAV decoding. */
+#flag -D  DR_FLAC_IMPLEMENTATION
+#include "extras/dr_flac.h"  /* Enables FLAC decoding. */
 
-#flag -D DR_MP3_IMPLEMENTATION
-#include "extras/dr_mp3.h" /* Enables MP3 decoding. */
+#flag -D  DR_MP3_IMPLEMENTATION
+#include "extras/dr_mp3.h"   /* Enables MP3 decoding. */
 
-#flag -D DR_FLAC_IMPLEMENTATION
-#include "extras/dr_flac.h" /* Enables FLAC decoding. */
+#flag -D  DR_WAV_IMPLEMENTATION
+#include "extras/dr_wav.h"   /* Enables WAV decoding. */
+
+
+#flag -D MA_DEBUG_OUTPUT
+#flag -D MA_LOG_LEVEL_VERBOSE
+//#flag -D MA_NO_PULSEAUDIO
 
 #flag -D MINIAUDIO_IMPLEMENTATION
 
 #include "miniaudio.h"
-#include "miniaudio_wrap.h"
+//#include "miniaudio_wrap.h"
 
 struct C.ma_decoder
 {
@@ -39,7 +44,10 @@ struct C.playback {
         // channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
 }
 
-[typedef] struct C.ma_device {}
+[typedef] struct C.ma_device {
+    mut:
+        pUserData voidptr
+}
 [typedef] struct C.ma_context {}
 [typedef] struct C.ma_decoder_config {}
 [typedef] struct C.ma_device_config {

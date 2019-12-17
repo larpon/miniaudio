@@ -42,6 +42,21 @@ pub struct MiniAudio {
         initialized     bool
 }
 
+
+fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) {
+
+    p_decoder := p_device.pUserData
+    if p_decoder == C.NULL {
+        return
+    }
+
+    frames_read := C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
+
+    //println('Decoding '+frames_read.str()+'/'+frame_count.str())
+
+    //(void)pInput;
+}
+
 pub fn from(filename string) MiniAudio {
 
     mut ma := MiniAudio {
@@ -66,7 +81,7 @@ pub fn from(filename string) MiniAudio {
     device_config.playback.format   = ma.decoder.outputFormat
     device_config.playback.channels = ma.decoder.outputChannels
     device_config.sampleRate        = ma.decoder.outputSampleRate
-    device_config.dataCallback      = C.data_callback
+    device_config.dataCallback      = data_callback
     device_config.pUserData         = ma.decoder
 
     ma.device_config = device_config
@@ -89,29 +104,69 @@ pub fn from(filename string) MiniAudio {
     return ma
 }
 
+
 pub fn (ma mut MiniAudio) play() {
+
+    if !ma.initialized { return }
+
+    if ma.is_playing() {
+        ma.stop()
+    }
+
+    println('Seeking frame 0')
+    ma.seek_frame(0)
+
+    ma.start()
+}
+
+pub fn (ma mut MiniAudio) stop() {
 
     if !ma.initialized { return }
 
     mut result := C.MA_SUCCESS
 
-    if C.ma_device_is_started( ma.device ) {
+    if ma.is_playing() {
+        println('Stopping device')
         result = int(C.ma_device_stop(ma.device))
         if result != C.MA_SUCCESS {
             ma.error = 'miniaudio'+@FN+': failed to stop device (ma_device_stop ${translate_error_code(result)})'
             ma.free()
             return
         }
+        println('Device stopped')
+    } else {
+        println('Device not started')
+    }
+}
+
+pub fn (ma mut MiniAudio) start() {
+
+    if !ma.initialized { return }
+
+    if !ma.is_playing() {
+
+        println('Starting device')
+        result := int( C.ma_device_start( ma.device ) )
+
+        if result != C.MA_SUCCESS {
+            ma.error = 'miniaudio'+@FN+': failed to start device playback (ma_device_start ${translate_error_code(result)})'
+            ma.free()
+        }
+        println('Started device')
+    } else {
+        println('Device already started')
+    }
+}
+
+pub fn (ma MiniAudio) is_playing() bool {
+
+    if !ma.initialized { return false }
+
+    if C.ma_device_is_started( ma.device ) {
+        return true
     }
 
-    ma.seek_frame(0)
-
-    result = int( C.ma_device_start(ma.device) )
-
-    if result != C.MA_SUCCESS {
-        ma.error = 'miniaudio'+@FN+': failed to start device playback (ma_device_start ${translate_error_code(result)})'
-        ma.free()
-    }
+    return false
 }
 
 pub fn (ma mut MiniAudio) seek(ms f64) {
@@ -119,6 +174,8 @@ pub fn (ma mut MiniAudio) seek(ms f64) {
     if !ma.initialized { return }
 
     if ms < 0 || ms > ma.length() { return }
+
+    println('Seek to millisecond '+ms.str())
 
     ma.seek_frame( u64( (ms / f64(1000)) * f64(ma.sample_rate()) ) )
 
@@ -130,11 +187,14 @@ pub fn (ma mut MiniAudio) seek_frame(pcm_frame u64) {
 
     if pcm_frame < 0 || pcm_frame > ma.pcm_frames() { return }
 
-    result := int( C.ma_decoder_seek_to_pcm_frame(ma.decoder, 0) )
+    println('Seek PCM frame '+pcm_frame.str())
+
+    result := int( C.ma_decoder_seek_to_pcm_frame(ma.decoder, pcm_frame) )
     if result != C.MA_SUCCESS {
         ma.error = 'miniaudio'+@FN+': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${translate_error_code(result)})'
         ma.free()
     }
+
 }
 
 
@@ -171,11 +231,12 @@ pub fn (ma MiniAudio) pcm_frames() u64 {
 }
 
 pub fn (ma mut MiniAudio) free() {
+    ma.initialized = false
+
     C.ma_device_uninit(ma.device)
     C.ma_decoder_uninit(ma.decoder)
 
-    ma.initialized = false
-
     ma.device = 0
     ma.decoder = 0
+    println('Device free')
 }
