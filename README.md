@@ -13,12 +13,11 @@ import miniaudio as ma
 fn main() {
     os.clear()
 
-    wav_file := os.home_dir()+'Projects/v-pg/miniaudio/test.wav'
+    wav_file := os.home_dir()+'test.wav'
 
-    flac_file := os.home_dir()+'Projects/v-pg/miniaudio/test.flac'
+    flac_file := os.home_dir()+'test.flac'
 
-    mp3_file := os.home_dir()+'Projects/v-pg/miniaudio/test.mp3'
-
+    mp3_file := os.home_dir()+'test.mp3'
 
     println('Loading wav')
     mut a := ma.from(wav_file)
