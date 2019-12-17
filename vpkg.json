@@ -1,0 +1,7 @@
+{
+  "name": "miniaudio",
+  "version": "0.0.1",
+  "author": ["Lars Pontoppidan <dev.larpon@gmail.com>"],
+  "repo": "https://github.com/larpon/v-miniaudio",
+  "sources": ["https://v-pkg.github.io/registry/"]
+}
