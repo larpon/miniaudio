@@ -67,14 +67,14 @@ pub fn from(filename string) MiniAudio {
         initialized: false
     }
 
-    decoder := C.ma_decoder{}
-    mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, &decoder))
+    decoder := &C.ma_decoder{}
+    mut result := int(C.ma_decoder_init_file(filename.str, C.NULL, decoder))
 
     if result != C.MA_SUCCESS {
         ma.error = 'miniaudio'+@FN+': failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )'
         return ma
     }
-    ma.decoder = &decoder
+    ma.decoder = decoder
 
     mut device_config := C.ma_device_config_init(DeviceType.playback)
 
@@ -86,15 +86,15 @@ pub fn from(filename string) MiniAudio {
 
     ma.device_config = device_config
 
-    device := C.ma_device{}
-    result = int( C.ma_device_init(C.NULL, &ma.device_config, &device) )
+    device := &C.ma_device{}
+    result = int( C.ma_device_init(C.NULL, &ma.device_config, device) )
 
     if result != C.MA_SUCCESS {
         ma.error = 'miniaudio'+@FN+': failed to initialize device (ma_device_init ${translate_error_code(result)})'
         C.ma_decoder_uninit( ma.decoder )
         return ma
     }
-    ma.device = &device
+    ma.device = device
 
     //println(ma.device)
     //println(ma.decoder)
