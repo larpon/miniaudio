@@ -50,7 +50,7 @@ fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame
         return
     }
 
-    frames_read := C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
+    /*frames_read :=*/ C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
 
     //println('Decoding '+frames_read.str()+'/'+frame_count.str())
 
@@ -187,7 +187,7 @@ pub fn (ma mut MiniAudio) seek_frame(pcm_frame u64) {
 
     if pcm_frame < 0 || pcm_frame > ma.pcm_frames() { return }
 
-    println('Seek PCM frame '+pcm_frame.str())
+    println('Seek PCM frame '+pcm_frame.str() + '/' + ma.pcm_frames().str())
 
     result := int( C.ma_decoder_seek_to_pcm_frame(ma.decoder, pcm_frame) )
     if result != C.MA_SUCCESS {
