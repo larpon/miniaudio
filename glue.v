@@ -2,11 +2,11 @@
 // Use of this source code is governed by an MIT license file distributed with this software package
 
 // miniaudio (https://github.com/dr-soft/miniaudio)
-// is licensed under the unlicense and, are thus, in the publiic domain.
+// is licensed under the unlicense and, are thus, in the public domain.
 
 module miniaudio
 
-//#flag -I ./miniaudio/c
+//#flag -I ./miniaudio/c // for the wrapper code
 #flag -I ./miniaudio/c/miniaudio
 
 //#flag linux -lpthread -lm -ldl
@@ -31,7 +31,16 @@ $if debug {
 #flag -D MINIAUDIO_IMPLEMENTATION
 
 #include "miniaudio.h"
-//#include "miniaudio_wrap.h"
+
+//#include "../miniaudio_wrap.h" // for wrapper code
+
+//ma_uint32 read_and_mix_pcm_frames_f32(ma_decoder* pDecoder, float* pOutputF32, ma_uint32 frameCount)
+//fn C.read_and_mix_pcm_frames_f32(pDecoder &C.ma_decoder, pOutputF32 voidptr, frameCount u32) u32
+
+
+// #define macros
+//fn C.ma_countof(x voidptr) int
+//fn C.ma_countof(obj []f32) int
 
 
 enum DeviceType
@@ -57,14 +66,14 @@ struct C.ma_pcm_converter {}
 
 struct C.ma_decoder
 {
-    outputFormat     C.ma_format
+    outputFormat     int //Format //C.ma_format
     outputChannels   u32 //C.ma_uint32
     outputSampleRate u32 //C.ma_uint32
 }
 
 struct C.playback {
     mut:
-        format    C.ma_format
+        format    int //Format //int //C.ma_format
         channels  u32 //C.ma_uint32
         // channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
 }
@@ -86,7 +95,11 @@ struct C.playback {
 
 [typedef] struct C.ma_mutex {}
 
-[typedef] struct C.ma_decoder_config {}
+[typedef] struct C.ma_decoder_config {
+    outputFormat     int //Format //C.ma_format
+    outputChannels   u32 //C.ma_uint32
+    outputSampleRate u32 //C.ma_uint32
+}
 [typedef] struct C.ma_device_config {
     mut:
     deviceType                C.ma_device_type
@@ -129,6 +142,11 @@ fn C.ma_decoder_read_pcm_frames(pDecoder &C.ma_decoder, pFramesOut voidptr,  fra
 
 //ma_result ma_decoder_seek_to_pcm_frame(ma_decoder* pDecoder, ma_uint64 frameIndex);
 fn C.ma_decoder_seek_to_pcm_frame(pDecoder &C.ma_decoder, frameIndex u64) C.ma_result
+
+// ma_decoder_config
+
+//ma_decoder_config ma_decoder_config_init(ma_format outputFormat, ma_uint32 outputChannels, ma_uint32 outputSampleRate);
+fn C.ma_decoder_config_init(outputFormat int, outputChannels u32, outputSampleRate u32) C.ma_decoder_config
 
 // ma_device
 
