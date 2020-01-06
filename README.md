@@ -9,6 +9,7 @@ Example `main.v`
 module main
 
 import os
+import math
 import time
 
 import miniaudio as ma
