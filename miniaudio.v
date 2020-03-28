@@ -82,7 +82,7 @@ fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame
     master_volume := d.vol
     //println('Callback buffers: '+d.buffers.size.str())
 
-    for id, audio_buffer in d.buffers {
+    for _, audio_buffer in d.buffers {
 
         //mut ab := audio_buffer
         //ab.mutex.lock()
