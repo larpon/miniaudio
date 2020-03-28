@@ -1,112 +1,89 @@
 // Copyright(C) 2019 Lars Pontoppidan. All rights reserved.
 // Use of this source code is governed by an MIT license file distributed with this software package
-
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
-
 module miniaudio
 
-import sync
-
-fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32
-{
-//     The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
-//     contents of the output buffer by simply adding the samples together. You could also clip the samples to -1..+1, but I'm not
-//     doing that in this example.
-
-    mut m_p_output := &f32(0)
-    unsafe { m_p_output = p_output }
-
-    channel_count := 2
-
-    temp := [4096]f32 //[f32(0)].repeat(4096) //[4096]f32
-    temp_cap_in_frames := u32((4096/sizeof(f32)) / channel_count)
-    mut total_frames_read := u32(0)
-
-
-    for total_frames_read < frameCount {
-        mut i_sample := u32(0)
-        mut frames_read_this_iteration := u32(0)
-        total_frames_remaining := frameCount - total_frames_read
-        mut frames_to_read_this_iteration := temp_cap_in_frames
-
-        if (frames_to_read_this_iteration > total_frames_remaining) {
-            frames_to_read_this_iteration = total_frames_remaining
-        }
-
-        frames_read_this_iteration = u32( C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration) )
-
-        if frames_read_this_iteration == 0 { break }
-
-        // Mix the frames together.
-        for i_sample = 0; i_sample < frames_read_this_iteration*channel_count; i_sample++ {
-            idx := total_frames_read*channel_count + i_sample
-
-
-            //println('m:'+master_volume.str()+' l:'+local_volume.str())
-
-            m_p_output[idx] += temp[i_sample]*master_volume*local_volume
-        }
-
-        total_frames_read += frames_read_this_iteration
-
-        if (frames_read_this_iteration < frames_to_read_this_iteration) { break } // Reached EOF.
-
-    }
-
-    return total_frames_read
+fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32 {
+	// The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
+	// contents of the output buffer by simply adding the samples together. You could also clip the samples to -1..+1, but I'm not
+	// doing that in this example.
+	mut m_p_output := &f32(0)
+	unsafe{
+		m_p_output = p_output
+	}
+	channel_count := 2
+	temp := [4096]f32 // [f32(0)].repeat(4096) //[4096]f32
+	temp_cap_in_frames := u32((4096 / sizeof(f32)) / channel_count)
+	mut total_frames_read := u32(0)
+	for total_frames_read < frameCount {
+		mut i_sample := u32(0)
+		mut frames_read_this_iteration := u32(0)
+		total_frames_remaining := frameCount - total_frames_read
+		mut frames_to_read_this_iteration := temp_cap_in_frames
+		if (frames_to_read_this_iteration > total_frames_remaining) {
+			frames_to_read_this_iteration = total_frames_remaining
+		}
+		frames_read_this_iteration = u32(C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration))
+		if frames_read_this_iteration == 0 {
+			break
+		}
+		// Mix the frames together.
+		for i_sample = 0; i_sample < frames_read_this_iteration * channel_count; i_sample++ {
+			idx := total_frames_read * channel_count + i_sample
+			// println('m:'+master_volume.str()+' l:'+local_volume.str())
+			m_p_output[idx] += temp[i_sample] * master_volume * local_volume
+		}
+		total_frames_read += frames_read_this_iteration
+		if (frames_read_this_iteration < frames_to_read_this_iteration) {
+			break
+		} // Reached EOF.
+	}
+	return total_frames_read
 }
 
-
-fn log_callback( p_context &C.ma_context, p_device &C.ma_device, logLevel u32, message charptr ) {
-    println('miniaudio ERROR '+tos3(message))
-    exit(1)
+fn log_callback(p_context &C.ma_context, p_device &C.ma_device, logLevel u32, message charptr) {
+	println('miniaudio ERROR ' + tos3(message))
+	exit(1)
 }
 
 fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) {
-
-    // Most of this function is heavily inspired, if not outright copied
-    // from raylib: https://github.com/raysan5/raylib/blob/c20ccfe274f94d29dcf1a1f84048a57d56dedce6/src/raudio.c#L275
-
-    d := &Device(p_device.pUserData)
-    if d == C.NULL { return }
-
-    if !d.initialized { return }
-
-    //println('Callback device '+ptr_str(d)+'')
-    // Mixing is basically just an accumulation, we need to initialize the output buffer to 0
-    //C.memset(p_output, 0, frame_count*p_device.playback.channels*C.ma_get_bytes_per_sample(p_device.playback.format))
-
-    C.ma_mutex_lock(d.mutex)
-
-    master_volume := d.vol
-    //println('Callback buffers: '+d.buffers.size.str())
-
-    for id, audio_buffer in d.buffers {
-
-        //mut ab := audio_buffer
-        //ab.mutex.lock()
-        //println('ab: '+audio_buffer.playing.str())
-
-        if !audio_buffer.playing || audio_buffer.paused { continue }
-
-        //println('AudioBuffer at '+ptr_str(audio_buffer))
-
-        p_decoder := audio_buffer.decoder
-        if p_decoder == C.NULL { continue }
-
-        //println('Using decoder at '+ptr_str(p_decoder))
-        //println(p_decoder.outputFormat.str()+' '+p_decoder.outputChannels.str()+' '+p_decoder.outputSampleRate.str())
-
-        /*frames_read :=*/ read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count, master_volume, audio_buffer.volume)
-        /*frames_read :=*/ //C.read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count)
-        /*frames_read :=*/ //C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
-        //ab.mutex.unlock()
-    }
-
-
-    C.ma_mutex_unlock(d.mutex)
-
+	// Most of this function is heavily inspired, if not outright copied
+	// from raylib: https://github.com/raysan5/raylib/blob/c20ccfe274f94d29dcf1a1f84048a57d56dedce6/src/raudio.c#L275
+	d := &Device(p_device.pUserData)
+	if d == C.NULL {
+		return
+	}
+	if !d.initialized {
+		return
+	}
+	// println('Callback device '+ptr_str(d)+'')
+	// Mixing is basically just an accumulation, we need to initialize the output buffer to 0
+	// C.memset(p_output, 0, frame_count*p_device.playback.channels*C.ma_get_bytes_per_sample(p_device.playback.format))
+	C.ma_mutex_lock(d.mutex)
+	master_volume := d.vol
+	// println('Callback buffers: '+d.buffers.size.str())
+	for _, audio_buffer in d.buffers {
+		// mut ab := audio_buffer
+		// ab.mutex.lock()
+		// println('ab: '+audio_buffer.playing.str())
+		if !audio_buffer.playing || audio_buffer.paused {
+			continue
+		}
+		// println('AudioBuffer at '+ptr_str(audio_buffer))
+		p_decoder := audio_buffer.decoder
+		if p_decoder == C.NULL {
+			continue
+		}
+		// println('Using decoder at '+ptr_str(p_decoder))
+		// println(p_decoder.outputFormat.str()+' '+p_decoder.outputChannels.str()+' '+p_decoder.outputSampleRate.str())
+		/*frames_read :=*/
+		read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count, master_volume, audio_buffer.volume)
+		/*frames_read :=*/ // C.read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count)
+		/*frames_read :=*/ // C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
+		// ab.mutex.unlock()
+	}
+	C.ma_mutex_unlock(d.mutex)
 }
 
 /*
@@ -114,128 +91,128 @@ pub fn sound_from(filename string) Sound {
 
 }*/
 
+
 pub fn device() &Device {
-    mut d := &Device {
-        context: 0
-        mutex: 0
-        device: 0
-
-        vol: 1.0
-
-        initialized: false
-    }
-
-    d.init_context()
-
-    d.init_mutex()
-
-    d.device_config = C.ma_device_config_init(DeviceType.playback)
-
-    d.device_config.playback.format   = int(Format.f32)
-    d.device_config.playback.channels = 2
-    d.device_config.sampleRate        = 44100
-    d.device_config.dataCallback      = data_callback
-    d.device_config.pUserData         = d
-
-    d.init_device()
-
-    $if debug { println('miniaudio::'+@FN+' setting device '+ptr_str(d.device_config.pUserData)+' as callback data') }
-
-    d.start()
-
-    return d
+	mut d := &Device{
+		context: 0
+		mutex: 0
+		device: 0
+		vol: 1.0
+		initialized: false
+	}
+	d.init_context()
+	d.init_mutex()
+	d.device_config = C.ma_device_config_init(DeviceType.playback)
+	d.device_config.playback.format = int(Format.f32)
+	d.device_config.playback.channels = 2
+	d.device_config.sampleRate = 44100
+	d.device_config.dataCallback = data_callback
+	d.device_config.pUserData = d
+	d.init_device()
+	$if debug {
+		println('miniaudio::' + '' + ' setting device ' + ptr_str(d.device_config.pUserData) + ' as callback data')
+	}
+	d.start()
+	return d
 }
 
 pub fn sound(filename string) &Sound {
-
-    decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
-
-    // Init decoder
-    decoder := &C.ma_decoder{}
-    result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
-
-    if result != C.MA_SUCCESS {
-        println('miniaudio::'+@FN+' ERROR: Failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )')
-        exit(1)
-    }
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized decoder '+ptr_str(decoder)) }
-
-    ab := audio_buffer(decoder)
-
-    s := &Sound {
-        audio_buffer: ab
-    }
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized Sound '+ptr_str(s)) }
-
-    return s
-
+	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
+	// Init decoder
+	decoder := &C.ma_decoder{}
+	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )')
+		exit(1)
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized decoder ' + ptr_str(decoder))
+	}
+	ab := audio_buffer(decoder)
+	s := &Sound{
+		audio_buffer: ab
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized Sound ' + ptr_str(s))
+	}
+	return s
 }
 
 fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
-
-    ab := &AudioBuffer {
-        volume: 1.0
-        decoder: decoder
-        //mutex: sync.new_mutex()
-    }
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized AudioBuffer '+ptr_str(ab)) }
-
-    return ab
+	ab := &AudioBuffer{
+		volume: 1.0
+		decoder: decoder
+		// mutex: sync.new_mutex()
+		
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized AudioBuffer ' + ptr_str(ab))
+	}
+	return ab
 }
 
 /*
  * Interfaces
  */
 
-//interface HasAudioBufferGetter {
-//    audio_buffer()              AudioBuffer
-//}
-
+// interface HasAudioBufferGetter {
+// audio_buffer()              AudioBuffer
+// }
 /*
  * Sound
  */
 
+
 struct Sound {
-    mut:
-        audio_buffer            &AudioBuffer
+mut:
+	audio_buffer &AudioBuffer
 }
 
 pub fn (s mut Sound) play() {
-    s.audio_buffer.playing = true
+	s.audio_buffer.playing = true
 }
 
 pub fn (s Sound) length() f64 {
-    if s.audio_buffer == 0 { return f64(0) }
-    return s.audio_buffer.length()
+	if s.audio_buffer == 0 {
+		return f64(0)
+	}
+	return s.audio_buffer.length()
 }
 
 pub fn (s Sound) pcm_frames() u64 {
-    if s.audio_buffer == 0 { return u64(0) }
-    return s.audio_buffer.pcm_frames()
+	if s.audio_buffer == 0 {
+		return u64(0)
+	}
+	return s.audio_buffer.pcm_frames()
 }
 
 pub fn (s Sound) sample_rate() u32 {
-    if s.audio_buffer == 0 { return u32(0) }
-    return s.audio_buffer.sample_rate()
+	if s.audio_buffer == 0 {
+		return u32(0)
+	}
+	return s.audio_buffer.sample_rate()
 }
 
 pub fn (s mut Sound) volume(volume f64) {
-    if s.audio_buffer == 0 { return }
-
-    mut value := volume
-    if value < 0 { value = 0.0 }
-    if value > 1 { value = 1.0 }
-    //$if debug { println('Sound '+ptr_str(s)+' -> volume: '+value.str()) }
-    s.audio_buffer.set_volume(value)
-
+	if s.audio_buffer == 0 {
+		return
+	}
+	mut value := volume
+	if value < 0 {
+		value = 0.0
+	}
+	if value > 1 {
+		value = 1.0
+	}
+	// $if debug { println('Sound '+ptr_str(s)+' -> volume: '+value.str()) }
+	s.audio_buffer.set_volume(value)
 }
 
 pub fn (s mut Sound) seek(ms f64) {
-    if s.audio_buffer == 0 { return }
-    s.audio_buffer.seek(ms)
+	if s.audio_buffer == 0 {
+		return
+	}
+	s.audio_buffer.seek(ms)
 }
 
 /*
@@ -243,248 +220,228 @@ fn (s Sound) audio_buffer() AudioBuffer {
     return s.audio_buffer
 }*/
 
-
-
 /*
  * Stream
  */
 
+
 struct Stream {
-    mut:
-        audio_buffer            AudioBuffer
+mut:
+	audio_buffer AudioBuffer
 }
 
 fn (s Stream) audio_buffer() AudioBuffer {
-    return s.audio_buffer
+	return s.audio_buffer
 }
-
 
 /*
  * AudioBuffer
  */
 
+
 struct AudioBuffer {
-    mut:
-        //dsp                         C.ma_pcm_converter // PCM data converter
-
-        decoder                     &C.ma_decoder
-
-        volume                      f64 // Audio buffer volume
-        // TODO pitch                       f64 // Audio buffer pitch
-
-        playing                     bool
-        paused                      bool
-
-        // TODO looping                     bool
-        // TODO loops                       int
-
-        // TODO is_stream                   bool
-        // TODO is_static                   bool
-
-        // TODO is_sub_buffer_processed     [2]bool
-
-        // TODO mutex                       sync.Mutex
-
-        //frame_cursor_pos            u64 // Frame cursor position
-        //buffer_size_in_frames       u64 // Total buffer size in frames
-        //total_frames_processed      u64 // Total frames processed in this buffer (required for play timming)
-
-        //buffer                      byteptr // Data buffer, on music stream keeps filling
-
+mut:
+// dsp                         C.ma_pcm_converter // PCM data converter
+	decoder &C.ma_decoder
+	volume  f64 // Audio buffer volume
+	// TODO pitch                       f64 // Audio buffer pitch
+	playing bool
+	paused  bool
+	// TODO looping                     bool
+	// TODO loops                       int
+	// TODO is_stream                   bool
+	// TODO is_static                   bool
+	// TODO is_sub_buffer_processed     [2]bool
+	// TODO mutex                       sync.Mutex
+	// frame_cursor_pos            u64 // Frame cursor position
+	// buffer_size_in_frames       u64 // Total buffer size in frames
+	// total_frames_processed      u64 // Total frames processed in this buffer (required for play timming)
+	// buffer                      byteptr // Data buffer, on music stream keeps filling
 }
 
 pub fn (ab mut AudioBuffer) set_volume(volume f64) {
-    //ab.mutex.lock()
-
-    mut value := volume
-    if value < 0 { value = 0.0 }
-    if value > 1 { value = 1.0 }
-    //$if debug { println('AudioBuffer '+ptr_str(ab)+' -> volume: '+value.str()) }
-    ab.volume = value
-
-    //ab.mutex.unlock()
+	// ab.mutex.lock()
+	mut value := volume
+	if value < 0 {
+		value = 0.0
+	}
+	if value > 1 {
+		value = 1.0
+	}
+	// $if debug { println('AudioBuffer '+ptr_str(ab)+' -> volume: '+value.str()) }
+	ab.volume = value
+	// ab.mutex.unlock()
 }
 
 pub fn (ab mut AudioBuffer) seek(ms f64) {
-
-    if ms < 0 || ms > ab.length() { return }
-
-    $if debug { println('AudioBuffer '+ptr_str(ab)+' seek to millisecond '+ms.str()) }
-
-    ab.seek_frame( u64( (ms / f64(1000)) * f64(ab.sample_rate()) ) )
-
+	if ms < 0 || ms > ab.length() {
+		return
+	}
+	$if debug {
+		println('AudioBuffer ' + ptr_str(ab) + ' seek to millisecond ' + ms.str())
+	}
+	ab.seek_frame(u64((ms / f64(1000)) * f64(ab.sample_rate())))
 }
 
 pub fn (ab mut AudioBuffer) seek_frame(pcm_frame u64) {
-
-    ab.playing = false
-    if pcm_frame < 0 || pcm_frame > ab.pcm_frames() { return }
-
-    $if debug { println('AudioBuffer '+ptr_str(ab)+' seek PCM frame '+pcm_frame.str() + '/' + ab.pcm_frames().str()) }
-
-    result := int( C.ma_decoder_seek_to_pcm_frame(ab.decoder, pcm_frame) )
-
-    if result != C.MA_SUCCESS {
-        println('miniaudio::'+@FN+': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${translate_error_code(result)})')
-        //d.free() // TODO
-        exit(1)
-    }
-    ab.playing = true
-
+	ab.playing = false
+	if pcm_frame < 0 || pcm_frame > ab.pcm_frames() {
+		return
+	}
+	$if debug {
+		println('AudioBuffer ' + ptr_str(ab) + ' seek PCM frame ' + pcm_frame.str() + '/' + ab.pcm_frames().str())
+	}
+	result := int(C.ma_decoder_seek_to_pcm_frame(ab.decoder, pcm_frame))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${translate_error_code(result)})')
+		// d.free() // TODO
+		exit(1)
+	}
+	ab.playing = true
 }
 
 pub fn (ab AudioBuffer) length() f64 {
-
-    pcm_frames := f64(ab.pcm_frames())
-    sample_rate := f64(ab.sample_rate())
-
-    return (pcm_frames / sample_rate) * f64(1000)
+	pcm_frames := f64(ab.pcm_frames())
+	sample_rate := f64(ab.sample_rate())
+	return (pcm_frames / sample_rate) * f64(1000)
 }
 
 pub fn (ab AudioBuffer) pcm_frames() u64 {
-    return u64(C.ma_decoder_get_length_in_pcm_frames(ab.decoder))
+	return u64(C.ma_decoder_get_length_in_pcm_frames(ab.decoder))
 }
 
 pub fn (ab AudioBuffer) sample_rate() u32 {
-    return ab.decoder.outputSampleRate
+	return ab.decoder.outputSampleRate
 }
-
 
 /*
  * Device
  */
 
+
 pub struct Device {
-    mut:
-        context                 &C.ma_context
-        context_config          C.ma_context_config
-
-        device                  &C.ma_device
-        device_config           C.ma_device_config
-
-        mutex                   &C.ma_mutex
-
-        initialized             bool
-
-        buffers                 map[string]&AudioBuffer
-
-        vol                  f64                     // Master volume for the device
+mut:
+	context        &C.ma_context
+	context_config C.ma_context_config
+	device         &C.ma_device
+	device_config  C.ma_device_config
+	mutex          &C.ma_mutex
+	initialized    bool
+	buffers        map[string]&AudioBuffer
+	vol            f64 // Master volume for the device
 }
 
 pub fn (d mut Device) volume(volume f64) {
-    //C.ma_mutex_lock(d.mutex)
-
-    d.vol = volume
-
-    //C.ma_mutex_unlock(d.mutex)
+	// C.ma_mutex_lock(d.mutex)
+	d.vol = volume
+	// C.ma_mutex_unlock(d.mutex)
 }
 
 fn (d mut Device) init_context() {
-    // Init audio context
-    context := &C.ma_context{
-        logCallback: 0
-    }
-
-    d.context_config = C.ma_context_config_init()
-    d.context_config.logCallback = log_callback
-
-    result := int( C.ma_context_init(C.NULL, 0, &d.context_config, context) )
-    if result != C.MA_SUCCESS {
-        println('miniaudio::'+@FN+' ERROR: Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
-        exit(1)
-    }
-    d.context = context
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized context '+ptr_str(d.context)) }
+	// Init audio context
+	context := &C.ma_context{
+		logCallback: 0
+	}
+	d.context_config = C.ma_context_config_init()
+	d.context_config.logCallback = log_callback
+	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
+		exit(1)
+	}
+	d.context = context
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized context ' + ptr_str(d.context))
+	}
 }
 
 fn (d mut Device) init_mutex() {
-
-    // We need a valid context
-    if d.context == 0 { return }
-
-    // Init audio mutex
-    mutex := &C.ma_mutex{}
-    result := int( C.ma_mutex_init(d.context, mutex) )
-    if result != C.MA_SUCCESS {
-        println('miniaudio::'+@FN+' ERROR: Failed to initialize audio mutex.  (ma_mutex_init ${translate_error_code(result)} ')
-        exit(1)
-    }
-    d.mutex = mutex
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized mutex '+ptr_str(d.mutex)) }
+	// We need a valid context
+	if d.context == 0 {
+		return
+	}
+	// Init audio mutex
+	mutex := &C.ma_mutex{}
+	result := int(C.ma_mutex_init(d.context, mutex))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio mutex.  (ma_mutex_init ${translate_error_code(result)} ')
+		exit(1)
+	}
+	d.mutex = mutex
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized mutex ' + ptr_str(d.mutex))
+	}
 }
 
 fn (d mut Device) init_device() {
-    // Init audio device from device_config
-
-    device := &C.ma_device{ pUserData: 0 }
-    result := int( C.ma_device_init(d.context, &d.device_config, device) )
-
-    if result != C.MA_SUCCESS {
-        println('miniaudio::'+@FN+': failed to initialize device (ma_device_init ${translate_error_code(result)})')
-        exit(1)
-    }
-    d.device = device
-
-    $if debug { println('miniaudio::'+@FN+' INFO: Initialized device '+ptr_str(d.device)) }
-
-    d.initialized = true
-
-    //println(d.device)
+	// Init audio device from device_config
+	device := &C.ma_device{
+		pUserData: 0
+	}
+	result := int(C.ma_device_init(d.context, &d.device_config, device))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ': failed to initialize device (ma_device_init ${translate_error_code(result)})')
+		exit(1)
+	}
+	d.device = device
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized device ' + ptr_str(d.device))
+	}
+	d.initialized = true
+	// println(d.device)
 }
 
 pub fn (d mut Device) start() {
-
-    if !d.initialized { return }
-
-    if !d.is_started() {
-
-        $if debug { println('Starting device '+ptr_str(d.device)) }
-        result := int( C.ma_device_start( d.device ) )
-
-        if result != C.MA_SUCCESS {
-            println('miniaudio::'+@FN+': failed to start device playback (ma_device_start ${translate_error_code(result)})')
-            d.free()
-            exit(1)
-        }
-        $if debug { println('Started device') }
-    } else {
-        $if debug { println('Device already started') }
-    }
+	if !d.initialized {
+		return
+	}
+	if !d.is_started() {
+		$if debug {
+			println('Starting device ' + ptr_str(d.device))
+		}
+		result := int(C.ma_device_start(d.device))
+		if result != C.MA_SUCCESS {
+			println('miniaudio::' + '' + ': failed to start device playback (ma_device_start ${translate_error_code(result)})')
+			d.free()
+			exit(1)
+		}
+		$if debug {
+			println('Started device')
+		}
+	}
+	else {
+		$if debug {
+			println('Device already started')
+		}
+	}
 }
 
 pub fn (d mut Device) add(id string, s Sound) {
-    C.ma_mutex_lock(d.mutex)
-
-    $if debug { println('Adding sound '+id+':'+ptr_str(s)+' with audio buffer:'+ptr_str(s.audio_buffer)+' to device '+ptr_str(d)) }
-
-    if id in d.buffers { println('Warning: '+id+' is already added') }
-
-    d.buffers[id] = s.audio_buffer
-
-    C.ma_mutex_unlock(d.mutex)
+	C.ma_mutex_lock(d.mutex)
+	$if debug {
+		println('Adding sound ' + id + ':' + ptr_str(s) + ' with audio buffer:' + ptr_str(s.audio_buffer) + ' to device ' + ptr_str(d))
+	}
+	if id in d.buffers {
+		println('Warning: ' + id + ' is already added')
+	}
+	d.buffers[id] = s.audio_buffer
+	C.ma_mutex_unlock(d.mutex)
 }
-
 
 pub fn (d Device) is_started() bool {
-
-    if !d.initialized { return false }
-
-    if C.ma_device_is_started( d.device ) {
-        return true
-    }
-
-    return false
+	if !d.initialized {
+		return false
+	}
+	if C.ma_device_is_started(d.device) {
+		return true
+	}
+	return false
 }
-
-
 
 /*
 pub fn (d Device) pos() f64 {
     C.ma_decoder_read_pcm_frames
 }*/
-
 
 /*
 pub fn (d mut Device) play() {
@@ -500,41 +457,42 @@ pub fn (d mut Device) play() {
     d.start()
 }*/
 
+
 pub fn (d mut Device) stop() {
-
-    if !d.initialized { return }
-
-    mut result := C.MA_SUCCESS
-
-    if d.is_started() {
-        $if debug { println('Stopping device '+ptr_str(d.device)) }
-        result = int(C.ma_device_stop(d.device))
-        if result != C.MA_SUCCESS {
-            println('miniaudio::'+@FN+': failed to stop device (ma_device_stop ${translate_error_code(result)})')
-            d.free()
-            exit(1)
-        }
-        $if debug { println('Device stopped') }
-    } else {
-        $if debug { println('Device not started') }
-    }
+	if !d.initialized {
+		return
+	}
+	mut result := C.MA_SUCCESS
+	if d.is_started() {
+		$if debug {
+			println('Stopping device ' + ptr_str(d.device))
+		}
+		result = int(C.ma_device_stop(d.device))
+		if result != C.MA_SUCCESS {
+			println('miniaudio::' + '' + ': failed to stop device (ma_device_stop ${translate_error_code(result)})')
+			d.free()
+			exit(1)
+		}
+		$if debug {
+			println('Device stopped')
+		}
+	}
+	else {
+		$if debug {
+			println('Device not started')
+		}
+	}
 }
 
-
 pub fn (d mut Device) free() {
-
-    d.stop()
-
-    d.initialized = false
-
-    C.ma_device_uninit(d.device)
-    //C.ma_decoder_uninit(d.decoder)
-    C.ma_context_uninit(d.context)
-    C.ma_mutex_uninit(d.mutex)
-
-    d.context = 0
-    d.mutex = 0
-    d.device = 0
-    //d.decoder = 0
-
+	d.stop()
+	d.initialized = false
+	C.ma_device_uninit(d.device)
+	// C.ma_decoder_uninit(d.decoder)
+	C.ma_context_uninit(d.context)
+	C.ma_mutex_uninit(d.mutex)
+	d.context = 0
+	d.mutex = 0
+	d.device = 0
+	// d.decoder = 0
 }
