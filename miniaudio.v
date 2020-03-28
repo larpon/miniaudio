@@ -6,8 +6,6 @@
 
 module miniaudio
 
-import sync
-
 fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32
 {
 //     The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
