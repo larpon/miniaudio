@@ -7,7 +7,7 @@
 module miniaudio
 
 //#flag -I ./miniaudio/c // for the wrapper code
-#flag -I ./miniaudio/c/miniaudio
+#flag -I @VROOT/c/miniaudio
 
 //#flag linux -lpthread -lm -ldl
 
