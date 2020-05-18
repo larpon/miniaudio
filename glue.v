@@ -29,19 +29,19 @@ $if debug {
 // fn C.ma_countof(x voidptr) int
 // fn C.ma_countof(obj []f32) int
 enum DeviceType {
-	playback = 1, // ma_device_type_playback
-	capture = 2, // ma_device_type_capture
-	duplex = 3, // ma_device_type_playback | ma_device_type_capture, /* 3 */
+	playback = 1 // ma_device_type_playback
+	capture = 2 // ma_device_type_capture
+	duplex = 3 // ma_device_type_playback | ma_device_type_capture, /* 3 */
 	loopback = 4 // ma_device_type_loopback
 }
 
 enum Format {
-	unknown = 0, // ma_format_unknown
-	u8 = 1, // ma_format_u8
-	s16 = 2, // ma_format_s16
-	s24 = 3, // ma_format_s24
-	s32 = 4, // ma_format_s32
-	f32 = 5, // ma_format_f32
+	unknown = 0 // ma_format_unknown
+	u8 = 1 // ma_format_u8
+	s16 = 2 // ma_format_s16
+	s24 = 3 // ma_format_s24
+	s32 = 4 // ma_format_s32
+	f32 = 5 // ma_format_f32
 	count // ma_format_count
 }
 

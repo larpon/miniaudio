@@ -21,7 +21,7 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 		mut frames_read_this_iteration := u32(0)
 		total_frames_remaining := frameCount - total_frames_read
 		mut frames_to_read_this_iteration := temp_cap_in_frames
-		if (frames_to_read_this_iteration > total_frames_remaining) {
+		if frames_to_read_this_iteration > total_frames_remaining {
 			frames_to_read_this_iteration = total_frames_remaining
 		}
 		frames_read_this_iteration = u32(C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration))
@@ -35,7 +35,7 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 			m_p_output[idx] += temp[i_sample] * master_volume * local_volume
 		}
 		total_frames_read += frames_read_this_iteration
-		if (frames_read_this_iteration < frames_to_read_this_iteration) {
+		if frames_read_this_iteration < frames_to_read_this_iteration {
 			break
 		} // Reached EOF.
 	}
@@ -168,7 +168,7 @@ mut:
 	audio_buffer &AudioBuffer
 }
 
-pub fn (s mut Sound) play() {
+pub fn (mut s Sound) play() {
 	s.audio_buffer.playing = true
 }
 
@@ -193,7 +193,7 @@ pub fn (s Sound) sample_rate() u32 {
 	return s.audio_buffer.sample_rate()
 }
 
-pub fn (s mut Sound) volume(volume f64) {
+pub fn (mut s Sound) volume(volume f64) {
 	if s.audio_buffer == 0 {
 		return
 	}
@@ -208,7 +208,7 @@ pub fn (s mut Sound) volume(volume f64) {
 	s.audio_buffer.set_volume(value)
 }
 
-pub fn (s mut Sound) seek(ms f64) {
+pub fn (mut s Sound) seek(ms f64) {
 	if s.audio_buffer == 0 {
 		return
 	}
@@ -259,7 +259,7 @@ mut:
 	// buffer                      byteptr // Data buffer, on music stream keeps filling
 }
 
-pub fn (ab mut AudioBuffer) set_volume(volume f64) {
+pub fn (mut ab AudioBuffer) set_volume(volume f64) {
 	// ab.mutex.lock()
 	mut value := volume
 	if value < 0 {
@@ -273,7 +273,7 @@ pub fn (ab mut AudioBuffer) set_volume(volume f64) {
 	// ab.mutex.unlock()
 }
 
-pub fn (ab mut AudioBuffer) seek(ms f64) {
+pub fn (mut ab AudioBuffer) seek(ms f64) {
 	if ms < 0 || ms > ab.length() {
 		return
 	}
@@ -283,7 +283,7 @@ pub fn (ab mut AudioBuffer) seek(ms f64) {
 	ab.seek_frame(u64((ms / f64(1000)) * f64(ab.sample_rate())))
 }
 
-pub fn (ab mut AudioBuffer) seek_frame(pcm_frame u64) {
+pub fn (mut ab AudioBuffer) seek_frame(pcm_frame u64) {
 	ab.playing = false
 	if pcm_frame < 0 || pcm_frame > ab.pcm_frames() {
 		return
@@ -331,13 +331,13 @@ mut:
 	vol            f64 // Master volume for the device
 }
 
-pub fn (d mut Device) volume(volume f64) {
+pub fn (mut d Device) volume(volume f64) {
 	// C.ma_mutex_lock(d.mutex)
 	d.vol = volume
 	// C.ma_mutex_unlock(d.mutex)
 }
 
-fn (d mut Device) init_context() {
+fn (mut d Device) init_context() {
 	// Init audio context
 	context := &C.ma_context{
 		logCallback: 0
@@ -355,7 +355,7 @@ fn (d mut Device) init_context() {
 	}
 }
 
-fn (d mut Device) init_mutex() {
+fn (mut d Device) init_mutex() {
 	// We need a valid context
 	if d.context == 0 {
 		return
@@ -373,7 +373,7 @@ fn (d mut Device) init_mutex() {
 	}
 }
 
-fn (d mut Device) init_device() {
+fn (mut d Device) init_device() {
 	// Init audio device from device_config
 	device := &C.ma_device{
 		pUserData: 0
@@ -391,7 +391,7 @@ fn (d mut Device) init_device() {
 	// println(d.device)
 }
 
-pub fn (d mut Device) start() {
+pub fn (mut d Device) start() {
 	if !d.initialized {
 		return
 	}
@@ -416,7 +416,7 @@ pub fn (d mut Device) start() {
 	}
 }
 
-pub fn (d mut Device) add(id string, s Sound) {
+pub fn (mut d Device) add(id string, s Sound) {
 	C.ma_mutex_lock(d.mutex)
 	$if debug {
 		println('Adding sound ' + id + ':' + ptr_str(s) + ' with audio buffer:' + ptr_str(s.audio_buffer) + ' to device ' + ptr_str(d))
@@ -458,7 +458,7 @@ pub fn (d mut Device) play() {
 }*/
 
 
-pub fn (d mut Device) stop() {
+pub fn (mut d Device) stop() {
 	if !d.initialized {
 		return
 	}
@@ -484,7 +484,7 @@ pub fn (d mut Device) stop() {
 	}
 }
 
-pub fn (d mut Device) free() {
+pub fn (mut d Device) free() {
 	d.stop()
 	d.initialized = false
 	C.ma_device_uninit(d.device)
