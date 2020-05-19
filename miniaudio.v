@@ -4,6 +4,191 @@
 // is licensed under the unlicense and, are thus, in the publiic domain.
 module miniaudio
 
+
+/*
+ * Device
+ */
+pub struct Device {
+mut:
+	context        &C.ma_context
+	context_config C.ma_context_config
+	device         &C.ma_device
+	device_config  C.ma_device_config
+	mutex          &C.ma_mutex
+	initialized    bool
+	buffers        map[string]&AudioBuffer
+	vol            f64 // Master volume for the device
+}
+
+pub fn (mut d Device) volume(volume f64) {
+	// C.ma_mutex_lock(d.mutex)
+	d.vol = volume
+	// C.ma_mutex_unlock(d.mutex)
+}
+
+fn (mut d Device) init_context() {
+	// Init audio context
+	context := &C.ma_context{
+		logCallback: 0
+	}
+	d.context_config = C.ma_context_config_init()
+	d.context_config.logCallback = log_callback
+	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
+		exit(1)
+	}
+	d.context = context
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized context ' + ptr_str(d.context))
+	}
+}
+
+fn (mut d Device) init_mutex() {
+	// We need a valid context
+	if d.context == 0 {
+		return
+	}
+	// Init audio mutex
+	mutex := &C.ma_mutex{}
+	result := int(C.ma_mutex_init(d.context, mutex))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio mutex.  (ma_mutex_init ${translate_error_code(result)} ')
+		exit(1)
+	}
+	d.mutex = mutex
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized mutex ' + ptr_str(d.mutex))
+	}
+}
+
+fn (mut d Device) init_device() {
+	// Init audio device from device_config
+	device := &C.ma_device{
+		pUserData: 0
+	}
+	result := int(C.ma_device_init(d.context, &d.device_config, device))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ': failed to initialize device (ma_device_init ${translate_error_code(result)})')
+		exit(1)
+	}
+	d.device = device
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized device ' + ptr_str(d.device))
+	}
+	d.initialized = true
+	// println(d.device)
+}
+
+pub fn (mut d Device) start() {
+	if !d.initialized {
+		return
+	}
+	if !d.is_started() {
+		$if debug {
+			println('Starting device ' + ptr_str(d.device))
+		}
+		result := int(C.ma_device_start(d.device))
+		if result != C.MA_SUCCESS {
+			println('miniaudio::' + '' + ': failed to start device playback (ma_device_start ${translate_error_code(result)})')
+			d.free()
+			exit(1)
+		}
+		$if debug {
+			println('Started device')
+		}
+	}
+	else {
+		$if debug {
+			println('Device already started')
+		}
+	}
+}
+
+pub fn (mut d Device) add(id string, s Sound) {
+	C.ma_mutex_lock(d.mutex)
+	$if debug {
+		println('Adding sound ' + id + ':' + ptr_str(s) + ' with audio buffer:' + ptr_str(s.audio_buffer) + ' to device ' + ptr_str(d))
+	}
+	if id in d.buffers {
+		println('Warning: ' + id + ' is already added')
+	}
+	d.buffers[id] = s.audio_buffer
+	C.ma_mutex_unlock(d.mutex)
+}
+
+pub fn (d Device) is_started() bool {
+	if !d.initialized {
+		return false
+	}
+	if C.ma_device_is_started(d.device) {
+		return true
+	}
+	return false
+}
+
+/*
+pub fn (d Device) pos() f64 {
+    C.ma_decoder_read_pcm_frames
+}*/
+
+/*
+pub fn (d mut Device) play() {
+
+    if !d.initialized { return }
+
+    if d.is_started() {
+        d.stop()
+    }
+
+    d.seek_frame(0)
+
+    d.start()
+}*/
+
+
+pub fn (mut d Device) stop() {
+	if !d.initialized {
+		return
+	}
+	mut result := C.MA_SUCCESS
+	if d.is_started() {
+		$if debug {
+			println('Stopping device ' + ptr_str(d.device))
+		}
+		result = int(C.ma_device_stop(d.device))
+		if result != C.MA_SUCCESS {
+			println('miniaudio::' + '' + ': failed to stop device (ma_device_stop ${translate_error_code(result)})')
+			d.free()
+			exit(1)
+		}
+		$if debug {
+			println('Device stopped')
+		}
+	}
+	else {
+		$if debug {
+			println('Device not started')
+		}
+	}
+}
+
+pub fn (mut d Device) free() {
+	d.stop()
+	d.initialized = false
+	C.ma_device_uninit(d.device)
+	// C.ma_decoder_uninit(d.decoder)
+	C.ma_context_uninit(d.context)
+	C.ma_mutex_uninit(d.mutex)
+	d.context = 0
+	d.mutex = 0
+	d.device = 0
+	// d.decoder = 0
+}
+
+
+
+
 fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32 {
 	// The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
 	// contents of the output buffer by simply adding the samples together. You could also clip the samples to -1..+1, but I'm not
@@ -314,185 +499,3 @@ pub fn (ab AudioBuffer) sample_rate() u32 {
 	return ab.decoder.outputSampleRate
 }
 
-/*
- * Device
- */
-
-
-pub struct Device {
-mut:
-	context        &C.ma_context
-	context_config C.ma_context_config
-	device         &C.ma_device
-	device_config  C.ma_device_config
-	mutex          &C.ma_mutex
-	initialized    bool
-	buffers        map[string]&AudioBuffer
-	vol            f64 // Master volume for the device
-}
-
-pub fn (mut d Device) volume(volume f64) {
-	// C.ma_mutex_lock(d.mutex)
-	d.vol = volume
-	// C.ma_mutex_unlock(d.mutex)
-}
-
-fn (mut d Device) init_context() {
-	// Init audio context
-	context := &C.ma_context{
-		logCallback: 0
-	}
-	d.context_config = C.ma_context_config_init()
-	d.context_config.logCallback = log_callback
-	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
-	if result != C.MA_SUCCESS {
-		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
-		exit(1)
-	}
-	d.context = context
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized context ' + ptr_str(d.context))
-	}
-}
-
-fn (mut d Device) init_mutex() {
-	// We need a valid context
-	if d.context == 0 {
-		return
-	}
-	// Init audio mutex
-	mutex := &C.ma_mutex{}
-	result := int(C.ma_mutex_init(d.context, mutex))
-	if result != C.MA_SUCCESS {
-		println('miniaudio::' + '' + ' ERROR: Failed to initialize audio mutex.  (ma_mutex_init ${translate_error_code(result)} ')
-		exit(1)
-	}
-	d.mutex = mutex
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized mutex ' + ptr_str(d.mutex))
-	}
-}
-
-fn (mut d Device) init_device() {
-	// Init audio device from device_config
-	device := &C.ma_device{
-		pUserData: 0
-	}
-	result := int(C.ma_device_init(d.context, &d.device_config, device))
-	if result != C.MA_SUCCESS {
-		println('miniaudio::' + '' + ': failed to initialize device (ma_device_init ${translate_error_code(result)})')
-		exit(1)
-	}
-	d.device = device
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized device ' + ptr_str(d.device))
-	}
-	d.initialized = true
-	// println(d.device)
-}
-
-pub fn (mut d Device) start() {
-	if !d.initialized {
-		return
-	}
-	if !d.is_started() {
-		$if debug {
-			println('Starting device ' + ptr_str(d.device))
-		}
-		result := int(C.ma_device_start(d.device))
-		if result != C.MA_SUCCESS {
-			println('miniaudio::' + '' + ': failed to start device playback (ma_device_start ${translate_error_code(result)})')
-			d.free()
-			exit(1)
-		}
-		$if debug {
-			println('Started device')
-		}
-	}
-	else {
-		$if debug {
-			println('Device already started')
-		}
-	}
-}
-
-pub fn (mut d Device) add(id string, s Sound) {
-	C.ma_mutex_lock(d.mutex)
-	$if debug {
-		println('Adding sound ' + id + ':' + ptr_str(s) + ' with audio buffer:' + ptr_str(s.audio_buffer) + ' to device ' + ptr_str(d))
-	}
-	if id in d.buffers {
-		println('Warning: ' + id + ' is already added')
-	}
-	d.buffers[id] = s.audio_buffer
-	C.ma_mutex_unlock(d.mutex)
-}
-
-pub fn (d Device) is_started() bool {
-	if !d.initialized {
-		return false
-	}
-	if C.ma_device_is_started(d.device) {
-		return true
-	}
-	return false
-}
-
-/*
-pub fn (d Device) pos() f64 {
-    C.ma_decoder_read_pcm_frames
-}*/
-
-/*
-pub fn (d mut Device) play() {
-
-    if !d.initialized { return }
-
-    if d.is_started() {
-        d.stop()
-    }
-
-    d.seek_frame(0)
-
-    d.start()
-}*/
-
-
-pub fn (mut d Device) stop() {
-	if !d.initialized {
-		return
-	}
-	mut result := C.MA_SUCCESS
-	if d.is_started() {
-		$if debug {
-			println('Stopping device ' + ptr_str(d.device))
-		}
-		result = int(C.ma_device_stop(d.device))
-		if result != C.MA_SUCCESS {
-			println('miniaudio::' + '' + ': failed to stop device (ma_device_stop ${translate_error_code(result)})')
-			d.free()
-			exit(1)
-		}
-		$if debug {
-			println('Device stopped')
-		}
-	}
-	else {
-		$if debug {
-			println('Device not started')
-		}
-	}
-}
-
-pub fn (mut d Device) free() {
-	d.stop()
-	d.initialized = false
-	C.ma_device_uninit(d.device)
-	// C.ma_decoder_uninit(d.decoder)
-	C.ma_context_uninit(d.context)
-	C.ma_mutex_uninit(d.mutex)
-	d.context = 0
-	d.mutex = 0
-	d.device = 0
-	// d.decoder = 0
-}
