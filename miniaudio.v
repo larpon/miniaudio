@@ -6,6 +6,70 @@ module miniaudio
 
 
 /*
+ * Miniaudio public API
+ */
+pub fn device() &Device {
+	mut d := &Device{
+		context: 0
+		mutex: 0
+		device: 0
+		vol: 1.0
+		initialized: false
+	}
+	d.init_context()
+	d.init_mutex()
+	d.device_config = C.ma_device_config_init(DeviceType.playback)
+	d.device_config.playback.format = int(Format.f32)
+	d.device_config.playback.channels = 2
+	d.device_config.sampleRate = 44100
+	d.device_config.dataCallback = data_callback
+	d.device_config.pUserData = d
+	d.init_device()
+	$if debug {
+		println('miniaudio::' + '' + ' setting device ' + ptr_str(d.device_config.pUserData) + ' as callback data')
+	}
+	d.start()
+	return d
+}
+
+pub fn sound(filename string) &Sound {
+	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
+	// Init decoder
+	decoder := &C.ma_decoder{}
+	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
+	if result != C.MA_SUCCESS {
+		println('miniaudio::' + '' + ' ERROR: Failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )')
+		exit(1)
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized decoder ' + ptr_str(decoder))
+	}
+	ab := audio_buffer(decoder)
+	s := &Sound{
+		audio_buffer: ab
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized Sound ' + ptr_str(s))
+	}
+	return s
+}
+
+fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
+	ab := &AudioBuffer{
+		volume: 1.0
+		decoder: decoder
+		// mutex: sync.new_mutex()
+
+	}
+	$if debug {
+		println('miniaudio::' + '' + ' INFO: Initialized AudioBuffer ' + ptr_str(ab))
+	}
+	return ab
+}
+
+
+
+/*
  * Device
  */
 pub struct Device {
@@ -187,8 +251,9 @@ pub fn (mut d Device) free() {
 }
 
 
-
-
+/*
+ * Callbacks
+ */
 fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32 {
 	// The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
 	// contents of the output buffer by simply adding the samples together. You could also clip the samples to -1..+1, but I'm not
@@ -277,65 +342,6 @@ pub fn sound_from(filename string) Sound {
 }*/
 
 
-pub fn device() &Device {
-	mut d := &Device{
-		context: 0
-		mutex: 0
-		device: 0
-		vol: 1.0
-		initialized: false
-	}
-	d.init_context()
-	d.init_mutex()
-	d.device_config = C.ma_device_config_init(DeviceType.playback)
-	d.device_config.playback.format = int(Format.f32)
-	d.device_config.playback.channels = 2
-	d.device_config.sampleRate = 44100
-	d.device_config.dataCallback = data_callback
-	d.device_config.pUserData = d
-	d.init_device()
-	$if debug {
-		println('miniaudio::' + '' + ' setting device ' + ptr_str(d.device_config.pUserData) + ' as callback data')
-	}
-	d.start()
-	return d
-}
-
-pub fn sound(filename string) &Sound {
-	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
-	// Init decoder
-	decoder := &C.ma_decoder{}
-	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
-	if result != C.MA_SUCCESS {
-		println('miniaudio::' + '' + ' ERROR: Failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )')
-		exit(1)
-	}
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized decoder ' + ptr_str(decoder))
-	}
-	ab := audio_buffer(decoder)
-	s := &Sound{
-		audio_buffer: ab
-	}
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized Sound ' + ptr_str(s))
-	}
-	return s
-}
-
-fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
-	ab := &AudioBuffer{
-		volume: 1.0
-		decoder: decoder
-		// mutex: sync.new_mutex()
-		
-	}
-	$if debug {
-		println('miniaudio::' + '' + ' INFO: Initialized AudioBuffer ' + ptr_str(ab))
-	}
-	return ab
-}
-
 /*
  * Interfaces
  */
@@ -346,8 +352,6 @@ fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 /*
  * Sound
  */
-
-
 struct Sound {
 mut:
 	audio_buffer &AudioBuffer
