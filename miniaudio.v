@@ -22,7 +22,7 @@ pub fn device() &Device {
 	d.device_config.playback.format = int(Format.f32)
 	d.device_config.playback.channels = 2
 	d.device_config.sampleRate = 44100
-	d.device_config.dataCallback = data_callback
+	d.device_config.dataCallback = voidptr(data_callback)
 	d.device_config.pUserData = d
 	d.init_device()
 	$if debug {
@@ -96,7 +96,7 @@ fn (mut d Device) init_context() {
 		logCallback: 0
 	}
 	d.context_config = C.ma_context_config_init()
-	d.context_config.logCallback = log_callback
+	d.context_config.logCallback = voidptr(log_callback)
 	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD+'::' + @FN + ' Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
@@ -262,7 +262,7 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 	unsafe{
 		m_p_output = p_output
 	}
-	channel_count := 2
+	channel_count := u32(2)
 	temp := [4096]f32 // [f32(0)].repeat(4096) //[4096]f32
 	temp_cap_in_frames := u32((4096 / sizeof(f32)) / channel_count)
 	mut total_frames_read := u32(0)
@@ -282,7 +282,7 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 		for i_sample = 0; i_sample < frames_read_this_iteration * channel_count; i_sample++ {
 			idx := total_frames_read * channel_count + i_sample
 			// println('m:'+master_volume.str()+' l:'+local_volume.str())
-			m_p_output[idx] += temp[i_sample] * master_volume * local_volume
+			m_p_output[idx] += temp[i_sample] * f32(master_volume * local_volume)
 		}
 		total_frames_read += frames_read_this_iteration
 		if frames_read_this_iteration < frames_to_read_this_iteration {
