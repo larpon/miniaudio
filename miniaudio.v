@@ -158,9 +158,11 @@ pub fn (mut d Device) start() {
 			d.free()
 			exit(1)
 		}
-		$if debug {
-			println('INFO ' +@MOD+'::' + @FN + ' Started device')
-		}
+		
+		// Produces a parsing error: https://github.com/vlang/v/issues/10243
+		/*$if debug {
+			println('INFO ' +@MOD +'::' + @FN + ' Started device')
+		}*/
 	}
 	else {
 		$if debug {
@@ -226,9 +228,11 @@ pub fn (mut d Device) stop() {
 			d.free()
 			exit(1)
 		}
-		$if debug {
+
+		// Produces a parsing error: https://github.com/vlang/v/issues/10243
+		/*$if debug {
 			println('INFO ' + @MOD+'::' + @FN + ' Device stopped')
-		}
+		}*/
 	}
 	else {
 		$if debug {
@@ -244,9 +248,9 @@ pub fn (mut d Device) free() {
 	// C.ma_decoder_uninit(d.decoder)
 	C.ma_context_uninit(d.context)
 	C.ma_mutex_uninit(d.mutex)
-	d.context = 0
-	d.mutex = 0
-	d.device = 0
+	d.context = &C.ma_context(0)
+	d.mutex = &C.ma_mutex(0)
+	d.device = &C.ma_device(0)
 	// d.decoder = 0
 }
 
@@ -263,7 +267,7 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 		m_p_output = p_output
 	}
 	channel_count := u32(2)
-	temp := [4096]f32 // [f32(0)].repeat(4096) //[4096]f32
+	temp := [4096]f32{}
 	temp_cap_in_frames := u32((4096 / sizeof(f32)) / channel_count)
 	mut total_frames_read := u32(0)
 	for total_frames_read < frameCount {
@@ -282,7 +286,9 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 		for i_sample = 0; i_sample < frames_read_this_iteration * channel_count; i_sample++ {
 			idx := total_frames_read * channel_count + i_sample
 			// println('m:'+master_volume.str()+' l:'+local_volume.str())
-			m_p_output[idx] += temp[i_sample] * f32(master_volume * local_volume)
+			unsafe {
+				m_p_output[idx] += temp[i_sample] * f32(master_volume * local_volume)
+			}
 		}
 		total_frames_read += frames_read_this_iteration
 		if frames_read_this_iteration < frames_to_read_this_iteration {
@@ -293,7 +299,10 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 }
 
 fn log_callback(p_context &C.ma_context, p_device &C.ma_device, logLevel u32, message charptr) {
-	eprintln('ERROR ' + @MOD + tos3(message))
+	unsafe {
+		eprintln('ERROR ' + @MOD + tos3(message))
+	}
+
 	exit(1)
 }
 
@@ -313,7 +322,34 @@ fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame
 	C.ma_mutex_lock(d.mutex)
 	master_volume := d.vol
 	// println('Callback buffers: '+d.buffers.size.str())
-	for _, audio_buffer in d.buffers {
+	
+	// For some reason on the latest V, doing a for loop on a map
+	// returns back a bad struct (at least on msvc on Windows)
+	/*for key, audio_buffer in d.buffers {
+		println("$key $audio_buffer")
+		// mut ab := audio_buffer
+		// ab.mutex.lock()
+		// println('ab: '+audio_buffer.playing.str())
+		if !audio_buffer.playing || audio_buffer.paused {
+			continue
+		}
+		// println('AudioBuffer at '+ptr_str(audio_buffer))
+		p_decoder := audio_buffer.decoder
+		if p_decoder == C.NULL {
+			continue
+		}
+		// println('Using decoder at '+ptr_str(p_decoder))
+		// println(p_decoder.outputFormat.str()+' '+p_decoder.outputChannels.str()+' '+p_decoder.outputSampleRate.str())
+		/*frames_read :=*/
+		read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count, master_volume, audio_buffer.volume)
+		/*frames_read :=*/ // C.read_and_mix_pcm_frames_f32(p_decoder, p_output, frame_count)
+		/*frames_read :=*/ // C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
+		// ab.mutex.unlock()
+	}*/
+
+	keys := d.buffers.keys()
+	for key in keys {
+		audio_buffer := d.buffers[key]
 		// mut ab := audio_buffer
 		// ab.mutex.lock()
 		// println('ab: '+audio_buffer.playing.str())
@@ -333,6 +369,7 @@ fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame
 		/*frames_read :=*/ // C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
 		// ab.mutex.unlock()
 	}
+
 	C.ma_mutex_unlock(d.mutex)
 }
 

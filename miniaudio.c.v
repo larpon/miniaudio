@@ -6,12 +6,18 @@ module miniaudio
 // #flag -I ./miniaudio/c // for the wrapper code
 #flag -I @VROOT/c/miniaudio
 // #flag linux -lpthread -lm -ldl
+
+/* Enables FLAC decoding. */
 #flag -D  DR_FLAC_IMPLEMENTATION
-#include "extras/dr_flac.h"  /* Enables FLAC decoding. */
+#include "extras/dr_flac.h"
+
+/* Enables MP3 decoding. */
 #flag -D  DR_MP3_IMPLEMENTATION
-#include "extras/dr_mp3.h"   /* Enables MP3 decoding. */
+#include "extras/dr_mp3.h"
+
+/* Enables WAV decoding. */
 #flag -D  DR_WAV_IMPLEMENTATION
-#include "extras/dr_wav.h"   /* Enables WAV decoding. */
+#include "extras/dr_wav.h"
 /*
 $if debug {
     #flag -D MA_DEBUG_OUTPUT
@@ -47,6 +53,7 @@ enum Format {
 
 struct C.ma_pcm_converter {}
 
+[heap]
 struct C.ma_decoder {
 	outputFormat     int // Format //C.ma_format
 	outputChannels   u32 // C.ma_uint32

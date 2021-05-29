@@ -24,9 +24,9 @@ fn test_audio(){
     d.add('sound id 3',s3)
 
     s1.play()
-    time.sleep_ms(50)
+    time.sleep(50 * time.millisecond)
     s3.play()
-    time.sleep_ms(200)
+    time.sleep(200 * time.millisecond)
     s3.seek(20)
     s2.play()
 
@@ -35,11 +35,11 @@ fn test_audio(){
     for ee := s1.length(); ee > 0; ee = ee - 16.377 {
         vol = vol - 0.016
         s1.volume(vol)
-        time.sleep_ms(16)
+        time.sleep(16 * time.millisecond)
     }
     mut longest := int(math.max(s1.length(), s2.length()))
     longest = int(math.max(longest, s3.length()))
-    time.sleep_ms(longest)
+    time.sleep(longest * time.millisecond)
     d.free()
 }
 
