@@ -243,6 +243,9 @@ pub fn (mut d Device) stop() {
 }
 
 pub fn (mut d Device) free() {
+	$if debug {
+		println('INFO ' + @MOD + '::' + @FN)
+	}
 	d.stop()
 	d.initialized = false
 	C.ma_device_uninit(d.device)

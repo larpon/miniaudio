@@ -5,8 +5,8 @@ import math
 import time
 import miniaudio as ma
 
-fn test_audio() {
-	basedir := os.real_path(os.dir(@FILE))
+fn main() {
+	basedir := os.real_path(os.join_path(os.dir(@FILE),'..','..'))
 	wav_file := os.join_path(basedir, 'assets', 'audio.wav')
 	flac_file := os.join_path(basedir, 'assets', 'audio.flac')
 	mp3_file := os.join_path(basedir, 'assets', 'audio.mp3')
