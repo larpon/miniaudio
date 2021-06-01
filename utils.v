@@ -31,8 +31,7 @@ fn translate_error_code(code int) string {
 		C.MA_TIMEOUT {
 			return 'MA_TIMEOUT'
 		}
-		/* General miniaudio-specific errors. */
-
+		// General miniaudio-specific errors.
 		C.MA_FORMAT_NOT_SUPPORTED {
 			return 'MA_FORMAT_NOT_SUPPORTED'
 		}
@@ -54,8 +53,7 @@ fn translate_error_code(code int) string {
 		C.MA_INVALID_DEVICE_CONFIG {
 			return 'MA_INVALID_DEVICE_CONFIG'
 		}
-		/* State errors. */
-
+		// State errors.
 		C.MA_DEVICE_BUSY {
 			return 'MA_DEVICE_BUSY'
 		}
@@ -68,8 +66,7 @@ fn translate_error_code(code int) string {
 		C.MA_DEVICE_UNAVAILABLE {
 			return 'MA_DEVICE_UNAVAILABLE'
 		}
-		/* Operation errors. */
-
+		// Operation errors.
 		C.MA_FAILED_TO_MAP_DEVICE_BUFFER {
 			return 'MA_FAILED_TO_MAP_DEVICE_BUFFER'
 		}
