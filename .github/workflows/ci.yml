@@ -34,4 +34,4 @@ jobs:
       run: cd miniaudio; ../v test-fmt; cd ..
 
     - name: Run tests
-      run: ./v test miniaudio
+      run: ./v -d ci test miniaudio
