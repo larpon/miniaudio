@@ -26,7 +26,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: Larpon/v-miniaudio
-        path: $HOME/.vmodules/v-miniaudio
+        path: miniaudio
+
+    - name: Test code formatting
+      run: cd miniaudio; ../v test-fmt; cd ..
 
     - name: Run tests
-      run: ./v test $HOME/.vmodules/v-miniaudio
+      run: ./v test miniaudio
