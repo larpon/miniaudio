@@ -23,10 +23,12 @@ jobs:
       run: make -j4
 
     - name: Checkout v-miniaudio
-      uses: actions/checkout@v2
-      with:
-        repository: Larpon/v-miniaudio
-        path: miniaudio
+      run: |
+        git clone --depth 1 https://github.com/Larpon/v-miniaudio miniaudio
+        mkdir -p $HOME/.vmodules
+        cd miniaudio
+        ln -s $(pwd) $HOME/.vmodules/miniaudio
+        cd ..
 
     - name: Test code formatting
       run: cd miniaudio; ../v test-fmt; cd ..
