@@ -1,0 +1,32 @@
+name: Code CI
+
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  ubuntu-18_04:
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    steps:
+
+    - name: Checkout V
+      uses: actions/checkout@v2
+      with:
+        repository: vlang/v
+
+    - name: Build local v
+      run: make -j4
+
+    - name: Checkout v-miniaudio
+      uses: actions/checkout@v2
+      with:
+        repository: Larpon/v-miniaudio
+        path: $HOME/.vmodules/v-miniaudio
+
+    - name: Run tests
+      run: ./v test $HOME/.vmodules/v-miniaudio
