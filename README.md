@@ -5,7 +5,7 @@ Vrap of the excellent [miniaudio](https://github.com/dr-soft/miniaudio) C audio 
 The project is still highly work-in-progress and experimental, expect the API to change without warning.
 
 Example `main.v`
-```
+```v
 module main
 
 import os
@@ -57,4 +57,3 @@ fn main() {
 
 }
 ```
-
