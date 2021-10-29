@@ -266,7 +266,7 @@ mut:
 	pUserData voidptr
 	playback  C.playback
 }
-//type Device = C.ma_device
+type Device = C.ma_device
 
 [typedef]
 struct C.ma_context {

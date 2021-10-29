@@ -9,8 +9,8 @@ import c
 //
 // Miniaudio public low-level API
 //
-pub fn device() &Device {
-	mut d := &Device{
+pub fn device() &AudioDevice {
+	mut d := &AudioDevice{
 		context: 0
 		mutex: 0
 		device: 0
@@ -97,9 +97,9 @@ fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 }
 
 //
-// Device
+// AudioDevice
 //
-pub struct Device {
+pub struct AudioDevice {
 mut:
 	context        &C.ma_context
 	context_config C.ma_context_config
@@ -111,13 +111,13 @@ mut:
 	vol            f64 // Master volume for the device
 }
 
-pub fn (mut d Device) volume(volume f64) {
+pub fn (mut d AudioDevice) volume(volume f64) {
 	// C.ma_mutex_lock(d.mutex)
 	d.vol = volume
 	// C.ma_mutex_unlock(d.mutex)
 }
 
-fn (mut d Device) init_context() {
+fn (mut d AudioDevice) init_context() {
 	// Init audio context
 	context := &C.ma_context{
 		logCallback: 0
@@ -136,7 +136,7 @@ fn (mut d Device) init_context() {
 	}
 }
 
-fn (mut d Device) init_mutex() {
+fn (mut d AudioDevice) init_mutex() {
 	// We need a valid context
 	if d.context == 0 {
 		return
@@ -155,7 +155,7 @@ fn (mut d Device) init_mutex() {
 	}
 }
 
-fn (mut d Device) init_device() {
+fn (mut d AudioDevice) init_device() {
 	// Init audio device from device_config
 	device := &C.ma_device{
 		pUserData: 0
@@ -174,7 +174,7 @@ fn (mut d Device) init_device() {
 	// println(d.device)
 }
 
-pub fn (mut d Device) start() {
+pub fn (mut d AudioDevice) start() {
 	if !d.initialized {
 		return
 	}
@@ -194,12 +194,12 @@ pub fn (mut d Device) start() {
 		}
 	} else {
 		$if debug {
-			println('INFO ' + @MOD + '::' + @FN + ' Device already started')
+			println('INFO ' + @MOD + '::' + @FN + ' AudioDevice already started')
 		}
 	}
 }
 
-pub fn (mut d Device) add(id string, s Sound) {
+pub fn (mut d AudioDevice) add(id string, s Sound) {
 	C.ma_mutex_lock(d.mutex)
 	$if debug {
 		println('INFO ' + @MOD + '::' + @FN + ' Adding sound ' + id + ':' + ptr_str(s) +
@@ -212,7 +212,7 @@ pub fn (mut d Device) add(id string, s Sound) {
 	C.ma_mutex_unlock(d.mutex)
 }
 
-pub fn (d Device) is_started() bool {
+pub fn (d AudioDevice) is_started() bool {
 	if !d.initialized {
 		return false
 	}
@@ -223,12 +223,12 @@ pub fn (d Device) is_started() bool {
 }
 
 /*
-pub fn (d Device) pos() f64 {
+pub fn (d AudioDevice) pos() f64 {
     C.ma_decoder_read_pcm_frames
 }*/
 
 /*
-pub fn (d mut Device) play() {
+pub fn (d mut AudioDevice) play() {
 
     if !d.initialized { return }
 
@@ -241,7 +241,7 @@ pub fn (d mut Device) play() {
     d.start()
 }*/
 
-pub fn (mut d Device) stop() {
+pub fn (mut d AudioDevice) stop() {
 	if !d.initialized {
 		return
 	}
@@ -260,16 +260,16 @@ pub fn (mut d Device) stop() {
 
 		// Produces a parsing error: https://github.com/vlang/v/issues/10243
 		/*$if debug {
-			println('INFO ' + @MOD+'::' + @FN + ' Device stopped')
+			println('INFO ' + @MOD+'::' + @FN + ' AudioDevice stopped')
 		}*/
 	} else {
 		$if debug {
-			println('INFO ' + @MOD + '::' + @FN + ' Device not started')
+			println('INFO ' + @MOD + '::' + @FN + ' AudioDevice not started')
 		}
 	}
 }
 
-pub fn (mut d Device) free() {
+pub fn (mut d AudioDevice) free() {
 	$if debug {
 		println('INFO ' + @MOD + '::' + @FN)
 	}
@@ -346,7 +346,7 @@ fn log_callback(p_context &C.ma_context, p_device &C.ma_device, logLevel u32, me
 fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) {
 	// Most of this function is heavily inspired, if not outright copied
 	// from raylib: https://github.com/raysan5/raylib/blob/c20ccfe274f94d29dcf1a1f84048a57d56dedce6/src/raudio.c#L275
-	d := &Device(p_device.pUserData)
+	d := &AudioDevice(p_device.pUserData)
 	if d == C.NULL {
 		return
 	}
