@@ -57,6 +57,33 @@ pub fn sound(filename string) &Sound {
 	return s
 }
 
+// sound_from_memory creates a sound object from the provided byte array
+pub fn sound_from_memory(data []byte) &Sound {
+	decoder_config := C.ma_decoder_config_init(int(c.Format.f32), 2, 44100)
+	// Init decoder
+	decoder := &C.ma_decoder{}
+	result := int(C.ma_decoder_init_memory(data.data, data.len, &decoder_config, decoder))
+	
+	if result != C.MA_SUCCESS {
+		eprintln('ERROR ' + @MOD+'::' + @FN + ' Failed to init decoder from data (ma_decoder_init_memory ${c.translate_error_code(result)} )')
+		exit(1)
+	}
+	
+	$if debug {
+		println('INFO ' + @MOD+'::' + @FN + ' Initialized decoder ' + ptr_str(decoder))
+	}
+
+	ab := audio_buffer(decoder)
+	s := &Sound{
+		audio_buffer: ab
+	}
+	
+	$if debug {
+		println('INFO ' + @MOD+'::' + @FN + ' Initialized Sound ' + ptr_str(s))
+	}
+	return s
+}
+
 fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 	ab := &AudioBuffer{
 		volume: 1.0
@@ -162,11 +189,9 @@ pub fn (mut d Device) start() {
 			d.free()
 			exit(1)
 		}
-
-		// TODO BUG Produces a parsing error: https://github.com/vlang/v/issues/10243
-		/*$if debug {
+		$if debug {
 			println('INFO ' +@MOD +'::' + @FN + ' Started device')
-		}*/
+		}
 	} else {
 		$if debug {
 			println('INFO ' + @MOD + '::' + @FN + ' Device already started')
@@ -403,6 +428,10 @@ mut:
 
 pub fn (mut s Sound) play() {
 	s.audio_buffer.playing = true
+}
+
+pub fn (mut s Sound) pause() {
+	s.audio_buffer.playing = false
 }
 
 pub fn (s Sound) length() f64 {

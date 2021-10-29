@@ -134,6 +134,9 @@ fn C.ma_decoder_uninit(decoder &C.ma_decoder) C.ma_result
 // ma_result ma_decoder_init_file(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
 fn C.ma_decoder_init_file(filepath &char, decoder_config &C.ma_decoder_config, decoder &C.ma_decoder) C.ma_result
 
+// ma_result ma_decoder_init_memory(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
+fn C.ma_decoder_init_memory(data voidptr, len u64, decoder_config &C.ma_decoder_config, decoder &C.ma_decoder) C.ma_result
+
 fn C.ma_decoder_get_length_in_pcm_frames(pDecoder &C.ma_decoder) i64
 
 // ma_uint64 ma_decoder_read_pcm_frames(ma_decoder* pDecoder, void* pFramesOut, ma_uint64 frameCount);
