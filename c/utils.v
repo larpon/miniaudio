@@ -1,10 +1,10 @@
-// Copyright(C) 2019 Lars Pontoppidan. All rights reserved.
+// Copyright(C) 2019-2021 Lars Pontoppidan. All rights reserved.
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio)
 // is licensed under the unlicense and, are thus, in the publiic domain.
-module miniaudio
+module c
 
-fn translate_error_code(code int) string {
+pub fn translate_error_code(code int) string {
 	match code {
 		C.MA_SUCCESS {
 			return 'SUCCESS'

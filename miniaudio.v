@@ -1,11 +1,13 @@
-// Copyright(C) 2019 Lars Pontoppidan. All rights reserved.
+// Copyright(C) 2019-2021 Lars Pontoppidan. All rights reserved.
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
 module miniaudio
 
+import c
+
 /*
-* Miniaudio public API
+* Miniaudio public low-level API
 */
 pub fn device() &Device {
 	mut d := &Device{
@@ -17,8 +19,8 @@ pub fn device() &Device {
 	}
 	d.init_context()
 	d.init_mutex()
-	d.device_config = C.ma_device_config_init(DeviceType.playback)
-	d.device_config.playback.format = int(Format.f32)
+	d.device_config = C.ma_device_config_init(c.DeviceType.playback)
+	d.device_config.playback.format = int(c.Format.f32)
 	d.device_config.playback.channels = 2
 	d.device_config.sampleRate = 44100
 	d.device_config.dataCallback = voidptr(data_callback)
@@ -33,13 +35,13 @@ pub fn device() &Device {
 }
 
 pub fn sound(filename string) &Sound {
-	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
+	decoder_config := C.ma_decoder_config_init(int(c.Format.f32), 2, 44100)
 	// Init decoder
 	decoder := &C.ma_decoder{}
 	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			' Failed to init decoder from "$filename" (ma_decoder_init_file ${translate_error_code(result)} )')
+			' Failed to init decoder from "$filename" (ma_decoder_init_file ${c.translate_error_code(result)} )')
 		exit(1)
 	}
 	$if debug {
@@ -98,7 +100,7 @@ fn (mut d Device) init_context() {
 	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			' Failed to initialize audio context.  (ma_context_init ${translate_error_code(result)} ')
+			' Failed to initialize audio context.  (ma_context_init ${c.translate_error_code(result)} ')
 		exit(1)
 	}
 	d.context = context
@@ -117,7 +119,7 @@ fn (mut d Device) init_mutex() {
 	result := int(C.ma_mutex_init(d.context, mutex))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			' Failed to initialize audio mutex.  (ma_mutex_init ${translate_error_code(result)} ')
+			' Failed to initialize audio mutex.  (ma_mutex_init ${c.translate_error_code(result)} ')
 		exit(1)
 	}
 	d.mutex = mutex
@@ -134,7 +136,7 @@ fn (mut d Device) init_device() {
 	result := int(C.ma_device_init(d.context, &d.device_config, device))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			' Failed to initialize device (ma_device_init ${translate_error_code(result)})')
+			' Failed to initialize device (ma_device_init ${c.translate_error_code(result)})')
 		exit(1)
 	}
 	d.device = device
@@ -156,7 +158,7 @@ pub fn (mut d Device) start() {
 		result := int(C.ma_device_start(d.device))
 		if result != C.MA_SUCCESS {
 			eprintln('ERROR ' + @MOD + '::' + @FN +
-				' failed to start device playback (ma_device_start ${translate_error_code(result)})')
+				' failed to start device playback (ma_device_start ${c.translate_error_code(result)})')
 			d.free()
 			exit(1)
 		}
@@ -226,7 +228,7 @@ pub fn (mut d Device) stop() {
 		result = int(C.ma_device_stop(d.device))
 		if result != C.MA_SUCCESS {
 			eprintln('ERROR ' + @MOD + '::' + @FN +
-				' failed to stop device (ma_device_stop ${translate_error_code(result)})')
+				' failed to stop device (ma_device_stop ${c.translate_error_code(result)})')
 			d.free()
 			exit(1)
 		}
@@ -525,7 +527,7 @@ pub fn (mut ab AudioBuffer) seek_frame(pcm_frame u64) {
 	result := int(C.ma_decoder_seek_to_pcm_frame(ab.decoder, pcm_frame))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${translate_error_code(result)})')
+			': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${c.translate_error_code(result)})')
 		// d.free() // TODO
 		exit(1)
 	}
