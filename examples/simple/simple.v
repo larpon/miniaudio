@@ -40,4 +40,7 @@ fn main() {
 	longest = int(math.max(longest, s3.length()))
 	time.sleep(longest * time.millisecond)
 	d.free()
+	unsafe {
+		free(d)
+	}
 }

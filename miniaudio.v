@@ -6,9 +6,9 @@ module miniaudio
 
 import c
 
-/*
-* Miniaudio public low-level API
-*/
+//
+// Miniaudio public low-level API
+//
 pub fn device() &Device {
 	mut d := &Device{
 		context: 0
@@ -19,8 +19,8 @@ pub fn device() &Device {
 	}
 	d.init_context()
 	d.init_mutex()
-	d.device_config = C.ma_device_config_init(c.DeviceType.playback)
-	d.device_config.playback.format = int(c.Format.f32)
+	d.device_config = C.ma_device_config_init(DeviceType.playback)
+	d.device_config.playback.format = int(Format.f32)
 	d.device_config.playback.channels = 2
 	d.device_config.sampleRate = 44100
 	d.device_config.dataCallback = voidptr(data_callback)
@@ -35,7 +35,7 @@ pub fn device() &Device {
 }
 
 pub fn sound(filename string) &Sound {
-	decoder_config := C.ma_decoder_config_init(int(c.Format.f32), 2, 44100)
+	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
 	// Init decoder
 	decoder := &C.ma_decoder{}
 	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
@@ -59,7 +59,7 @@ pub fn sound(filename string) &Sound {
 
 // sound_from_memory creates a sound object from the provided byte array
 pub fn sound_from_memory(data []byte) &Sound {
-	decoder_config := C.ma_decoder_config_init(int(c.Format.f32), 2, 44100)
+	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
 	// Init decoder
 	decoder := &C.ma_decoder{}
 	result := int(C.ma_decoder_init_memory(data.data, data.len, &decoder_config, decoder))
@@ -96,9 +96,9 @@ fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 	return ab
 }
 
-/*
-* Device
-*/
+//
+// Device
+//
 pub struct Device {
 mut:
 	context        &C.ma_context
@@ -275,6 +275,11 @@ pub fn (mut d Device) free() {
 	}
 	d.stop()
 	d.initialized = false
+
+	for _, mut buffer in d.buffers {
+		buffer.free()
+	}
+
 	C.ma_device_uninit(d.device)
 	// C.ma_decoder_uninit(d.decoder)
 	C.ma_context_uninit(d.context)
@@ -477,6 +482,9 @@ pub fn (mut s Sound) seek(ms f64) {
 	s.audio_buffer.seek(ms)
 }
 
+pub fn (mut s Sound) free() {
+	s.audio_buffer.free()
+}
 /*
 fn (s Sound) audio_buffer() AudioBuffer {
     return s.audio_buffer
@@ -575,4 +583,10 @@ pub fn (ab AudioBuffer) pcm_frames() u64 {
 
 pub fn (ab AudioBuffer) sample_rate() u32 {
 	return ab.decoder.outputSampleRate
+}
+
+pub fn (mut ab AudioBuffer) free() {
+	if !isnil(ab.decoder) {
+		C.ma_decoder_uninit(ab.decoder)
+	}
 }
