@@ -143,7 +143,7 @@ fn (mut d Device) init_mutex() {
 	}
 	// Init audio mutex
 	mutex := &C.ma_mutex{}
-	result := int(C.ma_mutex_init(d.context, mutex))
+	result := int(C.ma_mutex_init(mutex))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
 			' Failed to initialize audio mutex.  (ma_mutex_init ${c.translate_error_code(result)} ')

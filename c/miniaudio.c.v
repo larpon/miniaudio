@@ -1,6 +1,6 @@
 // Copyright(C) 2019-2021 Lars Pontoppidan. All rights reserved.
 // Use of this source code is governed by an MIT license file distributed with this software package
-// miniaudio https://github.com/dr-soft/miniaudio @ 1ca6f806
+// miniaudio https://github.com/dr-soft/miniaudio @ dbca7a3b (Version 0.10.42)
 // is licensed under the unlicense and, are thus, in the public domain.
 module c
 
@@ -168,8 +168,8 @@ fn C.ma_device_stop(device &C.ma_device) C.ma_result
 fn C.ma_device_uninit(device &C.ma_device)
 
 // ma_decoder
-// ma_result ma_mutex_init(ma_context* pContext, ma_mutex* pMutex);
-fn C.ma_mutex_init(p_context &C.ma_context, p_mutex &C.ma_mutex) C.ma_result
+// ma_result ma_mutex_init(ma_mutex* pMutex);
+fn C.ma_mutex_init(p_mutex &C.ma_mutex) C.ma_result
 
 // void ma_mutex_uninit(ma_mutex* pMutex);
 fn C.ma_mutex_uninit(p_mutex &C.ma_mutex)
