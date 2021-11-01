@@ -1,14 +1,14 @@
 import os
 import math
 import time
-import miniaudio as ma
+import miniaudio.x as ma
 
 fn test_basics() {
 	$if ci ? {
 		assert true
 		return
 	}
-	basedir := os.real_path(os.dir(@FILE))
+	basedir := os.real_path(os.join_path(os.dir(@FILE),'..'))
 	wav_file := os.join_path(basedir, 'assets', 'audio.wav')
 	flac_file := os.join_path(basedir, 'assets', 'audio.flac')
 	mp3_file := os.join_path(basedir, 'assets', 'audio.mp3')
