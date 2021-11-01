@@ -260,7 +260,7 @@ fn gen_v_code(path string) string {
 	lines := code.split('\n')
 	mut skip := 0
 	for i, line in lines {
-		if line == 'IMPLEMENTATION' {
+		if line == '#endif  /* miniaudio_h */' {
 			break
 		}
 
