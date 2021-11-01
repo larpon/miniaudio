@@ -6,9 +6,9 @@ module miniaudio
 
 import c
 
-pub const used_import = c.used_import + 1
+pub const umport = c.used_import + 1
 
-type Result = int //C.ma_result
+//type Result = int //C.ma_result
 
 /*
 pub enum Status {
@@ -224,6 +224,7 @@ pub enum Status {
 // #define macros
 // fn C.ma_countof(x voidptr) int
 // fn C.ma_countof(obj []f32) int
+
 pub enum DeviceType {
 	playback = C.ma_device_type_playback
 	capture = C.ma_device_type_capture
@@ -382,3 +383,4 @@ fn C.ma_mutex_unlock(p_mutex &C.ma_mutex)
 // Misc
 // ma_uint32 ma_get_bytes_per_sample(ma_format format);
 fn C.ma_get_bytes_per_sample(format Format) u32
+

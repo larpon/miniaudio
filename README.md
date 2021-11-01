@@ -16,11 +16,11 @@ import miniaudio as ma
 
 fn main() {
 
-    wav_file := os.home_dir()+'test.wav'
+    wav_file := os.join_path(os.home_dir(),'test.wav')
 
-    flac_file := os.home_dir()+'test.flac'
+    flac_file := os.join_path(os.home_dir(),'test.flac')
 
-    mp3_file := os.home_dir()+'test.mp3'
+    mp3_file := os.join_path(os.home_dir(),'test.mp3')
 
 
     mut s1 := ma.sound(wav_file)

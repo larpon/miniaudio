@@ -12,6 +12,10 @@ $if linux {
 	#flag -lpthread -lm -ldl
 }
 
+$if macos {
+	#flag -lpthread -lm
+}
+
 // Enables FLAC decoding.
 #flag -D  DR_FLAC_IMPLEMENTATION
 #include "extras/dr_flac.h"
