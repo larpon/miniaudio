@@ -468,7 +468,7 @@ fn export_api(lines []string) string {
 	code += wrapper_code
 
 	if clean_sig.contains('backends[') {
-		code = '/* TODO $code */'
+		code = '/* TODO\n$code\n*/'
 	}
 
 	return '$code'
