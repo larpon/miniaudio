@@ -2,7 +2,7 @@
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
-module miniaudio
+module x
 
 import c
 

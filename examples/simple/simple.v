@@ -3,7 +3,7 @@ module main
 import os
 import math
 import time
-import miniaudio as ma
+import miniaudio.x as ma
 
 fn main() {
 	basedir := os.real_path(os.join_path(os.dir(@FILE),'..','..'))

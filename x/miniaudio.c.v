@@ -2,11 +2,11 @@
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
-module miniaudio
+module x
 
 import c
 
-pub const umport = c.used_import + 1
+pub const used_import = c.used_import + 1
 
 //type Result = int //C.ma_result
 
@@ -383,4 +383,3 @@ fn C.ma_mutex_unlock(p_mutex &C.ma_mutex)
 // Misc
 // ma_uint32 ma_get_bytes_per_sample(ma_format format);
 fn C.ma_get_bytes_per_sample(format Format) u32
-
