@@ -43,16 +43,19 @@ const (
 		'double':                 'f64'
 		'long double':            'f64'
 	}
+	c2v_alias_enums = {
+		'ma_format': 'Format'
+		'ma_result': 'Result'
+		'ma_device_type': 'DeviceType'
+		'playback': 'Playback'
+	}
 	c2v_alias_typedefs = {
 		'ma_semaphore': 'Semaphore'
-		//'ma_result': 'int'//'Result'
 		'ma_event': 'Event'
 		'ma_pcm_converter':    'PCMConverter'
 		'ma_decoder':          'Decoder'
-		'playback': 'Playback'
 		'ma_device': 'Device'
 		'ma_context': 'Context'
-		//'ma_format': 'Format'
 		'ma_context_config': 'ContextConfig'
 		'ma_mutex': 'Mutex'
 		'ma_decoder_config': 'DecoderConfig'
@@ -62,18 +65,18 @@ const (
 		'type': 'typ'
 		'lock': 'locking'
 	}
-	skip_struct_keywords = [
+	skip_typedefs = [
 		'ma_decoder', 'ma_result',
 		'playback',	'ma_device', 'ma_context',
 		'ma_context_config', 'ma_mutex', 'ma_decoder_config',
 		'ma_device_config'
 	]
-	skip_keywords = [
-		'DWORD','WORD','ma_I','wasapi',
+	skip_keywords = [''
+		/*'DWORD','WORD','ma_I','wasapi',
 		'ma_pa_','__coreaudio',
 		'drwav_','drmp3_','drflac_',
 		'stbvorbis','AudioClient','__alsa',
-		'ma_jack', 'ma_sio','AAudio', '__uwp','backends[','stbvorbis_'
+		'ma_jack', 'ma_sio','AAudio', '__uwp','backends[','stbvorbis_'*/
 	]
 )
 
@@ -92,8 +95,14 @@ import ${lib_name}.c
 
 pub const used_import = c.used_import
 
-pub type Result = int //C.ma_result
 
+// C.ma_result
+pub enum Result {
+	success = 0
+	error // TODO add all
+}
+
+// C.ma_device_type
 pub enum DeviceType {
 	playback = C.ma_device_type_playback
 	capture = C.ma_device_type_capture
@@ -101,6 +110,7 @@ pub enum DeviceType {
 	loopback = C.ma_device_type_loopback
 }
 
+// C.ma_format
 pub enum Format {
 	unknown = C.ma_format_unknown
 	u8 = C.ma_format_u8
@@ -116,16 +126,16 @@ type PCMConverter = C.ma_pcm_converter
 
 [heap]
 struct C.ma_decoder {
-	outputFormat     int // Format //C.ma_format
+pub mut:
+	outputFormat     Format // C.ma_format
 	outputChannels   u32 // C.ma_uint32
 	outputSampleRate u32 // C.ma_uint32
 }
 pub type Decoder = C.ma_decoder
 
-
 struct C.playback {
-mut:
-	format   int // Format //int //C.ma_format
+pub mut:
+	format   Format //C.ma_format
 	channels u32 // C.ma_uint32
 	// channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
 }
@@ -133,9 +143,9 @@ pub type Playback = C.playback
 
 [typedef]
 struct C.ma_device {
-mut:
+pub mut:
 	pUserData voidptr
-	playback  C.playback
+	playback  Playback
 }
 pub type Device = C.ma_device
 
@@ -158,7 +168,7 @@ pub type Mutex = C.ma_mutex
 
 [typedef]
 struct C.ma_decoder_config {
-	outputFormat     int // Format //C.ma_format
+	outputFormat     Format //C.ma_format
 	outputChannels   u32 // C.ma_uint32
 	outputSampleRate u32 // C.ma_uint32
 }
@@ -167,7 +177,7 @@ pub type DecoderConfig = C.ma_decoder_config
 [typedef]
 struct C.ma_device_config {
 mut:
-	deviceType               C.ma_device_type
+	deviceType               DeviceType
 	sampleRate               u32 // C.ma_uint32
 	bufferSizeInFrames       u32 // C.ma_uint32
 	bufferSizeInMilliseconds u32 // C.ma_uint32
@@ -178,7 +188,7 @@ mut:
 	dataCallback             voidptr // C.ma_device_callback_proc
 	stopCallback             voidptr // C.ma_stop_proc
 	pUserData                voidptr
-	playback                 C.playback
+	playback                 Playback
 }
 pub type DeviceConfig = C.ma_device_config
 '
@@ -207,7 +217,7 @@ pub type DeviceConfig = C.ma_device_config
 	miniaudio_c_v = miniaudio_c_v.replace('C.ma_device_type','DeviceType')
 	miniaudio_c_v = miniaudio_c_v.replace('DeviceType_','C.ma_device_type_')
 
-	os.write_file(os.real_path(os.join_path(cur_dir, '..', '${lib_name}.auto.c.v.xxx')), miniaudio_c_v) or {
+	os.write_file(os.real_path(os.join_path(cur_dir, '..', '${lib_name}.auto.c.v')), miniaudio_c_v) or {
 		panic(err)
 	}
 }
@@ -334,7 +344,7 @@ fn typedef_struct(lines []string) (string,[]string) {
 	mut v_types := []string{}
 
 	for line in lines {
-		if line.contains_any_substr(skip_keywords) || line.contains_any_substr(skip_struct_keywords) {
+		if line.contains_any_substr(skip_keywords) || line.contains_any_substr(skip_typedefs) {
 			return '',v_types//'/* SKIPPED ${lines.join(" ")} */'
 		}
 	}
@@ -438,7 +448,7 @@ fn export_api(lines []string) string {
 		}
 	}*/
 
-	code += wrapper_code
+	//code += wrapper_code
 
 	return '$code'
 }
@@ -695,6 +705,9 @@ fn gen_v_wrap_sig(sig RawCSig) (string, string) {
 
 fn c_to_v_c_type(c_type string) string {
 	mut vc_type := ''
+	if c_type in c2v_alias_enums.keys() {
+		return c2v_alias_enums[c_type]
+	}
 	if c_type in c2v_types_map.keys() {
 		return c2v_types_map[c_type]
 	}
