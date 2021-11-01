@@ -2,8 +2,6 @@ import os
 import time
 import miniaudio as ma
 
-// void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
-
 fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) {
 	p_decoder := &ma.Decoder(p_device.pUserData)
 	if isnil(p_decoder) {

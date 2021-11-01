@@ -195,6 +195,10 @@ mut:
 	playback                 Playback
 }
 pub type DeviceConfig = C.ma_device_config
+
+[typedef]
+struct C.ma_event {}
+pub type Event = C.ma_event
 '
 	for c_header in c_headers {
 		miniaudio_c_v += gen_v_code(c_header)
@@ -264,6 +268,15 @@ fn gen_v_code(path string) string {
 			skip--
 			continue
 		}
+
+		if line.contains('#if defined(MA_EXPERIMENTAL__DATA_LOOPING_AND_CHAINING)') {
+			lns := eat_lines_until(i, lines, fn (l string) bool {
+				return l.starts_with('#endif')
+			})
+			skip = lns.len - 1
+			continue
+		}
+
 		if line.starts_with('typedef struct') {
 			if line.contains(';') {
 				tds, vtyps := typedef_struct([line])
@@ -288,12 +301,6 @@ fn gen_v_code(path string) string {
 				return l.contains(';')
 			})
 
-			/*
-			DEBUG
-			if line.contains('ma_decoder_init_memory') {
-				println('still here ($i): $line')
-			}
-			*/
 			for ae_line in api_export {
 				if ae_line.contains_any_substr(skip_keywords) {
 					// println('skipping: $ae_line')
@@ -374,7 +381,8 @@ pub type $v_type = C.$id'
 
 	flat := lines.join(' ').replace('\n', '')
 	tokens := flat.split(' ')
-	raw_members := flat.all_after('{').all_before_last('}').trim(' ').replace(' *', '* ') //.replace('const ','')
+	raw_members := flat.all_after('{').all_before_last('}').trim(' ').replace(' *', '* ').replace('[] ',
+		' []') //.replace('const ','')
 	raw_struct_ids := flat.all_after_last('}').trim(' ').all_before_last(';').replace(' ',
 		'').split(',')
 	mut members := raw_members.split(';')
@@ -457,7 +465,11 @@ fn export_api(lines []string) string {
 		}
 	}*/
 
-	// code += wrapper_code
+	code += wrapper_code
+
+	if clean_sig.contains('backends[') {
+		code = '/* TODO $code */'
+	}
 
 	return '$code'
 }
@@ -507,6 +519,7 @@ fn process_c_args(arg string) RawCArg {
 	}
 
 	a = a.replace(' *', '* ')
+	a = a.replace('[] ', ' []')
 	a = a.replace('volatile', '')
 	// println(a)
 
@@ -749,21 +762,11 @@ fn c_to_v_type(kind string) string {
 		knd = knd.replace('*', '')
 	}
 	// mut v_type := ''
-
+	if knd in c2v_alias_enums.keys() {
+		return ptr + c2v_alias_enums[knd]
+	}
 	if knd in c2v_alias_typedefs.keys() {
 		return ptr + c2v_alias_typedefs[knd]
-	}
-
-	if knd == 'cpBool' {
-		return ptr + 'bool'
-	}
-
-	if knd == 'cpFloat' {
-		return ptr + 'Float'
-	}
-
-	if knd == 'cpVect' {
-		return ptr + 'Vect'
 	}
 
 	if knd == 'void' {
