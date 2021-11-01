@@ -29,10 +29,9 @@ $if macos {
 #include "extras/dr_wav.h"
 
 $if debug {
-    #flag -D MA_DEBUG_OUTPUT
-    #flag -D MA_LOG_LEVEL_VERBOSE
+	#flag -D MA_DEBUG_OUTPUT
+	#flag -D MA_LOG_LEVEL_VERBOSE
 }
-
 
 // #flag -D MA_NO_PULSEAUDIO
 #flag -D MINIAUDIO_IMPLEMENTATION

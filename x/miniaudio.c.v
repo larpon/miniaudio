@@ -8,7 +8,7 @@ import c
 
 pub const used_import = c.used_import + 1
 
-//type Result = int //C.ma_result
+// type Result = int //C.ma_result
 
 /*
 pub enum Status {
@@ -228,7 +228,7 @@ pub enum Status {
 pub enum DeviceType {
 	playback = C.ma_device_type_playback
 	capture = C.ma_device_type_capture
-	duplex = 3 //C.ma_device_type_playback | C.ma_device_type_capture, /* 3 */
+	duplex = 3 // C.ma_device_type_playback | C.ma_device_type_capture, /* 3 */
 	loopback = C.ma_device_type_loopback
 }
 
@@ -243,6 +243,7 @@ pub enum Format {
 }
 
 struct C.ma_pcm_converter {}
+
 type PCMConverter = C.ma_pcm_converter
 
 [heap]
@@ -251,6 +252,7 @@ struct C.ma_decoder {
 	outputChannels   u32 // C.ma_uint32
 	outputSampleRate u32 // C.ma_uint32
 }
+
 type Decoder = C.ma_decoder
 
 struct C.playback {
@@ -259,6 +261,7 @@ mut:
 	channels u32 // C.ma_uint32
 	// channelMap [32 /*C.MA_MAX_CHANNELS*/ ]ma_channel
 }
+
 type Playback = C.playback
 
 [typedef]
@@ -267,12 +270,14 @@ mut:
 	pUserData voidptr
 	playback  C.playback
 }
+
 type Device = C.ma_device
 
 [typedef]
 struct C.ma_context {
 	logCallback voidptr // C.ma_log_proc
 }
+
 type Context = C.ma_context
 
 [typedef]
@@ -280,10 +285,12 @@ struct C.ma_context_config {
 mut:
 	logCallback voidptr // C.ma_log_proc
 }
+
 type ContextConfig = C.ma_context_config
 
 [typedef]
 struct C.ma_mutex {}
+
 type Mutex = C.ma_mutex
 
 [typedef]
@@ -292,6 +299,7 @@ struct C.ma_decoder_config {
 	outputChannels   u32 // C.ma_uint32
 	outputSampleRate u32 // C.ma_uint32
 }
+
 type DecoderConfig = C.ma_decoder_config
 
 [typedef]
@@ -310,6 +318,7 @@ mut:
 	pUserData                voidptr
 	playback                 C.playback
 }
+
 type DeviceConfig = C.ma_device_config
 
 //
@@ -322,7 +331,8 @@ pub fn (mut cc ContextConfig) init() ContextConfig {
 
 // ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pConfig, ma_context* pContext);
 fn C.ma_context_init(backends []C.ma_backend, backendCount u32, p_config &C.ma_context_config, p_context &C.ma_context) C.ma_result
-//pub fn Result
+
+// pub fn Result
 
 // ma_result ma_context_uninit(ma_context* pContext);
 fn C.ma_context_uninit(p_context &C.ma_context) C.ma_result

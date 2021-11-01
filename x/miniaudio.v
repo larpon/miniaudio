@@ -63,23 +63,24 @@ pub fn sound_from_memory(data []byte) &Sound {
 	// Init decoder
 	decoder := &C.ma_decoder{}
 	result := int(C.ma_decoder_init_memory(data.data, data.len, &decoder_config, decoder))
-	
+
 	if result != C.MA_SUCCESS {
-		eprintln('ERROR ' + @MOD+'::' + @FN + ' Failed to init decoder from data (ma_decoder_init_memory ${c.translate_error_code(result)} )')
+		eprintln('ERROR ' + @MOD + '::' + @FN +
+			' Failed to init decoder from data (ma_decoder_init_memory ${c.translate_error_code(result)} )')
 		exit(1)
 	}
-	
+
 	$if debug {
-		println('INFO ' + @MOD+'::' + @FN + ' Initialized decoder ' + ptr_str(decoder))
+		println('INFO ' + @MOD + '::' + @FN + ' Initialized decoder ' + ptr_str(decoder))
 	}
 
 	ab := audio_buffer(decoder)
 	s := &Sound{
 		audio_buffer: ab
 	}
-	
+
 	$if debug {
-		println('INFO ' + @MOD+'::' + @FN + ' Initialized Sound ' + ptr_str(s))
+		println('INFO ' + @MOD + '::' + @FN + ' Initialized Sound ' + ptr_str(s))
 	}
 	return s
 }
@@ -190,7 +191,7 @@ pub fn (mut d AudioDevice) start() {
 			exit(1)
 		}
 		$if debug {
-			println('INFO ' +@MOD +'::' + @FN + ' Started device')
+			println('INFO ' + @MOD + '::' + @FN + ' Started device')
 		}
 	} else {
 		$if debug {
@@ -485,6 +486,7 @@ pub fn (mut s Sound) seek(ms f64) {
 pub fn (mut s Sound) free() {
 	s.audio_buffer.free()
 }
+
 /*
 fn (s Sound) audio_buffer() AudioBuffer {
     return s.audio_buffer
