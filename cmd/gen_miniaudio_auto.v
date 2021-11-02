@@ -465,11 +465,11 @@ fn export_api(lines []string) string {
 		}
 	}*/
 
-	code += wrapper_code
-
 	if clean_sig.contains('backends[') {
-		code = '/* TODO\n$code\n*/'
+		return '$code\n/* TODO\n$wrapper_code\n*/'
 	}
+
+	code += wrapper_code
 
 	return '$code'
 }
@@ -519,7 +519,6 @@ fn process_c_args(arg string) RawCArg {
 	}
 
 	a = a.replace(' *', '* ')
-	a = a.replace('[] ', ' []')
 	a = a.replace('volatile', '')
 	// println(a)
 

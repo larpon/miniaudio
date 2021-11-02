@@ -1488,10 +1488,11 @@ pub fn context_config_init() ContextConfig {
 	return C.ma_context_config_init()
 }
 
+// MA_API ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pConfig, ma_context* pContext);
+fn C.ma_context_init(backends []C.ma_backend, backend_count u32, p_config &C.ma_context_config, p_context &C.ma_context) Result
+
 /*
 TODO
-// MA_API ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pConfig, ma_context* pContext);
-fn C.ma_context_init(backends[] C.ma_backend, backend_count u32, p_config &C.ma_context_config, p_context &C.ma_context) Result
 [inline]
 pub fn context_init(backends[] C.ma_backend, backend_count u32, p_config &ContextConfig, p_context &Context) Result{
 	return C.ma_context_init(backends, backend_count, p_config, p_context)
@@ -1563,10 +1564,11 @@ pub fn device_init(p_context &Context, p_config &DeviceConfig, p_device &Device)
 	return C.ma_device_init(p_context, p_config, p_device)
 }
 
+// MA_API ma_result ma_device_init_ex(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pContextConfig, const ma_device_config* pConfig, ma_device* pDevice);
+fn C.ma_device_init_ex(backends []C.ma_backend, backend_count u32, p_context_config &C.ma_context_config, p_config &C.ma_device_config, p_device &C.ma_device) Result
+
 /*
 TODO
-// MA_API ma_result ma_device_init_ex(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pContextConfig, const ma_device_config* pConfig, ma_device* pDevice);
-fn C.ma_device_init_ex(backends[] C.ma_backend, backend_count u32, p_context_config &C.ma_context_config, p_config &C.ma_device_config, p_device &C.ma_device) Result
 [inline]
 pub fn device_init_ex(backends[] C.ma_backend, backend_count u32, p_context_config &ContextConfig, p_config &DeviceConfig, p_device &Device) Result{
 	return C.ma_device_init_ex(backends, backend_count, p_context_config, p_config, p_device)
