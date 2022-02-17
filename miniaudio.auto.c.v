@@ -195,11 +195,32 @@ pub fn biquad_config_init(format Format, channels u32, b0 f64, b1 f64, b2 f64, a
 	return C.ma_biquad_config_init(format, channels, b0, b1, b2, a0, a1, a2)
 }
 
-// MA_API ma_result ma_biquad_init(const ma_biquad_config* pConfig, ma_biquad* pBQ);
-fn C.ma_biquad_init(p_config &C.ma_biquad_config, p_b_q &C.ma_biquad) Result
+// MA_API ma_result ma_biquad_get_heap_size(const ma_biquad_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_biquad_get_heap_size(p_config &C.ma_biquad_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn biquad_init(p_config &C.ma_biquad_config, p_b_q &C.ma_biquad) Result {
-	return C.ma_biquad_init(p_config, p_b_q)
+pub fn biquad_get_heap_size(p_config &C.ma_biquad_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_biquad_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_biquad_init_preallocated(const ma_biquad_config* pConfig, void* pHeap, ma_biquad* pBQ);
+fn C.ma_biquad_init_preallocated(p_config &C.ma_biquad_config, p_heap voidptr, p_b_q &C.ma_biquad) Result
+[inline]
+pub fn biquad_init_preallocated(p_config &C.ma_biquad_config, p_heap voidptr, p_b_q &C.ma_biquad) Result {
+	return C.ma_biquad_init_preallocated(p_config, p_heap, p_b_q)
+}
+
+// MA_API ma_result ma_biquad_init(const ma_biquad_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_biquad* pBQ);
+fn C.ma_biquad_init(p_config &C.ma_biquad_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_q &C.ma_biquad) Result
+[inline]
+pub fn biquad_init(p_config &C.ma_biquad_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_q &C.ma_biquad) Result {
+	return C.ma_biquad_init(p_config, p_allocation_callbacks, p_b_q)
+}
+
+// MA_API void ma_biquad_uninit(ma_biquad* pBQ, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_biquad_uninit(p_b_q &C.ma_biquad, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn biquad_uninit(p_b_q &C.ma_biquad, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_biquad_uninit(p_b_q, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_biquad_reinit(const ma_biquad_config* pConfig, ma_biquad* pBQ);
@@ -237,11 +258,32 @@ pub fn lpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 	return C.ma_lpf2_config_init(format, channels, sample_rate, cutoff_frequency, q)
 }
 
-// MA_API ma_result ma_lpf1_init(const ma_lpf1_config* pConfig, ma_lpf1* pLPF);
-fn C.ma_lpf1_init(p_config &C.ma_lpf1_config, p_l_p_f &C.ma_lpf1) Result
+// MA_API ma_result ma_lpf1_get_heap_size(const ma_lpf1_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_lpf1_get_heap_size(p_config &C.ma_lpf1_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn lpf1_init(p_config &C.ma_lpf1_config, p_l_p_f &C.ma_lpf1) Result {
-	return C.ma_lpf1_init(p_config, p_l_p_f)
+pub fn lpf1_get_heap_size(p_config &C.ma_lpf1_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_lpf1_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_lpf1_init_preallocated(const ma_lpf1_config* pConfig, void* pHeap, ma_lpf1* pLPF);
+fn C.ma_lpf1_init_preallocated(p_config &C.ma_lpf1_config, p_heap voidptr, p_l_p_f &C.ma_lpf1) Result
+[inline]
+pub fn lpf1_init_preallocated(p_config &C.ma_lpf1_config, p_heap voidptr, p_l_p_f &C.ma_lpf1) Result {
+	return C.ma_lpf1_init_preallocated(p_config, p_heap, p_l_p_f)
+}
+
+// MA_API ma_result ma_lpf1_init(const ma_lpf1_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_lpf1* pLPF);
+fn C.ma_lpf1_init(p_config &C.ma_lpf1_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf1) Result
+[inline]
+pub fn lpf1_init(p_config &C.ma_lpf1_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf1) Result {
+	return C.ma_lpf1_init(p_config, p_allocation_callbacks, p_l_p_f)
+}
+
+// MA_API void ma_lpf1_uninit(ma_lpf1* pLPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_lpf1_uninit(p_l_p_f &C.ma_lpf1, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn lpf1_uninit(p_l_p_f &C.ma_lpf1, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_lpf1_uninit(p_l_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_lpf1_reinit(const ma_lpf1_config* pConfig, ma_lpf1* pLPF);
@@ -265,11 +307,32 @@ pub fn lpf1_get_latency(p_l_p_f &C.ma_lpf1) u32 {
 	return C.ma_lpf1_get_latency(p_l_p_f)
 }
 
-// MA_API ma_result ma_lpf2_init(const ma_lpf2_config* pConfig, ma_lpf2* pLPF);
-fn C.ma_lpf2_init(p_config &C.ma_lpf2_config, p_l_p_f &C.ma_lpf2) Result
+// MA_API ma_result ma_lpf2_get_heap_size(const ma_lpf2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_lpf2_get_heap_size(p_config &C.ma_lpf2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn lpf2_init(p_config &C.ma_lpf2_config, p_l_p_f &C.ma_lpf2) Result {
-	return C.ma_lpf2_init(p_config, p_l_p_f)
+pub fn lpf2_get_heap_size(p_config &C.ma_lpf2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_lpf2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_lpf2_init_preallocated(const ma_lpf2_config* pConfig, void* pHeap, ma_lpf2* pHPF);
+fn C.ma_lpf2_init_preallocated(p_config &C.ma_lpf2_config, p_heap voidptr, p_h_p_f &C.ma_lpf2) Result
+[inline]
+pub fn lpf2_init_preallocated(p_config &C.ma_lpf2_config, p_heap voidptr, p_h_p_f &C.ma_lpf2) Result {
+	return C.ma_lpf2_init_preallocated(p_config, p_heap, p_h_p_f)
+}
+
+// MA_API ma_result ma_lpf2_init(const ma_lpf2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_lpf2* pLPF);
+fn C.ma_lpf2_init(p_config &C.ma_lpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf2) Result
+[inline]
+pub fn lpf2_init(p_config &C.ma_lpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf2) Result {
+	return C.ma_lpf2_init(p_config, p_allocation_callbacks, p_l_p_f)
+}
+
+// MA_API void ma_lpf2_uninit(ma_lpf2* pLPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_lpf2_uninit(p_l_p_f &C.ma_lpf2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn lpf2_uninit(p_l_p_f &C.ma_lpf2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_lpf2_uninit(p_l_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_lpf2_reinit(const ma_lpf2_config* pConfig, ma_lpf2* pLPF);
@@ -300,11 +363,32 @@ pub fn lpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 	return C.ma_lpf_config_init(format, channels, sample_rate, cutoff_frequency, order)
 }
 
-// MA_API ma_result ma_lpf_init(const ma_lpf_config* pConfig, ma_lpf* pLPF);
-fn C.ma_lpf_init(p_config &C.ma_lpf_config, p_l_p_f &C.ma_lpf) Result
+// MA_API ma_result ma_lpf_get_heap_size(const ma_lpf_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_lpf_get_heap_size(p_config &C.ma_lpf_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn lpf_init(p_config &C.ma_lpf_config, p_l_p_f &C.ma_lpf) Result {
-	return C.ma_lpf_init(p_config, p_l_p_f)
+pub fn lpf_get_heap_size(p_config &C.ma_lpf_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_lpf_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_lpf_init_preallocated(const ma_lpf_config* pConfig, void* pHeap, ma_lpf* pLPF);
+fn C.ma_lpf_init_preallocated(p_config &C.ma_lpf_config, p_heap voidptr, p_l_p_f &C.ma_lpf) Result
+[inline]
+pub fn lpf_init_preallocated(p_config &C.ma_lpf_config, p_heap voidptr, p_l_p_f &C.ma_lpf) Result {
+	return C.ma_lpf_init_preallocated(p_config, p_heap, p_l_p_f)
+}
+
+// MA_API ma_result ma_lpf_init(const ma_lpf_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_lpf* pLPF);
+fn C.ma_lpf_init(p_config &C.ma_lpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf) Result
+[inline]
+pub fn lpf_init(p_config &C.ma_lpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_l_p_f &C.ma_lpf) Result {
+	return C.ma_lpf_init(p_config, p_allocation_callbacks, p_l_p_f)
+}
+
+// MA_API void ma_lpf_uninit(ma_lpf* pLPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_lpf_uninit(p_l_p_f &C.ma_lpf, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn lpf_uninit(p_l_p_f &C.ma_lpf, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_lpf_uninit(p_l_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_lpf_reinit(const ma_lpf_config* pConfig, ma_lpf* pLPF);
@@ -342,11 +426,32 @@ pub fn hpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 	return C.ma_hpf2_config_init(format, channels, sample_rate, cutoff_frequency, q)
 }
 
-// MA_API ma_result ma_hpf1_init(const ma_hpf1_config* pConfig, ma_hpf1* pHPF);
-fn C.ma_hpf1_init(p_config &C.ma_hpf1_config, p_h_p_f &C.ma_hpf1) Result
+// MA_API ma_result ma_hpf1_get_heap_size(const ma_hpf1_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_hpf1_get_heap_size(p_config &C.ma_hpf1_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn hpf1_init(p_config &C.ma_hpf1_config, p_h_p_f &C.ma_hpf1) Result {
-	return C.ma_hpf1_init(p_config, p_h_p_f)
+pub fn hpf1_get_heap_size(p_config &C.ma_hpf1_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_hpf1_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_hpf1_init_preallocated(const ma_hpf1_config* pConfig, void* pHeap, ma_hpf1* pLPF);
+fn C.ma_hpf1_init_preallocated(p_config &C.ma_hpf1_config, p_heap voidptr, p_l_p_f &C.ma_hpf1) Result
+[inline]
+pub fn hpf1_init_preallocated(p_config &C.ma_hpf1_config, p_heap voidptr, p_l_p_f &C.ma_hpf1) Result {
+	return C.ma_hpf1_init_preallocated(p_config, p_heap, p_l_p_f)
+}
+
+// MA_API ma_result ma_hpf1_init(const ma_hpf1_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hpf1* pHPF);
+fn C.ma_hpf1_init(p_config &C.ma_hpf1_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf1) Result
+[inline]
+pub fn hpf1_init(p_config &C.ma_hpf1_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf1) Result {
+	return C.ma_hpf1_init(p_config, p_allocation_callbacks, p_h_p_f)
+}
+
+// MA_API void ma_hpf1_uninit(ma_hpf1* pHPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hpf1_uninit(p_h_p_f &C.ma_hpf1, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hpf1_uninit(p_h_p_f &C.ma_hpf1, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hpf1_uninit(p_h_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_hpf1_reinit(const ma_hpf1_config* pConfig, ma_hpf1* pHPF);
@@ -370,11 +475,32 @@ pub fn hpf1_get_latency(p_h_p_f &C.ma_hpf1) u32 {
 	return C.ma_hpf1_get_latency(p_h_p_f)
 }
 
-// MA_API ma_result ma_hpf2_init(const ma_hpf2_config* pConfig, ma_hpf2* pHPF);
-fn C.ma_hpf2_init(p_config &C.ma_hpf2_config, p_h_p_f &C.ma_hpf2) Result
+// MA_API ma_result ma_hpf2_get_heap_size(const ma_hpf2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_hpf2_get_heap_size(p_config &C.ma_hpf2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn hpf2_init(p_config &C.ma_hpf2_config, p_h_p_f &C.ma_hpf2) Result {
-	return C.ma_hpf2_init(p_config, p_h_p_f)
+pub fn hpf2_get_heap_size(p_config &C.ma_hpf2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_hpf2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_hpf2_init_preallocated(const ma_hpf2_config* pConfig, void* pHeap, ma_hpf2* pHPF);
+fn C.ma_hpf2_init_preallocated(p_config &C.ma_hpf2_config, p_heap voidptr, p_h_p_f &C.ma_hpf2) Result
+[inline]
+pub fn hpf2_init_preallocated(p_config &C.ma_hpf2_config, p_heap voidptr, p_h_p_f &C.ma_hpf2) Result {
+	return C.ma_hpf2_init_preallocated(p_config, p_heap, p_h_p_f)
+}
+
+// MA_API ma_result ma_hpf2_init(const ma_hpf2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hpf2* pHPF);
+fn C.ma_hpf2_init(p_config &C.ma_hpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf2) Result
+[inline]
+pub fn hpf2_init(p_config &C.ma_hpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf2) Result {
+	return C.ma_hpf2_init(p_config, p_allocation_callbacks, p_h_p_f)
+}
+
+// MA_API void ma_hpf2_uninit(ma_hpf2* pHPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hpf2_uninit(p_h_p_f &C.ma_hpf2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hpf2_uninit(p_h_p_f &C.ma_hpf2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hpf2_uninit(p_h_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_hpf2_reinit(const ma_hpf2_config* pConfig, ma_hpf2* pHPF);
@@ -405,11 +531,32 @@ pub fn hpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 	return C.ma_hpf_config_init(format, channels, sample_rate, cutoff_frequency, order)
 }
 
-// MA_API ma_result ma_hpf_init(const ma_hpf_config* pConfig, ma_hpf* pHPF);
-fn C.ma_hpf_init(p_config &C.ma_hpf_config, p_h_p_f &C.ma_hpf) Result
+// MA_API ma_result ma_hpf_get_heap_size(const ma_hpf_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_hpf_get_heap_size(p_config &C.ma_hpf_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn hpf_init(p_config &C.ma_hpf_config, p_h_p_f &C.ma_hpf) Result {
-	return C.ma_hpf_init(p_config, p_h_p_f)
+pub fn hpf_get_heap_size(p_config &C.ma_hpf_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_hpf_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_hpf_init_preallocated(const ma_hpf_config* pConfig, void* pHeap, ma_hpf* pLPF);
+fn C.ma_hpf_init_preallocated(p_config &C.ma_hpf_config, p_heap voidptr, p_l_p_f &C.ma_hpf) Result
+[inline]
+pub fn hpf_init_preallocated(p_config &C.ma_hpf_config, p_heap voidptr, p_l_p_f &C.ma_hpf) Result {
+	return C.ma_hpf_init_preallocated(p_config, p_heap, p_l_p_f)
+}
+
+// MA_API ma_result ma_hpf_init(const ma_hpf_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hpf* pHPF);
+fn C.ma_hpf_init(p_config &C.ma_hpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf) Result
+[inline]
+pub fn hpf_init(p_config &C.ma_hpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_h_p_f &C.ma_hpf) Result {
+	return C.ma_hpf_init(p_config, p_allocation_callbacks, p_h_p_f)
+}
+
+// MA_API void ma_hpf_uninit(ma_hpf* pHPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hpf_uninit(p_h_p_f &C.ma_hpf, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hpf_uninit(p_h_p_f &C.ma_hpf, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hpf_uninit(p_h_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_hpf_reinit(const ma_hpf_config* pConfig, ma_hpf* pHPF);
@@ -440,11 +587,32 @@ pub fn bpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 	return C.ma_bpf2_config_init(format, channels, sample_rate, cutoff_frequency, q)
 }
 
-// MA_API ma_result ma_bpf2_init(const ma_bpf2_config* pConfig, ma_bpf2* pBPF);
-fn C.ma_bpf2_init(p_config &C.ma_bpf2_config, p_b_p_f &C.ma_bpf2) Result
+// MA_API ma_result ma_bpf2_get_heap_size(const ma_bpf2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_bpf2_get_heap_size(p_config &C.ma_bpf2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn bpf2_init(p_config &C.ma_bpf2_config, p_b_p_f &C.ma_bpf2) Result {
-	return C.ma_bpf2_init(p_config, p_b_p_f)
+pub fn bpf2_get_heap_size(p_config &C.ma_bpf2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_bpf2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_bpf2_init_preallocated(const ma_bpf2_config* pConfig, void* pHeap, ma_bpf2* pBPF);
+fn C.ma_bpf2_init_preallocated(p_config &C.ma_bpf2_config, p_heap voidptr, p_b_p_f &C.ma_bpf2) Result
+[inline]
+pub fn bpf2_init_preallocated(p_config &C.ma_bpf2_config, p_heap voidptr, p_b_p_f &C.ma_bpf2) Result {
+	return C.ma_bpf2_init_preallocated(p_config, p_heap, p_b_p_f)
+}
+
+// MA_API ma_result ma_bpf2_init(const ma_bpf2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_bpf2* pBPF);
+fn C.ma_bpf2_init(p_config &C.ma_bpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_p_f &C.ma_bpf2) Result
+[inline]
+pub fn bpf2_init(p_config &C.ma_bpf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_p_f &C.ma_bpf2) Result {
+	return C.ma_bpf2_init(p_config, p_allocation_callbacks, p_b_p_f)
+}
+
+// MA_API void ma_bpf2_uninit(ma_bpf2* pBPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_bpf2_uninit(p_b_p_f &C.ma_bpf2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn bpf2_uninit(p_b_p_f &C.ma_bpf2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_bpf2_uninit(p_b_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_bpf2_reinit(const ma_bpf2_config* pConfig, ma_bpf2* pBPF);
@@ -475,11 +643,32 @@ pub fn bpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 	return C.ma_bpf_config_init(format, channels, sample_rate, cutoff_frequency, order)
 }
 
-// MA_API ma_result ma_bpf_init(const ma_bpf_config* pConfig, ma_bpf* pBPF);
-fn C.ma_bpf_init(p_config &C.ma_bpf_config, p_b_p_f &C.ma_bpf) Result
+// MA_API ma_result ma_bpf_get_heap_size(const ma_bpf_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_bpf_get_heap_size(p_config &C.ma_bpf_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn bpf_init(p_config &C.ma_bpf_config, p_b_p_f &C.ma_bpf) Result {
-	return C.ma_bpf_init(p_config, p_b_p_f)
+pub fn bpf_get_heap_size(p_config &C.ma_bpf_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_bpf_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_bpf_init_preallocated(const ma_bpf_config* pConfig, void* pHeap, ma_bpf* pBPF);
+fn C.ma_bpf_init_preallocated(p_config &C.ma_bpf_config, p_heap voidptr, p_b_p_f &C.ma_bpf) Result
+[inline]
+pub fn bpf_init_preallocated(p_config &C.ma_bpf_config, p_heap voidptr, p_b_p_f &C.ma_bpf) Result {
+	return C.ma_bpf_init_preallocated(p_config, p_heap, p_b_p_f)
+}
+
+// MA_API ma_result ma_bpf_init(const ma_bpf_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_bpf* pBPF);
+fn C.ma_bpf_init(p_config &C.ma_bpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_p_f &C.ma_bpf) Result
+[inline]
+pub fn bpf_init(p_config &C.ma_bpf_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_b_p_f &C.ma_bpf) Result {
+	return C.ma_bpf_init(p_config, p_allocation_callbacks, p_b_p_f)
+}
+
+// MA_API void ma_bpf_uninit(ma_bpf* pBPF, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_bpf_uninit(p_b_p_f &C.ma_bpf, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn bpf_uninit(p_b_p_f &C.ma_bpf, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_bpf_uninit(p_b_p_f, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_bpf_reinit(const ma_bpf_config* pConfig, ma_bpf* pBPF);
@@ -510,11 +699,32 @@ pub fn notch2_config_init(format Format, channels u32, sample_rate u32, q f64, f
 	return C.ma_notch2_config_init(format, channels, sample_rate, q, frequency)
 }
 
-// MA_API ma_result ma_notch2_init(const ma_notch2_config* pConfig, ma_notch2* pFilter);
-fn C.ma_notch2_init(p_config &C.ma_notch2_config, p_filter &C.ma_notch2) Result
+// MA_API ma_result ma_notch2_get_heap_size(const ma_notch2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_notch2_get_heap_size(p_config &C.ma_notch2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn notch2_init(p_config &C.ma_notch2_config, p_filter &C.ma_notch2) Result {
-	return C.ma_notch2_init(p_config, p_filter)
+pub fn notch2_get_heap_size(p_config &C.ma_notch2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_notch2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_notch2_init_preallocated(const ma_notch2_config* pConfig, void* pHeap, ma_notch2* pFilter);
+fn C.ma_notch2_init_preallocated(p_config &C.ma_notch2_config, p_heap voidptr, p_filter &C.ma_notch2) Result
+[inline]
+pub fn notch2_init_preallocated(p_config &C.ma_notch2_config, p_heap voidptr, p_filter &C.ma_notch2) Result {
+	return C.ma_notch2_init_preallocated(p_config, p_heap, p_filter)
+}
+
+// MA_API ma_result ma_notch2_init(const ma_notch2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_notch2* pFilter);
+fn C.ma_notch2_init(p_config &C.ma_notch2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_notch2) Result
+[inline]
+pub fn notch2_init(p_config &C.ma_notch2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_notch2) Result {
+	return C.ma_notch2_init(p_config, p_allocation_callbacks, p_filter)
+}
+
+// MA_API void ma_notch2_uninit(ma_notch2* pFilter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_notch2_uninit(p_filter &C.ma_notch2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn notch2_uninit(p_filter &C.ma_notch2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_notch2_uninit(p_filter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_notch2_reinit(const ma_notch2_config* pConfig, ma_notch2* pFilter);
@@ -545,11 +755,32 @@ pub fn peak2_config_init(format Format, channels u32, sample_rate u32, gain_d_b 
 	return C.ma_peak2_config_init(format, channels, sample_rate, gain_d_b, q, frequency)
 }
 
-// MA_API ma_result ma_peak2_init(const ma_peak2_config* pConfig, ma_peak2* pFilter);
-fn C.ma_peak2_init(p_config &C.ma_peak2_config, p_filter &C.ma_peak2) Result
+// MA_API ma_result ma_peak2_get_heap_size(const ma_peak2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_peak2_get_heap_size(p_config &C.ma_peak2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn peak2_init(p_config &C.ma_peak2_config, p_filter &C.ma_peak2) Result {
-	return C.ma_peak2_init(p_config, p_filter)
+pub fn peak2_get_heap_size(p_config &C.ma_peak2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_peak2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_peak2_init_preallocated(const ma_peak2_config* pConfig, void* pHeap, ma_peak2* pFilter);
+fn C.ma_peak2_init_preallocated(p_config &C.ma_peak2_config, p_heap voidptr, p_filter &C.ma_peak2) Result
+[inline]
+pub fn peak2_init_preallocated(p_config &C.ma_peak2_config, p_heap voidptr, p_filter &C.ma_peak2) Result {
+	return C.ma_peak2_init_preallocated(p_config, p_heap, p_filter)
+}
+
+// MA_API ma_result ma_peak2_init(const ma_peak2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_peak2* pFilter);
+fn C.ma_peak2_init(p_config &C.ma_peak2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_peak2) Result
+[inline]
+pub fn peak2_init(p_config &C.ma_peak2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_peak2) Result {
+	return C.ma_peak2_init(p_config, p_allocation_callbacks, p_filter)
+}
+
+// MA_API void ma_peak2_uninit(ma_peak2* pFilter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_peak2_uninit(p_filter &C.ma_peak2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn peak2_uninit(p_filter &C.ma_peak2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_peak2_uninit(p_filter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_peak2_reinit(const ma_peak2_config* pConfig, ma_peak2* pFilter);
@@ -581,11 +812,32 @@ pub fn loshelf2_config_init(format Format, channels u32, sample_rate u32, gain_d
 		frequency)
 }
 
-// MA_API ma_result ma_loshelf2_init(const ma_loshelf2_config* pConfig, ma_loshelf2* pFilter);
-fn C.ma_loshelf2_init(p_config &C.ma_loshelf2_config, p_filter &C.ma_loshelf2) Result
+// MA_API ma_result ma_loshelf2_get_heap_size(const ma_loshelf2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_loshelf2_get_heap_size(p_config &C.ma_loshelf2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn loshelf2_init(p_config &C.ma_loshelf2_config, p_filter &C.ma_loshelf2) Result {
-	return C.ma_loshelf2_init(p_config, p_filter)
+pub fn loshelf2_get_heap_size(p_config &C.ma_loshelf2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_loshelf2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_loshelf2_init_preallocated(const ma_loshelf2_config* pConfig, void* pHeap, ma_loshelf2* pFilter);
+fn C.ma_loshelf2_init_preallocated(p_config &C.ma_loshelf2_config, p_heap voidptr, p_filter &C.ma_loshelf2) Result
+[inline]
+pub fn loshelf2_init_preallocated(p_config &C.ma_loshelf2_config, p_heap voidptr, p_filter &C.ma_loshelf2) Result {
+	return C.ma_loshelf2_init_preallocated(p_config, p_heap, p_filter)
+}
+
+// MA_API ma_result ma_loshelf2_init(const ma_loshelf2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_loshelf2* pFilter);
+fn C.ma_loshelf2_init(p_config &C.ma_loshelf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_loshelf2) Result
+[inline]
+pub fn loshelf2_init(p_config &C.ma_loshelf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_loshelf2) Result {
+	return C.ma_loshelf2_init(p_config, p_allocation_callbacks, p_filter)
+}
+
+// MA_API void ma_loshelf2_uninit(ma_loshelf2* pFilter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_loshelf2_uninit(p_filter &C.ma_loshelf2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn loshelf2_uninit(p_filter &C.ma_loshelf2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_loshelf2_uninit(p_filter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_loshelf2_reinit(const ma_loshelf2_config* pConfig, ma_loshelf2* pFilter);
@@ -617,11 +869,32 @@ pub fn hishelf2_config_init(format Format, channels u32, sample_rate u32, gain_d
 		frequency)
 }
 
-// MA_API ma_result ma_hishelf2_init(const ma_hishelf2_config* pConfig, ma_hishelf2* pFilter);
-fn C.ma_hishelf2_init(p_config &C.ma_hishelf2_config, p_filter &C.ma_hishelf2) Result
+// MA_API ma_result ma_hishelf2_get_heap_size(const ma_hishelf2_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_hishelf2_get_heap_size(p_config &C.ma_hishelf2_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn hishelf2_init(p_config &C.ma_hishelf2_config, p_filter &C.ma_hishelf2) Result {
-	return C.ma_hishelf2_init(p_config, p_filter)
+pub fn hishelf2_get_heap_size(p_config &C.ma_hishelf2_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_hishelf2_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_hishelf2_init_preallocated(const ma_hishelf2_config* pConfig, void* pHeap, ma_hishelf2* pFilter);
+fn C.ma_hishelf2_init_preallocated(p_config &C.ma_hishelf2_config, p_heap voidptr, p_filter &C.ma_hishelf2) Result
+[inline]
+pub fn hishelf2_init_preallocated(p_config &C.ma_hishelf2_config, p_heap voidptr, p_filter &C.ma_hishelf2) Result {
+	return C.ma_hishelf2_init_preallocated(p_config, p_heap, p_filter)
+}
+
+// MA_API ma_result ma_hishelf2_init(const ma_hishelf2_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hishelf2* pFilter);
+fn C.ma_hishelf2_init(p_config &C.ma_hishelf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_hishelf2) Result
+[inline]
+pub fn hishelf2_init(p_config &C.ma_hishelf2_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_filter &C.ma_hishelf2) Result {
+	return C.ma_hishelf2_init(p_config, p_allocation_callbacks, p_filter)
+}
+
+// MA_API void ma_hishelf2_uninit(ma_hishelf2* pFilter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hishelf2_uninit(p_filter &C.ma_hishelf2, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hishelf2_uninit(p_filter &C.ma_hishelf2, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hishelf2_uninit(p_filter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_hishelf2_reinit(const ma_hishelf2_config* pConfig, ma_hishelf2* pFilter);
@@ -645,6 +918,614 @@ pub fn hishelf2_get_latency(p_filter &C.ma_hishelf2) u32 {
 	return C.ma_hishelf2_get_latency(p_filter)
 }
 
+// MA_API ma_delay_config ma_delay_config_init(ma_uint32 channels, ma_uint32 sampleRate, ma_uint32 delayInFrames, float decay);
+fn C.ma_delay_config_init(channels u32, sample_rate u32, delay_in_frames u32, decay f32) C.ma_delay_config
+[inline]
+pub fn delay_config_init(channels u32, sample_rate u32, delay_in_frames u32, decay f32) C.ma_delay_config {
+	return C.ma_delay_config_init(channels, sample_rate, delay_in_frames, decay)
+}
+
+// MA_API ma_result ma_delay_init(const ma_delay_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_delay* pDelay);
+fn C.ma_delay_init(p_config &C.ma_delay_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_delay &C.ma_delay) Result
+[inline]
+pub fn delay_init(p_config &C.ma_delay_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_delay &C.ma_delay) Result {
+	return C.ma_delay_init(p_config, p_allocation_callbacks, p_delay)
+}
+
+// MA_API void ma_delay_uninit(ma_delay* pDelay, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_delay_uninit(p_delay &C.ma_delay, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn delay_uninit(p_delay &C.ma_delay, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_delay_uninit(p_delay, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_delay_process_pcm_frames(ma_delay* pDelay, void* pFramesOut, const void* pFramesIn, ma_uint32 frameCount);
+fn C.ma_delay_process_pcm_frames(p_delay &C.ma_delay, p_frames_out voidptr, p_frames_in voidptr, frame_count u32) Result
+[inline]
+pub fn delay_process_pcm_frames(p_delay &C.ma_delay, p_frames_out voidptr, p_frames_in voidptr, frame_count u32) Result {
+	return C.ma_delay_process_pcm_frames(p_delay, p_frames_out, p_frames_in, frame_count)
+}
+
+// MA_API void ma_delay_set_wet(ma_delay* pDelay, float value);
+fn C.ma_delay_set_wet(p_delay &C.ma_delay, value f32)
+[inline]
+pub fn delay_set_wet(p_delay &C.ma_delay, value f32) {
+	C.ma_delay_set_wet(p_delay, value)
+}
+
+// MA_API float ma_delay_get_wet(const ma_delay* pDelay);
+fn C.ma_delay_get_wet(p_delay &C.ma_delay) f32
+[inline]
+pub fn delay_get_wet(p_delay &C.ma_delay) f32 {
+	return C.ma_delay_get_wet(p_delay)
+}
+
+// MA_API void ma_delay_set_dry(ma_delay* pDelay, float value);
+fn C.ma_delay_set_dry(p_delay &C.ma_delay, value f32)
+[inline]
+pub fn delay_set_dry(p_delay &C.ma_delay, value f32) {
+	C.ma_delay_set_dry(p_delay, value)
+}
+
+// MA_API float ma_delay_get_dry(const ma_delay* pDelay);
+fn C.ma_delay_get_dry(p_delay &C.ma_delay) f32
+[inline]
+pub fn delay_get_dry(p_delay &C.ma_delay) f32 {
+	return C.ma_delay_get_dry(p_delay)
+}
+
+// MA_API void ma_delay_set_decay(ma_delay* pDelay, float value);
+fn C.ma_delay_set_decay(p_delay &C.ma_delay, value f32)
+[inline]
+pub fn delay_set_decay(p_delay &C.ma_delay, value f32) {
+	C.ma_delay_set_decay(p_delay, value)
+}
+
+// MA_API float ma_delay_get_decay(const ma_delay* pDelay);
+fn C.ma_delay_get_decay(p_delay &C.ma_delay) f32
+[inline]
+pub fn delay_get_decay(p_delay &C.ma_delay) f32 {
+	return C.ma_delay_get_decay(p_delay)
+}
+
+// MA_API ma_gainer_config ma_gainer_config_init(ma_uint32 channels, ma_uint32 smoothTimeInFrames);
+fn C.ma_gainer_config_init(channels u32, smooth_time_in_frames u32) C.ma_gainer_config
+[inline]
+pub fn gainer_config_init(channels u32, smooth_time_in_frames u32) C.ma_gainer_config {
+	return C.ma_gainer_config_init(channels, smooth_time_in_frames)
+}
+
+// MA_API ma_result ma_gainer_get_heap_size(const ma_gainer_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_gainer_get_heap_size(p_config &C.ma_gainer_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn gainer_get_heap_size(p_config &C.ma_gainer_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_gainer_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_gainer_init_preallocated(const ma_gainer_config* pConfig, void* pHeap, ma_gainer* pGainer);
+fn C.ma_gainer_init_preallocated(p_config &C.ma_gainer_config, p_heap voidptr, p_gainer &C.ma_gainer) Result
+[inline]
+pub fn gainer_init_preallocated(p_config &C.ma_gainer_config, p_heap voidptr, p_gainer &C.ma_gainer) Result {
+	return C.ma_gainer_init_preallocated(p_config, p_heap, p_gainer)
+}
+
+// MA_API ma_result ma_gainer_init(const ma_gainer_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_gainer* pGainer);
+fn C.ma_gainer_init(p_config &C.ma_gainer_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_gainer &C.ma_gainer) Result
+[inline]
+pub fn gainer_init(p_config &C.ma_gainer_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_gainer &C.ma_gainer) Result {
+	return C.ma_gainer_init(p_config, p_allocation_callbacks, p_gainer)
+}
+
+// MA_API void ma_gainer_uninit(ma_gainer* pGainer, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_gainer_uninit(p_gainer &C.ma_gainer, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn gainer_uninit(p_gainer &C.ma_gainer, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_gainer_uninit(p_gainer, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_gainer_process_pcm_frames(ma_gainer* pGainer, void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount);
+fn C.ma_gainer_process_pcm_frames(p_gainer &C.ma_gainer, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result
+[inline]
+pub fn gainer_process_pcm_frames(p_gainer &C.ma_gainer, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result {
+	return C.ma_gainer_process_pcm_frames(p_gainer, p_frames_out, p_frames_in, frame_count)
+}
+
+// MA_API ma_result ma_gainer_set_gain(ma_gainer* pGainer, float newGain);
+fn C.ma_gainer_set_gain(p_gainer &C.ma_gainer, new_gain f32) Result
+[inline]
+pub fn gainer_set_gain(p_gainer &C.ma_gainer, new_gain f32) Result {
+	return C.ma_gainer_set_gain(p_gainer, new_gain)
+}
+
+// MA_API ma_result ma_gainer_set_gains(ma_gainer* pGainer, float* pNewGains);
+fn C.ma_gainer_set_gains(p_gainer &C.ma_gainer, p_new_gains &f32) Result
+[inline]
+pub fn gainer_set_gains(p_gainer &C.ma_gainer, p_new_gains &f32) Result {
+	return C.ma_gainer_set_gains(p_gainer, p_new_gains)
+}
+
+// MA_API ma_panner_config ma_panner_config_init(ma_format format, ma_uint32 channels);
+fn C.ma_panner_config_init(format Format, channels u32) C.ma_panner_config
+[inline]
+pub fn panner_config_init(format Format, channels u32) C.ma_panner_config {
+	return C.ma_panner_config_init(format, channels)
+}
+
+// MA_API ma_result ma_panner_init(const ma_panner_config* pConfig, ma_panner* pPanner);
+fn C.ma_panner_init(p_config &C.ma_panner_config, p_panner &C.ma_panner) Result
+[inline]
+pub fn panner_init(p_config &C.ma_panner_config, p_panner &C.ma_panner) Result {
+	return C.ma_panner_init(p_config, p_panner)
+}
+
+// MA_API ma_result ma_panner_process_pcm_frames(ma_panner* pPanner, void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount);
+fn C.ma_panner_process_pcm_frames(p_panner &C.ma_panner, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result
+[inline]
+pub fn panner_process_pcm_frames(p_panner &C.ma_panner, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result {
+	return C.ma_panner_process_pcm_frames(p_panner, p_frames_out, p_frames_in, frame_count)
+}
+
+// MA_API void ma_panner_set_mode(ma_panner* pPanner, ma_pan_mode mode);
+fn C.ma_panner_set_mode(p_panner &C.ma_panner, mode C.ma_pan_mode)
+[inline]
+pub fn panner_set_mode(p_panner &C.ma_panner, mode C.ma_pan_mode) {
+	C.ma_panner_set_mode(p_panner, mode)
+}
+
+// MA_API ma_pan_mode ma_panner_get_mode(const ma_panner* pPanner);
+fn C.ma_panner_get_mode(p_panner &C.ma_panner) C.ma_pan_mode
+[inline]
+pub fn panner_get_mode(p_panner &C.ma_panner) C.ma_pan_mode {
+	return C.ma_panner_get_mode(p_panner)
+}
+
+// MA_API void ma_panner_set_pan(ma_panner* pPanner, float pan);
+fn C.ma_panner_set_pan(p_panner &C.ma_panner, pan f32)
+[inline]
+pub fn panner_set_pan(p_panner &C.ma_panner, pan f32) {
+	C.ma_panner_set_pan(p_panner, pan)
+}
+
+// MA_API float ma_panner_get_pan(const ma_panner* pPanner);
+fn C.ma_panner_get_pan(p_panner &C.ma_panner) f32
+[inline]
+pub fn panner_get_pan(p_panner &C.ma_panner) f32 {
+	return C.ma_panner_get_pan(p_panner)
+}
+
+// MA_API ma_fader_config ma_fader_config_init(ma_format format, ma_uint32 channels, ma_uint32 sampleRate);
+fn C.ma_fader_config_init(format Format, channels u32, sample_rate u32) C.ma_fader_config
+[inline]
+pub fn fader_config_init(format Format, channels u32, sample_rate u32) C.ma_fader_config {
+	return C.ma_fader_config_init(format, channels, sample_rate)
+}
+
+// MA_API ma_result ma_fader_init(const ma_fader_config* pConfig, ma_fader* pFader);
+fn C.ma_fader_init(p_config &C.ma_fader_config, p_fader &C.ma_fader) Result
+[inline]
+pub fn fader_init(p_config &C.ma_fader_config, p_fader &C.ma_fader) Result {
+	return C.ma_fader_init(p_config, p_fader)
+}
+
+// MA_API ma_result ma_fader_process_pcm_frames(ma_fader* pFader, void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount);
+fn C.ma_fader_process_pcm_frames(p_fader &C.ma_fader, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result
+[inline]
+pub fn fader_process_pcm_frames(p_fader &C.ma_fader, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result {
+	return C.ma_fader_process_pcm_frames(p_fader, p_frames_out, p_frames_in, frame_count)
+}
+
+// MA_API void ma_fader_get_data_format(const ma_fader* pFader, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate);
+fn C.ma_fader_get_data_format(p_fader &C.ma_fader, p_format &Format, p_channels &u32, p_sample_rate &u32)
+[inline]
+pub fn fader_get_data_format(p_fader &C.ma_fader, p_format &Format, p_channels &u32, p_sample_rate &u32) {
+	C.ma_fader_get_data_format(p_fader, p_format, p_channels, p_sample_rate)
+}
+
+// MA_API void ma_fader_set_fade(ma_fader* pFader, float volumeBeg, float volumeEnd, ma_uint64 lengthInFrames);
+fn C.ma_fader_set_fade(p_fader &C.ma_fader, volume_beg f32, volume_end f32, length_in_frames u64)
+[inline]
+pub fn fader_set_fade(p_fader &C.ma_fader, volume_beg f32, volume_end f32, length_in_frames u64) {
+	C.ma_fader_set_fade(p_fader, volume_beg, volume_end, length_in_frames)
+}
+
+// MA_API float ma_fader_get_current_volume(ma_fader* pFader);
+fn C.ma_fader_get_current_volume(p_fader &C.ma_fader) f32
+[inline]
+pub fn fader_get_current_volume(p_fader &C.ma_fader) f32 {
+	return C.ma_fader_get_current_volume(p_fader)
+}
+
+// MA_API ma_spatializer_listener_config ma_spatializer_listener_config_init(ma_uint32 channelsOut);
+fn C.ma_spatializer_listener_config_init(channels_out u32) C.ma_spatializer_listener_config
+[inline]
+pub fn spatializer_listener_config_init(channels_out u32) C.ma_spatializer_listener_config {
+	return C.ma_spatializer_listener_config_init(channels_out)
+}
+
+// MA_API ma_result ma_spatializer_listener_get_heap_size(const ma_spatializer_listener_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_spatializer_listener_get_heap_size(p_config &C.ma_spatializer_listener_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn spatializer_listener_get_heap_size(p_config &C.ma_spatializer_listener_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_spatializer_listener_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_spatializer_listener_init_preallocated(const ma_spatializer_listener_config* pConfig, void* pHeap, ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_init_preallocated(p_config &C.ma_spatializer_listener_config, p_heap voidptr, p_listener &C.ma_spatializer_listener) Result
+[inline]
+pub fn spatializer_listener_init_preallocated(p_config &C.ma_spatializer_listener_config, p_heap voidptr, p_listener &C.ma_spatializer_listener) Result {
+	return C.ma_spatializer_listener_init_preallocated(p_config, p_heap, p_listener)
+}
+
+// MA_API ma_result ma_spatializer_listener_init(const ma_spatializer_listener_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_init(p_config &C.ma_spatializer_listener_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_listener &C.ma_spatializer_listener) Result
+[inline]
+pub fn spatializer_listener_init(p_config &C.ma_spatializer_listener_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_listener &C.ma_spatializer_listener) Result {
+	return C.ma_spatializer_listener_init(p_config, p_allocation_callbacks, p_listener)
+}
+
+// MA_API void ma_spatializer_listener_uninit(ma_spatializer_listener* pListener, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_spatializer_listener_uninit(p_listener &C.ma_spatializer_listener, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn spatializer_listener_uninit(p_listener &C.ma_spatializer_listener, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_spatializer_listener_uninit(p_listener, p_allocation_callbacks)
+}
+
+// MA_API ma_channel* ma_spatializer_listener_get_channel_map(ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_channel_map(p_listener &C.ma_spatializer_listener) &C.ma_channel
+[inline]
+pub fn spatializer_listener_get_channel_map(p_listener &C.ma_spatializer_listener) &C.ma_channel {
+	return C.ma_spatializer_listener_get_channel_map(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_cone(ma_spatializer_listener* pListener, float innerAngleInRadians, float outerAngleInRadians, float outerGain);
+fn C.ma_spatializer_listener_set_cone(p_listener &C.ma_spatializer_listener, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32)
+[inline]
+pub fn spatializer_listener_set_cone(p_listener &C.ma_spatializer_listener, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32) {
+	C.ma_spatializer_listener_set_cone(p_listener, inner_angle_in_radians, outer_angle_in_radians,
+		outer_gain)
+}
+
+// MA_API void ma_spatializer_listener_get_cone(const ma_spatializer_listener* pListener, float* pInnerAngleInRadians, float* pOuterAngleInRadians, float* pOuterGain);
+fn C.ma_spatializer_listener_get_cone(p_listener &C.ma_spatializer_listener, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32)
+[inline]
+pub fn spatializer_listener_get_cone(p_listener &C.ma_spatializer_listener, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32) {
+	C.ma_spatializer_listener_get_cone(p_listener, p_inner_angle_in_radians, p_outer_angle_in_radians,
+		p_outer_gain)
+}
+
+// MA_API void ma_spatializer_listener_set_position(ma_spatializer_listener* pListener, float x, float y, float z);
+fn C.ma_spatializer_listener_set_position(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_listener_set_position(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32) {
+	C.ma_spatializer_listener_set_position(p_listener, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_listener_get_position(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_position(p_listener &C.ma_spatializer_listener) C.ma_vec3f
+[inline]
+pub fn spatializer_listener_get_position(p_listener &C.ma_spatializer_listener) C.ma_vec3f {
+	return C.ma_spatializer_listener_get_position(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_direction(ma_spatializer_listener* pListener, float x, float y, float z);
+fn C.ma_spatializer_listener_set_direction(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_listener_set_direction(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32) {
+	C.ma_spatializer_listener_set_direction(p_listener, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_listener_get_direction(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_direction(p_listener &C.ma_spatializer_listener) C.ma_vec3f
+[inline]
+pub fn spatializer_listener_get_direction(p_listener &C.ma_spatializer_listener) C.ma_vec3f {
+	return C.ma_spatializer_listener_get_direction(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_velocity(ma_spatializer_listener* pListener, float x, float y, float z);
+fn C.ma_spatializer_listener_set_velocity(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_listener_set_velocity(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32) {
+	C.ma_spatializer_listener_set_velocity(p_listener, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_listener_get_velocity(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_velocity(p_listener &C.ma_spatializer_listener) C.ma_vec3f
+[inline]
+pub fn spatializer_listener_get_velocity(p_listener &C.ma_spatializer_listener) C.ma_vec3f {
+	return C.ma_spatializer_listener_get_velocity(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_speed_of_sound(ma_spatializer_listener* pListener, float speedOfSound);
+fn C.ma_spatializer_listener_set_speed_of_sound(p_listener &C.ma_spatializer_listener, speed_of_sound f32)
+[inline]
+pub fn spatializer_listener_set_speed_of_sound(p_listener &C.ma_spatializer_listener, speed_of_sound f32) {
+	C.ma_spatializer_listener_set_speed_of_sound(p_listener, speed_of_sound)
+}
+
+// MA_API float ma_spatializer_listener_get_speed_of_sound(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_speed_of_sound(p_listener &C.ma_spatializer_listener) f32
+[inline]
+pub fn spatializer_listener_get_speed_of_sound(p_listener &C.ma_spatializer_listener) f32 {
+	return C.ma_spatializer_listener_get_speed_of_sound(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_world_up(ma_spatializer_listener* pListener, float x, float y, float z);
+fn C.ma_spatializer_listener_set_world_up(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_listener_set_world_up(p_listener &C.ma_spatializer_listener, x f32, y f32, z f32) {
+	C.ma_spatializer_listener_set_world_up(p_listener, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_listener_get_world_up(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_get_world_up(p_listener &C.ma_spatializer_listener) C.ma_vec3f
+[inline]
+pub fn spatializer_listener_get_world_up(p_listener &C.ma_spatializer_listener) C.ma_vec3f {
+	return C.ma_spatializer_listener_get_world_up(p_listener)
+}
+
+// MA_API void ma_spatializer_listener_set_enabled(ma_spatializer_listener* pListener, ma_bool32 isEnabled);
+fn C.ma_spatializer_listener_set_enabled(p_listener &C.ma_spatializer_listener, is_enabled bool)
+[inline]
+pub fn spatializer_listener_set_enabled(p_listener &C.ma_spatializer_listener, is_enabled bool) {
+	C.ma_spatializer_listener_set_enabled(p_listener, is_enabled)
+}
+
+// MA_API ma_bool32 ma_spatializer_listener_is_enabled(const ma_spatializer_listener* pListener);
+fn C.ma_spatializer_listener_is_enabled(p_listener &C.ma_spatializer_listener) bool
+[inline]
+pub fn spatializer_listener_is_enabled(p_listener &C.ma_spatializer_listener) bool {
+	return C.ma_spatializer_listener_is_enabled(p_listener)
+}
+
+// MA_API ma_spatializer_config ma_spatializer_config_init(ma_uint32 channelsIn, ma_uint32 channelsOut);
+fn C.ma_spatializer_config_init(channels_in u32, channels_out u32) C.ma_spatializer_config
+[inline]
+pub fn spatializer_config_init(channels_in u32, channels_out u32) C.ma_spatializer_config {
+	return C.ma_spatializer_config_init(channels_in, channels_out)
+}
+
+// MA_API ma_result ma_spatializer_get_heap_size(const ma_spatializer_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_spatializer_get_heap_size(p_config &C.ma_spatializer_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn spatializer_get_heap_size(p_config &C.ma_spatializer_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_spatializer_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_spatializer_init_preallocated(const ma_spatializer_config* pConfig, void* pHeap, ma_spatializer* pSpatializer);
+fn C.ma_spatializer_init_preallocated(p_config &C.ma_spatializer_config, p_heap voidptr, p_spatializer &C.ma_spatializer) Result
+[inline]
+pub fn spatializer_init_preallocated(p_config &C.ma_spatializer_config, p_heap voidptr, p_spatializer &C.ma_spatializer) Result {
+	return C.ma_spatializer_init_preallocated(p_config, p_heap, p_spatializer)
+}
+
+// MA_API ma_result ma_spatializer_init(const ma_spatializer_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_spatializer* pSpatializer);
+fn C.ma_spatializer_init(p_config &C.ma_spatializer_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_spatializer &C.ma_spatializer) Result
+[inline]
+pub fn spatializer_init(p_config &C.ma_spatializer_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_spatializer &C.ma_spatializer) Result {
+	return C.ma_spatializer_init(p_config, p_allocation_callbacks, p_spatializer)
+}
+
+// MA_API void ma_spatializer_uninit(ma_spatializer* pSpatializer, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_spatializer_uninit(p_spatializer &C.ma_spatializer, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn spatializer_uninit(p_spatializer &C.ma_spatializer, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_spatializer_uninit(p_spatializer, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer, ma_spatializer_listener* pListener, void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount);
+fn C.ma_spatializer_process_pcm_frames(p_spatializer &C.ma_spatializer, p_listener &C.ma_spatializer_listener, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result
+[inline]
+pub fn spatializer_process_pcm_frames(p_spatializer &C.ma_spatializer, p_listener &C.ma_spatializer_listener, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result {
+	return C.ma_spatializer_process_pcm_frames(p_spatializer, p_listener, p_frames_out,
+		p_frames_in, frame_count)
+}
+
+// MA_API ma_uint32 ma_spatializer_get_input_channels(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_input_channels(p_spatializer &C.ma_spatializer) u32
+[inline]
+pub fn spatializer_get_input_channels(p_spatializer &C.ma_spatializer) u32 {
+	return C.ma_spatializer_get_input_channels(p_spatializer)
+}
+
+// MA_API ma_uint32 ma_spatializer_get_output_channels(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_output_channels(p_spatializer &C.ma_spatializer) u32
+[inline]
+pub fn spatializer_get_output_channels(p_spatializer &C.ma_spatializer) u32 {
+	return C.ma_spatializer_get_output_channels(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_attenuation_model(ma_spatializer* pSpatializer, ma_attenuation_model attenuationModel);
+fn C.ma_spatializer_set_attenuation_model(p_spatializer &C.ma_spatializer, attenuation_model C.ma_attenuation_model)
+[inline]
+pub fn spatializer_set_attenuation_model(p_spatializer &C.ma_spatializer, attenuation_model C.ma_attenuation_model) {
+	C.ma_spatializer_set_attenuation_model(p_spatializer, attenuation_model)
+}
+
+// MA_API ma_attenuation_model ma_spatializer_get_attenuation_model(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_attenuation_model(p_spatializer &C.ma_spatializer) C.ma_attenuation_model
+[inline]
+pub fn spatializer_get_attenuation_model(p_spatializer &C.ma_spatializer) C.ma_attenuation_model {
+	return C.ma_spatializer_get_attenuation_model(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_positioning(ma_spatializer* pSpatializer, ma_positioning positioning);
+fn C.ma_spatializer_set_positioning(p_spatializer &C.ma_spatializer, positioning C.ma_positioning)
+[inline]
+pub fn spatializer_set_positioning(p_spatializer &C.ma_spatializer, positioning C.ma_positioning) {
+	C.ma_spatializer_set_positioning(p_spatializer, positioning)
+}
+
+// MA_API ma_positioning ma_spatializer_get_positioning(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_positioning(p_spatializer &C.ma_spatializer) C.ma_positioning
+[inline]
+pub fn spatializer_get_positioning(p_spatializer &C.ma_spatializer) C.ma_positioning {
+	return C.ma_spatializer_get_positioning(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_rolloff(ma_spatializer* pSpatializer, float rolloff);
+fn C.ma_spatializer_set_rolloff(p_spatializer &C.ma_spatializer, rolloff f32)
+[inline]
+pub fn spatializer_set_rolloff(p_spatializer &C.ma_spatializer, rolloff f32) {
+	C.ma_spatializer_set_rolloff(p_spatializer, rolloff)
+}
+
+// MA_API float ma_spatializer_get_rolloff(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_rolloff(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_rolloff(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_rolloff(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_min_gain(ma_spatializer* pSpatializer, float minGain);
+fn C.ma_spatializer_set_min_gain(p_spatializer &C.ma_spatializer, min_gain f32)
+[inline]
+pub fn spatializer_set_min_gain(p_spatializer &C.ma_spatializer, min_gain f32) {
+	C.ma_spatializer_set_min_gain(p_spatializer, min_gain)
+}
+
+// MA_API float ma_spatializer_get_min_gain(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_min_gain(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_min_gain(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_min_gain(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_max_gain(ma_spatializer* pSpatializer, float maxGain);
+fn C.ma_spatializer_set_max_gain(p_spatializer &C.ma_spatializer, max_gain f32)
+[inline]
+pub fn spatializer_set_max_gain(p_spatializer &C.ma_spatializer, max_gain f32) {
+	C.ma_spatializer_set_max_gain(p_spatializer, max_gain)
+}
+
+// MA_API float ma_spatializer_get_max_gain(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_max_gain(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_max_gain(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_max_gain(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_min_distance(ma_spatializer* pSpatializer, float minDistance);
+fn C.ma_spatializer_set_min_distance(p_spatializer &C.ma_spatializer, min_distance f32)
+[inline]
+pub fn spatializer_set_min_distance(p_spatializer &C.ma_spatializer, min_distance f32) {
+	C.ma_spatializer_set_min_distance(p_spatializer, min_distance)
+}
+
+// MA_API float ma_spatializer_get_min_distance(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_min_distance(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_min_distance(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_min_distance(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_max_distance(ma_spatializer* pSpatializer, float maxDistance);
+fn C.ma_spatializer_set_max_distance(p_spatializer &C.ma_spatializer, max_distance f32)
+[inline]
+pub fn spatializer_set_max_distance(p_spatializer &C.ma_spatializer, max_distance f32) {
+	C.ma_spatializer_set_max_distance(p_spatializer, max_distance)
+}
+
+// MA_API float ma_spatializer_get_max_distance(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_max_distance(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_max_distance(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_max_distance(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_cone(ma_spatializer* pSpatializer, float innerAngleInRadians, float outerAngleInRadians, float outerGain);
+fn C.ma_spatializer_set_cone(p_spatializer &C.ma_spatializer, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32)
+[inline]
+pub fn spatializer_set_cone(p_spatializer &C.ma_spatializer, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32) {
+	C.ma_spatializer_set_cone(p_spatializer, inner_angle_in_radians, outer_angle_in_radians,
+		outer_gain)
+}
+
+// MA_API void ma_spatializer_get_cone(const ma_spatializer* pSpatializer, float* pInnerAngleInRadians, float* pOuterAngleInRadians, float* pOuterGain);
+fn C.ma_spatializer_get_cone(p_spatializer &C.ma_spatializer, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32)
+[inline]
+pub fn spatializer_get_cone(p_spatializer &C.ma_spatializer, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32) {
+	C.ma_spatializer_get_cone(p_spatializer, p_inner_angle_in_radians, p_outer_angle_in_radians,
+		p_outer_gain)
+}
+
+// MA_API void ma_spatializer_set_doppler_factor(ma_spatializer* pSpatializer, float dopplerFactor);
+fn C.ma_spatializer_set_doppler_factor(p_spatializer &C.ma_spatializer, doppler_factor f32)
+[inline]
+pub fn spatializer_set_doppler_factor(p_spatializer &C.ma_spatializer, doppler_factor f32) {
+	C.ma_spatializer_set_doppler_factor(p_spatializer, doppler_factor)
+}
+
+// MA_API float ma_spatializer_get_doppler_factor(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_doppler_factor(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_doppler_factor(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_doppler_factor(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_directional_attenuation_factor(ma_spatializer* pSpatializer, float directionalAttenuationFactor);
+fn C.ma_spatializer_set_directional_attenuation_factor(p_spatializer &C.ma_spatializer, directional_attenuation_factor f32)
+[inline]
+pub fn spatializer_set_directional_attenuation_factor(p_spatializer &C.ma_spatializer, directional_attenuation_factor f32) {
+	C.ma_spatializer_set_directional_attenuation_factor(p_spatializer, directional_attenuation_factor)
+}
+
+// MA_API float ma_spatializer_get_directional_attenuation_factor(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_directional_attenuation_factor(p_spatializer &C.ma_spatializer) f32
+[inline]
+pub fn spatializer_get_directional_attenuation_factor(p_spatializer &C.ma_spatializer) f32 {
+	return C.ma_spatializer_get_directional_attenuation_factor(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_position(ma_spatializer* pSpatializer, float x, float y, float z);
+fn C.ma_spatializer_set_position(p_spatializer &C.ma_spatializer, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_set_position(p_spatializer &C.ma_spatializer, x f32, y f32, z f32) {
+	C.ma_spatializer_set_position(p_spatializer, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_get_position(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_position(p_spatializer &C.ma_spatializer) C.ma_vec3f
+[inline]
+pub fn spatializer_get_position(p_spatializer &C.ma_spatializer) C.ma_vec3f {
+	return C.ma_spatializer_get_position(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_direction(ma_spatializer* pSpatializer, float x, float y, float z);
+fn C.ma_spatializer_set_direction(p_spatializer &C.ma_spatializer, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_set_direction(p_spatializer &C.ma_spatializer, x f32, y f32, z f32) {
+	C.ma_spatializer_set_direction(p_spatializer, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_get_direction(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_direction(p_spatializer &C.ma_spatializer) C.ma_vec3f
+[inline]
+pub fn spatializer_get_direction(p_spatializer &C.ma_spatializer) C.ma_vec3f {
+	return C.ma_spatializer_get_direction(p_spatializer)
+}
+
+// MA_API void ma_spatializer_set_velocity(ma_spatializer* pSpatializer, float x, float y, float z);
+fn C.ma_spatializer_set_velocity(p_spatializer &C.ma_spatializer, x f32, y f32, z f32)
+[inline]
+pub fn spatializer_set_velocity(p_spatializer &C.ma_spatializer, x f32, y f32, z f32) {
+	C.ma_spatializer_set_velocity(p_spatializer, x, y, z)
+}
+
+// MA_API ma_vec3f ma_spatializer_get_velocity(const ma_spatializer* pSpatializer);
+fn C.ma_spatializer_get_velocity(p_spatializer &C.ma_spatializer) C.ma_vec3f
+[inline]
+pub fn spatializer_get_velocity(p_spatializer &C.ma_spatializer) C.ma_vec3f {
+	return C.ma_spatializer_get_velocity(p_spatializer)
+}
+
+// MA_API void ma_spatializer_get_relative_position_and_direction(const ma_spatializer* pSpatializer, const ma_spatializer_listener* pListener, ma_vec3f* pRelativePos, ma_vec3f* pRelativeDir);
+fn C.ma_spatializer_get_relative_position_and_direction(p_spatializer &C.ma_spatializer, p_listener &C.ma_spatializer_listener, p_relative_pos &C.ma_vec3f, p_relative_dir &C.ma_vec3f)
+[inline]
+pub fn spatializer_get_relative_position_and_direction(p_spatializer &C.ma_spatializer, p_listener &C.ma_spatializer_listener, p_relative_pos &C.ma_vec3f, p_relative_dir &C.ma_vec3f) {
+	C.ma_spatializer_get_relative_position_and_direction(p_spatializer, p_listener, p_relative_pos,
+		p_relative_dir)
+}
+
 // MA_API ma_linear_resampler_config ma_linear_resampler_config_init(ma_format format, ma_uint32 channels, ma_uint32 sampleRateIn, ma_uint32 sampleRateOut);
 fn C.ma_linear_resampler_config_init(format Format, channels u32, sample_rate_in u32, sample_rate_out u32) C.ma_linear_resampler_config
 [inline]
@@ -652,18 +1533,32 @@ pub fn linear_resampler_config_init(format Format, channels u32, sample_rate_in 
 	return C.ma_linear_resampler_config_init(format, channels, sample_rate_in, sample_rate_out)
 }
 
-// MA_API ma_result ma_linear_resampler_init(const ma_linear_resampler_config* pConfig, ma_linear_resampler* pResampler);
-fn C.ma_linear_resampler_init(p_config &C.ma_linear_resampler_config, p_resampler &C.ma_linear_resampler) Result
+// MA_API ma_result ma_linear_resampler_get_heap_size(const ma_linear_resampler_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_linear_resampler_get_heap_size(p_config &C.ma_linear_resampler_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn linear_resampler_init(p_config &C.ma_linear_resampler_config, p_resampler &C.ma_linear_resampler) Result {
-	return C.ma_linear_resampler_init(p_config, p_resampler)
+pub fn linear_resampler_get_heap_size(p_config &C.ma_linear_resampler_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_linear_resampler_get_heap_size(p_config, p_heap_size_in_bytes)
 }
 
-// MA_API void ma_linear_resampler_uninit(ma_linear_resampler* pResampler);
-fn C.ma_linear_resampler_uninit(p_resampler &C.ma_linear_resampler)
+// MA_API ma_result ma_linear_resampler_init_preallocated(const ma_linear_resampler_config* pConfig, void* pHeap, ma_linear_resampler* pResampler);
+fn C.ma_linear_resampler_init_preallocated(p_config &C.ma_linear_resampler_config, p_heap voidptr, p_resampler &C.ma_linear_resampler) Result
 [inline]
-pub fn linear_resampler_uninit(p_resampler &C.ma_linear_resampler) {
-	C.ma_linear_resampler_uninit(p_resampler)
+pub fn linear_resampler_init_preallocated(p_config &C.ma_linear_resampler_config, p_heap voidptr, p_resampler &C.ma_linear_resampler) Result {
+	return C.ma_linear_resampler_init_preallocated(p_config, p_heap, p_resampler)
+}
+
+// MA_API ma_result ma_linear_resampler_init(const ma_linear_resampler_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_linear_resampler* pResampler);
+fn C.ma_linear_resampler_init(p_config &C.ma_linear_resampler_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_resampler &C.ma_linear_resampler) Result
+[inline]
+pub fn linear_resampler_init(p_config &C.ma_linear_resampler_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_resampler &C.ma_linear_resampler) Result {
+	return C.ma_linear_resampler_init(p_config, p_allocation_callbacks, p_resampler)
+}
+
+// MA_API void ma_linear_resampler_uninit(ma_linear_resampler* pResampler, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_linear_resampler_uninit(p_resampler &C.ma_linear_resampler, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn linear_resampler_uninit(p_resampler &C.ma_linear_resampler, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_linear_resampler_uninit(p_resampler, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_linear_resampler_process_pcm_frames(ma_linear_resampler* pResampler, const void* pFramesIn, ma_uint64* pFrameCountIn, void* pFramesOut, ma_uint64* pFrameCountOut);
@@ -688,20 +1583,6 @@ pub fn linear_resampler_set_rate_ratio(p_resampler &C.ma_linear_resampler, ratio
 	return C.ma_linear_resampler_set_rate_ratio(p_resampler, ratio_in_out)
 }
 
-// MA_API ma_uint64 ma_linear_resampler_get_required_input_frame_count(const ma_linear_resampler* pResampler, ma_uint64 outputFrameCount);
-fn C.ma_linear_resampler_get_required_input_frame_count(p_resampler &C.ma_linear_resampler, output_frame_count u64) u64
-[inline]
-pub fn linear_resampler_get_required_input_frame_count(p_resampler &C.ma_linear_resampler, output_frame_count u64) u64 {
-	return C.ma_linear_resampler_get_required_input_frame_count(p_resampler, output_frame_count)
-}
-
-// MA_API ma_uint64 ma_linear_resampler_get_expected_output_frame_count(const ma_linear_resampler* pResampler, ma_uint64 inputFrameCount);
-fn C.ma_linear_resampler_get_expected_output_frame_count(p_resampler &C.ma_linear_resampler, input_frame_count u64) u64
-[inline]
-pub fn linear_resampler_get_expected_output_frame_count(p_resampler &C.ma_linear_resampler, input_frame_count u64) u64 {
-	return C.ma_linear_resampler_get_expected_output_frame_count(p_resampler, input_frame_count)
-}
-
 // MA_API ma_uint64 ma_linear_resampler_get_input_latency(const ma_linear_resampler* pResampler);
 fn C.ma_linear_resampler_get_input_latency(p_resampler &C.ma_linear_resampler) u64
 [inline]
@@ -716,6 +1597,22 @@ pub fn linear_resampler_get_output_latency(p_resampler &C.ma_linear_resampler) u
 	return C.ma_linear_resampler_get_output_latency(p_resampler)
 }
 
+// MA_API ma_result ma_linear_resampler_get_required_input_frame_count(const ma_linear_resampler* pResampler, ma_uint64 outputFrameCount, ma_uint64* pInputFrameCount);
+fn C.ma_linear_resampler_get_required_input_frame_count(p_resampler &C.ma_linear_resampler, output_frame_count u64, p_input_frame_count &u64) Result
+[inline]
+pub fn linear_resampler_get_required_input_frame_count(p_resampler &C.ma_linear_resampler, output_frame_count u64, p_input_frame_count &u64) Result {
+	return C.ma_linear_resampler_get_required_input_frame_count(p_resampler, output_frame_count,
+		p_input_frame_count)
+}
+
+// MA_API ma_result ma_linear_resampler_get_expected_output_frame_count(const ma_linear_resampler* pResampler, ma_uint64 inputFrameCount, ma_uint64* pOutputFrameCount);
+fn C.ma_linear_resampler_get_expected_output_frame_count(p_resampler &C.ma_linear_resampler, input_frame_count u64, p_output_frame_count &u64) Result
+[inline]
+pub fn linear_resampler_get_expected_output_frame_count(p_resampler &C.ma_linear_resampler, input_frame_count u64, p_output_frame_count &u64) Result {
+	return C.ma_linear_resampler_get_expected_output_frame_count(p_resampler, input_frame_count,
+		p_output_frame_count)
+}
+
 // MA_API ma_resampler_config ma_resampler_config_init(ma_format format, ma_uint32 channels, ma_uint32 sampleRateIn, ma_uint32 sampleRateOut, ma_resample_algorithm algorithm);
 fn C.ma_resampler_config_init(format Format, channels u32, sample_rate_in u32, sample_rate_out u32, algorithm C.ma_resample_algorithm) C.ma_resampler_config
 [inline]
@@ -724,18 +1621,32 @@ pub fn resampler_config_init(format Format, channels u32, sample_rate_in u32, sa
 		algorithm)
 }
 
-// MA_API ma_result ma_resampler_init(const ma_resampler_config* pConfig, ma_resampler* pResampler);
-fn C.ma_resampler_init(p_config &C.ma_resampler_config, p_resampler &C.ma_resampler) Result
+// MA_API ma_result ma_resampler_get_heap_size(const ma_resampler_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_resampler_get_heap_size(p_config &C.ma_resampler_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn resampler_init(p_config &C.ma_resampler_config, p_resampler &C.ma_resampler) Result {
-	return C.ma_resampler_init(p_config, p_resampler)
+pub fn resampler_get_heap_size(p_config &C.ma_resampler_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_resampler_get_heap_size(p_config, p_heap_size_in_bytes)
 }
 
-// MA_API void ma_resampler_uninit(ma_resampler* pResampler);
-fn C.ma_resampler_uninit(p_resampler &C.ma_resampler)
+// MA_API ma_result ma_resampler_init_preallocated(const ma_resampler_config* pConfig, void* pHeap, ma_resampler* pResampler);
+fn C.ma_resampler_init_preallocated(p_config &C.ma_resampler_config, p_heap voidptr, p_resampler &C.ma_resampler) Result
 [inline]
-pub fn resampler_uninit(p_resampler &C.ma_resampler) {
-	C.ma_resampler_uninit(p_resampler)
+pub fn resampler_init_preallocated(p_config &C.ma_resampler_config, p_heap voidptr, p_resampler &C.ma_resampler) Result {
+	return C.ma_resampler_init_preallocated(p_config, p_heap, p_resampler)
+}
+
+// MA_API ma_result ma_resampler_init(const ma_resampler_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_resampler* pResampler);
+fn C.ma_resampler_init(p_config &C.ma_resampler_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_resampler &C.ma_resampler) Result
+[inline]
+pub fn resampler_init(p_config &C.ma_resampler_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_resampler &C.ma_resampler) Result {
+	return C.ma_resampler_init(p_config, p_allocation_callbacks, p_resampler)
+}
+
+// MA_API void ma_resampler_uninit(ma_resampler* pResampler, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_resampler_uninit(p_resampler &C.ma_resampler, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn resampler_uninit(p_resampler &C.ma_resampler, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_resampler_uninit(p_resampler, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_resampler_process_pcm_frames(ma_resampler* pResampler, const void* pFramesIn, ma_uint64* pFrameCountIn, void* pFramesOut, ma_uint64* pFrameCountOut);
@@ -760,20 +1671,6 @@ pub fn resampler_set_rate_ratio(p_resampler &C.ma_resampler, ratio f32) Result {
 	return C.ma_resampler_set_rate_ratio(p_resampler, ratio)
 }
 
-// MA_API ma_uint64 ma_resampler_get_required_input_frame_count(const ma_resampler* pResampler, ma_uint64 outputFrameCount);
-fn C.ma_resampler_get_required_input_frame_count(p_resampler &C.ma_resampler, output_frame_count u64) u64
-[inline]
-pub fn resampler_get_required_input_frame_count(p_resampler &C.ma_resampler, output_frame_count u64) u64 {
-	return C.ma_resampler_get_required_input_frame_count(p_resampler, output_frame_count)
-}
-
-// MA_API ma_uint64 ma_resampler_get_expected_output_frame_count(const ma_resampler* pResampler, ma_uint64 inputFrameCount);
-fn C.ma_resampler_get_expected_output_frame_count(p_resampler &C.ma_resampler, input_frame_count u64) u64
-[inline]
-pub fn resampler_get_expected_output_frame_count(p_resampler &C.ma_resampler, input_frame_count u64) u64 {
-	return C.ma_resampler_get_expected_output_frame_count(p_resampler, input_frame_count)
-}
-
 // MA_API ma_uint64 ma_resampler_get_input_latency(const ma_resampler* pResampler);
 fn C.ma_resampler_get_input_latency(p_resampler &C.ma_resampler) u64
 [inline]
@@ -788,6 +1685,22 @@ pub fn resampler_get_output_latency(p_resampler &C.ma_resampler) u64 {
 	return C.ma_resampler_get_output_latency(p_resampler)
 }
 
+// MA_API ma_result ma_resampler_get_required_input_frame_count(const ma_resampler* pResampler, ma_uint64 outputFrameCount, ma_uint64* pInputFrameCount);
+fn C.ma_resampler_get_required_input_frame_count(p_resampler &C.ma_resampler, output_frame_count u64, p_input_frame_count &u64) Result
+[inline]
+pub fn resampler_get_required_input_frame_count(p_resampler &C.ma_resampler, output_frame_count u64, p_input_frame_count &u64) Result {
+	return C.ma_resampler_get_required_input_frame_count(p_resampler, output_frame_count,
+		p_input_frame_count)
+}
+
+// MA_API ma_result ma_resampler_get_expected_output_frame_count(const ma_resampler* pResampler, ma_uint64 inputFrameCount, ma_uint64* pOutputFrameCount);
+fn C.ma_resampler_get_expected_output_frame_count(p_resampler &C.ma_resampler, input_frame_count u64, p_output_frame_count &u64) Result
+[inline]
+pub fn resampler_get_expected_output_frame_count(p_resampler &C.ma_resampler, input_frame_count u64, p_output_frame_count &u64) Result {
+	return C.ma_resampler_get_expected_output_frame_count(p_resampler, input_frame_count,
+		p_output_frame_count)
+}
+
 // MA_API ma_channel_converter_config ma_channel_converter_config_init(ma_format format, ma_uint32 channelsIn, const ma_channel* pChannelMapIn, ma_uint32 channelsOut, const ma_channel* pChannelMapOut, ma_channel_mix_mode mixingMode);
 fn C.ma_channel_converter_config_init(format Format, channels_in u32, p_channel_map_in &C.ma_channel, channels_out u32, p_channel_map_out &C.ma_channel, mixing_mode C.ma_channel_mix_mode) C.ma_channel_converter_config
 [inline]
@@ -796,18 +1709,32 @@ pub fn channel_converter_config_init(format Format, channels_in u32, p_channel_m
 		p_channel_map_out, mixing_mode)
 }
 
-// MA_API ma_result ma_channel_converter_init(const ma_channel_converter_config* pConfig, ma_channel_converter* pConverter);
-fn C.ma_channel_converter_init(p_config &C.ma_channel_converter_config, p_converter &C.ma_channel_converter) Result
+// MA_API ma_result ma_channel_converter_get_heap_size(const ma_channel_converter_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_channel_converter_get_heap_size(p_config &C.ma_channel_converter_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn channel_converter_init(p_config &C.ma_channel_converter_config, p_converter &C.ma_channel_converter) Result {
-	return C.ma_channel_converter_init(p_config, p_converter)
+pub fn channel_converter_get_heap_size(p_config &C.ma_channel_converter_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_channel_converter_get_heap_size(p_config, p_heap_size_in_bytes)
 }
 
-// MA_API void ma_channel_converter_uninit(ma_channel_converter* pConverter);
-fn C.ma_channel_converter_uninit(p_converter &C.ma_channel_converter)
+// MA_API ma_result ma_channel_converter_init_preallocated(const ma_channel_converter_config* pConfig, void* pHeap, ma_channel_converter* pConverter);
+fn C.ma_channel_converter_init_preallocated(p_config &C.ma_channel_converter_config, p_heap voidptr, p_converter &C.ma_channel_converter) Result
 [inline]
-pub fn channel_converter_uninit(p_converter &C.ma_channel_converter) {
-	C.ma_channel_converter_uninit(p_converter)
+pub fn channel_converter_init_preallocated(p_config &C.ma_channel_converter_config, p_heap voidptr, p_converter &C.ma_channel_converter) Result {
+	return C.ma_channel_converter_init_preallocated(p_config, p_heap, p_converter)
+}
+
+// MA_API ma_result ma_channel_converter_init(const ma_channel_converter_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_channel_converter* pConverter);
+fn C.ma_channel_converter_init(p_config &C.ma_channel_converter_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_converter &C.ma_channel_converter) Result
+[inline]
+pub fn channel_converter_init(p_config &C.ma_channel_converter_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_converter &C.ma_channel_converter) Result {
+	return C.ma_channel_converter_init(p_config, p_allocation_callbacks, p_converter)
+}
+
+// MA_API void ma_channel_converter_uninit(ma_channel_converter* pConverter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_channel_converter_uninit(p_converter &C.ma_channel_converter, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn channel_converter_uninit(p_converter &C.ma_channel_converter, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_channel_converter_uninit(p_converter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_channel_converter_process_pcm_frames(ma_channel_converter* pConverter, void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount);
@@ -816,6 +1743,20 @@ fn C.ma_channel_converter_process_pcm_frames(p_converter &C.ma_channel_converter
 pub fn channel_converter_process_pcm_frames(p_converter &C.ma_channel_converter, p_frames_out voidptr, p_frames_in voidptr, frame_count u64) Result {
 	return C.ma_channel_converter_process_pcm_frames(p_converter, p_frames_out, p_frames_in,
 		frame_count)
+}
+
+// MA_API ma_result ma_channel_converter_get_input_channel_map(const ma_channel_converter* pConverter, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_channel_converter_get_input_channel_map(p_converter &C.ma_channel_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn channel_converter_get_input_channel_map(p_converter &C.ma_channel_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_channel_converter_get_input_channel_map(p_converter, p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_channel_converter_get_output_channel_map(const ma_channel_converter* pConverter, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_channel_converter_get_output_channel_map(p_converter &C.ma_channel_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn channel_converter_get_output_channel_map(p_converter &C.ma_channel_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_channel_converter_get_output_channel_map(p_converter, p_channel_map, channel_map_cap)
 }
 
 // MA_API ma_data_converter_config ma_data_converter_config_init_default();
@@ -833,18 +1774,32 @@ pub fn data_converter_config_init(format_in Format, format_out Format, channels_
 		sample_rate_in, sample_rate_out)
 }
 
-// MA_API ma_result ma_data_converter_init(const ma_data_converter_config* pConfig, ma_data_converter* pConverter);
-fn C.ma_data_converter_init(p_config &C.ma_data_converter_config, p_converter &C.ma_data_converter) Result
+// MA_API ma_result ma_data_converter_get_heap_size(const ma_data_converter_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_data_converter_get_heap_size(p_config &C.ma_data_converter_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn data_converter_init(p_config &C.ma_data_converter_config, p_converter &C.ma_data_converter) Result {
-	return C.ma_data_converter_init(p_config, p_converter)
+pub fn data_converter_get_heap_size(p_config &C.ma_data_converter_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_data_converter_get_heap_size(p_config, p_heap_size_in_bytes)
 }
 
-// MA_API void ma_data_converter_uninit(ma_data_converter* pConverter);
-fn C.ma_data_converter_uninit(p_converter &C.ma_data_converter)
+// MA_API ma_result ma_data_converter_init_preallocated(const ma_data_converter_config* pConfig, void* pHeap, ma_data_converter* pConverter);
+fn C.ma_data_converter_init_preallocated(p_config &C.ma_data_converter_config, p_heap voidptr, p_converter &C.ma_data_converter) Result
 [inline]
-pub fn data_converter_uninit(p_converter &C.ma_data_converter) {
-	C.ma_data_converter_uninit(p_converter)
+pub fn data_converter_init_preallocated(p_config &C.ma_data_converter_config, p_heap voidptr, p_converter &C.ma_data_converter) Result {
+	return C.ma_data_converter_init_preallocated(p_config, p_heap, p_converter)
+}
+
+// MA_API ma_result ma_data_converter_init(const ma_data_converter_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_data_converter* pConverter);
+fn C.ma_data_converter_init(p_config &C.ma_data_converter_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_converter &C.ma_data_converter) Result
+[inline]
+pub fn data_converter_init(p_config &C.ma_data_converter_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_converter &C.ma_data_converter) Result {
+	return C.ma_data_converter_init(p_config, p_allocation_callbacks, p_converter)
+}
+
+// MA_API void ma_data_converter_uninit(ma_data_converter* pConverter, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_data_converter_uninit(p_converter &C.ma_data_converter, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn data_converter_uninit(p_converter &C.ma_data_converter, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_data_converter_uninit(p_converter, p_allocation_callbacks)
 }
 
 // MA_API ma_result ma_data_converter_process_pcm_frames(ma_data_converter* pConverter, const void* pFramesIn, ma_uint64* pFrameCountIn, void* pFramesOut, ma_uint64* pFrameCountOut);
@@ -869,20 +1824,6 @@ pub fn data_converter_set_rate_ratio(p_converter &C.ma_data_converter, ratio_in_
 	return C.ma_data_converter_set_rate_ratio(p_converter, ratio_in_out)
 }
 
-// MA_API ma_uint64 ma_data_converter_get_required_input_frame_count(const ma_data_converter* pConverter, ma_uint64 outputFrameCount);
-fn C.ma_data_converter_get_required_input_frame_count(p_converter &C.ma_data_converter, output_frame_count u64) u64
-[inline]
-pub fn data_converter_get_required_input_frame_count(p_converter &C.ma_data_converter, output_frame_count u64) u64 {
-	return C.ma_data_converter_get_required_input_frame_count(p_converter, output_frame_count)
-}
-
-// MA_API ma_uint64 ma_data_converter_get_expected_output_frame_count(const ma_data_converter* pConverter, ma_uint64 inputFrameCount);
-fn C.ma_data_converter_get_expected_output_frame_count(p_converter &C.ma_data_converter, input_frame_count u64) u64
-[inline]
-pub fn data_converter_get_expected_output_frame_count(p_converter &C.ma_data_converter, input_frame_count u64) u64 {
-	return C.ma_data_converter_get_expected_output_frame_count(p_converter, input_frame_count)
-}
-
 // MA_API ma_uint64 ma_data_converter_get_input_latency(const ma_data_converter* pConverter);
 fn C.ma_data_converter_get_input_latency(p_converter &C.ma_data_converter) u64
 [inline]
@@ -895,6 +1836,36 @@ fn C.ma_data_converter_get_output_latency(p_converter &C.ma_data_converter) u64
 [inline]
 pub fn data_converter_get_output_latency(p_converter &C.ma_data_converter) u64 {
 	return C.ma_data_converter_get_output_latency(p_converter)
+}
+
+// MA_API ma_result ma_data_converter_get_required_input_frame_count(const ma_data_converter* pConverter, ma_uint64 outputFrameCount, ma_uint64* pInputFrameCount);
+fn C.ma_data_converter_get_required_input_frame_count(p_converter &C.ma_data_converter, output_frame_count u64, p_input_frame_count &u64) Result
+[inline]
+pub fn data_converter_get_required_input_frame_count(p_converter &C.ma_data_converter, output_frame_count u64, p_input_frame_count &u64) Result {
+	return C.ma_data_converter_get_required_input_frame_count(p_converter, output_frame_count,
+		p_input_frame_count)
+}
+
+// MA_API ma_result ma_data_converter_get_expected_output_frame_count(const ma_data_converter* pConverter, ma_uint64 inputFrameCount, ma_uint64* pOutputFrameCount);
+fn C.ma_data_converter_get_expected_output_frame_count(p_converter &C.ma_data_converter, input_frame_count u64, p_output_frame_count &u64) Result
+[inline]
+pub fn data_converter_get_expected_output_frame_count(p_converter &C.ma_data_converter, input_frame_count u64, p_output_frame_count &u64) Result {
+	return C.ma_data_converter_get_expected_output_frame_count(p_converter, input_frame_count,
+		p_output_frame_count)
+}
+
+// MA_API ma_result ma_data_converter_get_input_channel_map(const ma_data_converter* pConverter, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_data_converter_get_input_channel_map(p_converter &C.ma_data_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn data_converter_get_input_channel_map(p_converter &C.ma_data_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_data_converter_get_input_channel_map(p_converter, p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_data_converter_get_output_channel_map(const ma_data_converter* pConverter, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_data_converter_get_output_channel_map(p_converter &C.ma_data_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn data_converter_get_output_channel_map(p_converter &C.ma_data_converter, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_data_converter_get_output_channel_map(p_converter, p_channel_map, channel_map_cap)
 }
 
 // MA_API void ma_pcm_u8_to_s16(void* pOut, const void* pIn, ma_uint64 count, ma_dither_mode ditherMode);
@@ -1068,13 +2039,6 @@ pub fn interleave_pcm_frames(format Format, channels u32, frame_count u64, pp_de
 		p_interleaved_p_c_m_frames)
 }
 
-// MA_API ma_channel ma_channel_map_get_default_channel(ma_uint32 channelCount, ma_uint32 channelIndex);
-fn C.ma_channel_map_get_default_channel(channel_count u32, channel_index u32) C.ma_channel
-[inline]
-pub fn channel_map_get_default_channel(channel_count u32, channel_index u32) C.ma_channel {
-	return C.ma_channel_map_get_default_channel(channel_count, channel_index)
-}
-
 // MA_API ma_channel ma_channel_map_get_channel(const ma_channel* pChannelMap, ma_uint32 channelCount, ma_uint32 channelIndex);
 fn C.ma_channel_map_get_channel(p_channel_map &C.ma_channel, channel_count u32, channel_index u32) C.ma_channel
 [inline]
@@ -1082,18 +2046,19 @@ pub fn channel_map_get_channel(p_channel_map &C.ma_channel, channel_count u32, c
 	return C.ma_channel_map_get_channel(p_channel_map, channel_count, channel_index)
 }
 
-// MA_API void ma_channel_map_init_blank(ma_uint32 channels, ma_channel* pChannelMap);
-fn C.ma_channel_map_init_blank(channels u32, p_channel_map &C.ma_channel)
+// MA_API void ma_channel_map_init_blank(ma_channel* pChannelMap, ma_uint32 channels);
+fn C.ma_channel_map_init_blank(p_channel_map &C.ma_channel, channels u32)
 [inline]
-pub fn channel_map_init_blank(channels u32, p_channel_map &C.ma_channel) {
-	C.ma_channel_map_init_blank(channels, p_channel_map)
+pub fn channel_map_init_blank(p_channel_map &C.ma_channel, channels u32) {
+	C.ma_channel_map_init_blank(p_channel_map, channels)
 }
 
-// MA_API void ma_get_standard_channel_map(ma_standard_channel_map standardChannelMap, ma_uint32 channels, ma_channel* pChannelMap);
-fn C.ma_get_standard_channel_map(standard_channel_map C.ma_standard_channel_map, channels u32, p_channel_map &C.ma_channel)
+// MA_API void ma_channel_map_init_standard(ma_standard_channel_map standardChannelMap, ma_channel* pChannelMap, size_t channelMapCap, ma_uint32 channels);
+fn C.ma_channel_map_init_standard(standard_channel_map C.ma_standard_channel_map, p_channel_map &C.ma_channel, channel_map_cap usize, channels u32)
 [inline]
-pub fn get_standard_channel_map(standard_channel_map C.ma_standard_channel_map, channels u32, p_channel_map &C.ma_channel) {
-	C.ma_get_standard_channel_map(standard_channel_map, channels, p_channel_map)
+pub fn channel_map_init_standard(standard_channel_map C.ma_standard_channel_map, p_channel_map &C.ma_channel, channel_map_cap usize, channels u32) {
+	C.ma_channel_map_init_standard(standard_channel_map, p_channel_map, channel_map_cap,
+		channels)
 }
 
 // MA_API void ma_channel_map_copy(ma_channel* pOut, const ma_channel* pIn, ma_uint32 channels);
@@ -1103,32 +2068,32 @@ pub fn channel_map_copy(p_out &C.ma_channel, p_in &C.ma_channel, channels u32) {
 	C.ma_channel_map_copy(p_out, p_in, channels)
 }
 
-// MA_API void ma_channel_map_copy_or_default(ma_channel* pOut, const ma_channel* pIn, ma_uint32 channels);
-fn C.ma_channel_map_copy_or_default(p_out &C.ma_channel, p_in &C.ma_channel, channels u32)
+// MA_API void ma_channel_map_copy_or_default(ma_channel* pOut, size_t channelMapCapOut, const ma_channel* pIn, ma_uint32 channels);
+fn C.ma_channel_map_copy_or_default(p_out &C.ma_channel, channel_map_cap_out usize, p_in &C.ma_channel, channels u32)
 [inline]
-pub fn channel_map_copy_or_default(p_out &C.ma_channel, p_in &C.ma_channel, channels u32) {
-	C.ma_channel_map_copy_or_default(p_out, p_in, channels)
+pub fn channel_map_copy_or_default(p_out &C.ma_channel, channel_map_cap_out usize, p_in &C.ma_channel, channels u32) {
+	C.ma_channel_map_copy_or_default(p_out, channel_map_cap_out, p_in, channels)
 }
 
-// MA_API ma_bool32 ma_channel_map_valid(ma_uint32 channels, const ma_channel* pChannelMap);
-fn C.ma_channel_map_valid(channels u32, p_channel_map &C.ma_channel) bool
+// MA_API ma_bool32 ma_channel_map_is_valid(const ma_channel* pChannelMap, ma_uint32 channels);
+fn C.ma_channel_map_is_valid(p_channel_map &C.ma_channel, channels u32) bool
 [inline]
-pub fn channel_map_valid(channels u32, p_channel_map &C.ma_channel) bool {
-	return C.ma_channel_map_valid(channels, p_channel_map)
+pub fn channel_map_is_valid(p_channel_map &C.ma_channel, channels u32) bool {
+	return C.ma_channel_map_is_valid(p_channel_map, channels)
 }
 
-// MA_API ma_bool32 ma_channel_map_equal(ma_uint32 channels, const ma_channel* pChannelMapA, const ma_channel* pChannelMapB);
-fn C.ma_channel_map_equal(channels u32, p_channel_map_a &C.ma_channel, p_channel_map_b &C.ma_channel) bool
+// MA_API ma_bool32 ma_channel_map_is_equal(const ma_channel* pChannelMapA, const ma_channel* pChannelMapB, ma_uint32 channels);
+fn C.ma_channel_map_is_equal(p_channel_map_a &C.ma_channel, p_channel_map_b &C.ma_channel, channels u32) bool
 [inline]
-pub fn channel_map_equal(channels u32, p_channel_map_a &C.ma_channel, p_channel_map_b &C.ma_channel) bool {
-	return C.ma_channel_map_equal(channels, p_channel_map_a, p_channel_map_b)
+pub fn channel_map_is_equal(p_channel_map_a &C.ma_channel, p_channel_map_b &C.ma_channel, channels u32) bool {
+	return C.ma_channel_map_is_equal(p_channel_map_a, p_channel_map_b, channels)
 }
 
-// MA_API ma_bool32 ma_channel_map_blank(ma_uint32 channels, const ma_channel* pChannelMap);
-fn C.ma_channel_map_blank(channels u32, p_channel_map &C.ma_channel) bool
+// MA_API ma_bool32 ma_channel_map_is_blank(const ma_channel* pChannelMap, ma_uint32 channels);
+fn C.ma_channel_map_is_blank(p_channel_map &C.ma_channel, channels u32) bool
 [inline]
-pub fn channel_map_blank(channels u32, p_channel_map &C.ma_channel) bool {
-	return C.ma_channel_map_blank(channels, p_channel_map)
+pub fn channel_map_is_blank(p_channel_map &C.ma_channel, channels u32) bool {
+	return C.ma_channel_map_is_blank(p_channel_map, channels)
 }
 
 // MA_API ma_bool32 ma_channel_map_contains_channel_position(ma_uint32 channels, const ma_channel* pChannelMap, ma_channel channelPosition);
@@ -1190,11 +2155,11 @@ pub fn rb_acquire_read(p_r_b &C.ma_rb, p_size_in_bytes &usize, pp_buffer_out &vo
 	return C.ma_rb_acquire_read(p_r_b, p_size_in_bytes, pp_buffer_out)
 }
 
-// MA_API ma_result ma_rb_commit_read(ma_rb* pRB, size_t sizeInBytes, void* pBufferOut);
-fn C.ma_rb_commit_read(p_r_b &C.ma_rb, size_in_bytes usize, p_buffer_out voidptr) Result
+// MA_API ma_result ma_rb_commit_read(ma_rb* pRB, size_t sizeInBytes);
+fn C.ma_rb_commit_read(p_r_b &C.ma_rb, size_in_bytes usize) Result
 [inline]
-pub fn rb_commit_read(p_r_b &C.ma_rb, size_in_bytes usize, p_buffer_out voidptr) Result {
-	return C.ma_rb_commit_read(p_r_b, size_in_bytes, p_buffer_out)
+pub fn rb_commit_read(p_r_b &C.ma_rb, size_in_bytes usize) Result {
+	return C.ma_rb_commit_read(p_r_b, size_in_bytes)
 }
 
 // MA_API ma_result ma_rb_acquire_write(ma_rb* pRB, size_t* pSizeInBytes, void** ppBufferOut);
@@ -1204,11 +2169,11 @@ pub fn rb_acquire_write(p_r_b &C.ma_rb, p_size_in_bytes &usize, pp_buffer_out &v
 	return C.ma_rb_acquire_write(p_r_b, p_size_in_bytes, pp_buffer_out)
 }
 
-// MA_API ma_result ma_rb_commit_write(ma_rb* pRB, size_t sizeInBytes, void* pBufferOut);
-fn C.ma_rb_commit_write(p_r_b &C.ma_rb, size_in_bytes usize, p_buffer_out voidptr) Result
+// MA_API ma_result ma_rb_commit_write(ma_rb* pRB, size_t sizeInBytes);
+fn C.ma_rb_commit_write(p_r_b &C.ma_rb, size_in_bytes usize) Result
 [inline]
-pub fn rb_commit_write(p_r_b &C.ma_rb, size_in_bytes usize, p_buffer_out voidptr) Result {
-	return C.ma_rb_commit_write(p_r_b, size_in_bytes, p_buffer_out)
+pub fn rb_commit_write(p_r_b &C.ma_rb, size_in_bytes usize) Result {
+	return C.ma_rb_commit_write(p_r_b, size_in_bytes)
 }
 
 // MA_API ma_result ma_rb_seek_read(ma_rb* pRB, size_t offsetInBytes);
@@ -1312,11 +2277,11 @@ pub fn pcm_rb_acquire_read(p_r_b &C.ma_pcm_rb, p_size_in_frames &u32, pp_buffer_
 	return C.ma_pcm_rb_acquire_read(p_r_b, p_size_in_frames, pp_buffer_out)
 }
 
-// MA_API ma_result ma_pcm_rb_commit_read(ma_pcm_rb* pRB, ma_uint32 sizeInFrames, void* pBufferOut);
-fn C.ma_pcm_rb_commit_read(p_r_b &C.ma_pcm_rb, size_in_frames u32, p_buffer_out voidptr) Result
+// MA_API ma_result ma_pcm_rb_commit_read(ma_pcm_rb* pRB, ma_uint32 sizeInFrames);
+fn C.ma_pcm_rb_commit_read(p_r_b &C.ma_pcm_rb, size_in_frames u32) Result
 [inline]
-pub fn pcm_rb_commit_read(p_r_b &C.ma_pcm_rb, size_in_frames u32, p_buffer_out voidptr) Result {
-	return C.ma_pcm_rb_commit_read(p_r_b, size_in_frames, p_buffer_out)
+pub fn pcm_rb_commit_read(p_r_b &C.ma_pcm_rb, size_in_frames u32) Result {
+	return C.ma_pcm_rb_commit_read(p_r_b, size_in_frames)
 }
 
 // MA_API ma_result ma_pcm_rb_acquire_write(ma_pcm_rb* pRB, ma_uint32* pSizeInFrames, void** ppBufferOut);
@@ -1326,11 +2291,11 @@ pub fn pcm_rb_acquire_write(p_r_b &C.ma_pcm_rb, p_size_in_frames &u32, pp_buffer
 	return C.ma_pcm_rb_acquire_write(p_r_b, p_size_in_frames, pp_buffer_out)
 }
 
-// MA_API ma_result ma_pcm_rb_commit_write(ma_pcm_rb* pRB, ma_uint32 sizeInFrames, void* pBufferOut);
-fn C.ma_pcm_rb_commit_write(p_r_b &C.ma_pcm_rb, size_in_frames u32, p_buffer_out voidptr) Result
+// MA_API ma_result ma_pcm_rb_commit_write(ma_pcm_rb* pRB, ma_uint32 sizeInFrames);
+fn C.ma_pcm_rb_commit_write(p_r_b &C.ma_pcm_rb, size_in_frames u32) Result
 [inline]
-pub fn pcm_rb_commit_write(p_r_b &C.ma_pcm_rb, size_in_frames u32, p_buffer_out voidptr) Result {
-	return C.ma_pcm_rb_commit_write(p_r_b, size_in_frames, p_buffer_out)
+pub fn pcm_rb_commit_write(p_r_b &C.ma_pcm_rb, size_in_frames u32) Result {
+	return C.ma_pcm_rb_commit_write(p_r_b, size_in_frames)
 }
 
 // MA_API ma_result ma_pcm_rb_seek_read(ma_pcm_rb* pRB, ma_uint32 offsetInFrames);
@@ -1425,6 +2390,13 @@ pub fn malloc(sz usize, p_allocation_callbacks &C.ma_allocation_callbacks) voidp
 	return C.ma_malloc(sz, p_allocation_callbacks)
 }
 
+// MA_API void* ma_calloc(size_t sz, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_calloc(sz usize, p_allocation_callbacks &C.ma_allocation_callbacks) voidptr
+[inline]
+pub fn calloc(sz usize, p_allocation_callbacks &C.ma_allocation_callbacks) voidptr {
+	return C.ma_calloc(sz, p_allocation_callbacks)
+}
+
 // MA_API void* ma_realloc(void* p, size_t sz, const ma_allocation_callbacks* pAllocationCallbacks);
 fn C.ma_realloc(p voidptr, sz usize, p_allocation_callbacks &C.ma_allocation_callbacks) voidptr
 [inline]
@@ -1479,220 +2451,6 @@ fn C.ma_log_level_to_string(log_level u32) &char
 [inline]
 pub fn log_level_to_string(log_level u32) &char {
 	return C.ma_log_level_to_string(log_level)
-}
-
-// MA_API ma_context_config ma_context_config_init();
-fn C.ma_context_config_init() C.ma_context_config
-[inline]
-pub fn context_config_init() ContextConfig {
-	return C.ma_context_config_init()
-}
-
-// MA_API ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pConfig, ma_context* pContext);
-fn C.ma_context_init(backends []C.ma_backend, backend_count u32, p_config &C.ma_context_config, p_context &C.ma_context) Result
-
-/*
-TODO
-[inline]
-pub fn context_init(backends[] C.ma_backend, backend_count u32, p_config &ContextConfig, p_context &Context) Result{
-	return C.ma_context_init(backends, backend_count, p_config, p_context)
-}
-*/
-
-// MA_API ma_result ma_context_uninit(ma_context* pContext);
-fn C.ma_context_uninit(p_context &C.ma_context) Result
-[inline]
-pub fn (mut p_context Context) uninit() Result {
-	return C.ma_context_uninit(p_context)
-}
-
-// MA_API size_t ma_context_sizeof();
-fn C.ma_context_sizeof() usize
-[inline]
-pub fn context_sizeof() usize {
-	return C.ma_context_sizeof()
-}
-
-// MA_API ma_log* ma_context_get_log(ma_context* pContext);
-fn C.ma_context_get_log(p_context &C.ma_context) &C.ma_log
-[inline]
-pub fn (mut p_context Context) get_log() &C.ma_log {
-	return C.ma_context_get_log(p_context)
-}
-
-// MA_API ma_result ma_context_enumerate_devices(ma_context* pContext, ma_enum_devices_callback_proc callback, void* pUserData);
-fn C.ma_context_enumerate_devices(p_context &C.ma_context, callback C.ma_enum_devices_callback_proc, p_user_data voidptr) Result
-[inline]
-pub fn (mut p_context Context) enumerate_devices(callback C.ma_enum_devices_callback_proc, p_user_data voidptr) Result {
-	return C.ma_context_enumerate_devices(p_context, callback, p_user_data)
-}
-
-// MA_API ma_result ma_context_get_devices(ma_context* pContext, ma_device_info** ppPlaybackDeviceInfos, ma_uint32* pPlaybackDeviceCount, ma_device_info** ppCaptureDeviceInfos, ma_uint32* pCaptureDeviceCount);
-fn C.ma_context_get_devices(p_context &C.ma_context, pp_playback_device_infos &&C.ma_device_info, p_playback_device_count &u32, pp_capture_device_infos &&C.ma_device_info, p_capture_device_count &u32) Result
-[inline]
-pub fn (mut p_context Context) get_devices(pp_playback_device_infos &&C.ma_device_info, p_playback_device_count &u32, pp_capture_device_infos &&C.ma_device_info, p_capture_device_count &u32) Result {
-	return C.ma_context_get_devices(p_context, pp_playback_device_infos, p_playback_device_count,
-		pp_capture_device_infos, p_capture_device_count)
-}
-
-// MA_API ma_result ma_context_get_device_info(ma_context* pContext, ma_device_type deviceType, const ma_device_id* pDeviceID, ma_share_mode shareMode, ma_device_info* pDeviceInfo);
-fn C.ma_context_get_device_info(p_context &C.ma_context, device_type DeviceType, p_device_i_d &C.ma_device_id, share_mode C.ma_share_mode, p_device_info &C.ma_device_info) Result
-[inline]
-pub fn (mut p_context Context) get_device_info(device_type DeviceType, p_device_i_d &C.ma_device_id, share_mode C.ma_share_mode, p_device_info &C.ma_device_info) Result {
-	return C.ma_context_get_device_info(p_context, device_type, p_device_i_d, share_mode,
-		p_device_info)
-}
-
-// MA_API ma_bool32 ma_context_is_loopback_supported(ma_context* pContext);
-fn C.ma_context_is_loopback_supported(p_context &C.ma_context) bool
-[inline]
-pub fn (mut p_context Context) is_loopback_supported() bool {
-	return C.ma_context_is_loopback_supported(p_context)
-}
-
-// MA_API ma_device_config ma_device_config_init(ma_device_type deviceType);
-fn C.ma_device_config_init(device_type DeviceType) C.ma_device_config
-[inline]
-pub fn device_config_init(device_type DeviceType) DeviceConfig {
-	return C.ma_device_config_init(device_type)
-}
-
-// MA_API ma_result ma_device_init(ma_context* pContext, const ma_device_config* pConfig, ma_device* pDevice);
-fn C.ma_device_init(p_context &C.ma_context, p_config &C.ma_device_config, p_device &C.ma_device) Result
-[inline]
-pub fn device_init(p_context &Context, p_config &DeviceConfig, p_device &Device) Result {
-	return C.ma_device_init(p_context, p_config, p_device)
-}
-
-// MA_API ma_result ma_device_init_ex(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pContextConfig, const ma_device_config* pConfig, ma_device* pDevice);
-fn C.ma_device_init_ex(backends []C.ma_backend, backend_count u32, p_context_config &C.ma_context_config, p_config &C.ma_device_config, p_device &C.ma_device) Result
-
-/*
-TODO
-[inline]
-pub fn device_init_ex(backends[] C.ma_backend, backend_count u32, p_context_config &ContextConfig, p_config &DeviceConfig, p_device &Device) Result{
-	return C.ma_device_init_ex(backends, backend_count, p_context_config, p_config, p_device)
-}
-*/
-
-// MA_API void ma_device_uninit(ma_device* pDevice);
-fn C.ma_device_uninit(p_device &C.ma_device)
-[inline]
-pub fn (mut p_device Device) uninit() {
-	C.ma_device_uninit(p_device)
-}
-
-// MA_API ma_context* ma_device_get_context(ma_device* pDevice);
-fn C.ma_device_get_context(p_device &C.ma_device) &C.ma_context
-[inline]
-pub fn (mut p_device Device) get_context() &Context {
-	return C.ma_device_get_context(p_device)
-}
-
-// MA_API ma_log* ma_device_get_log(ma_device* pDevice);
-fn C.ma_device_get_log(p_device &C.ma_device) &C.ma_log
-[inline]
-pub fn (mut p_device Device) get_log() &C.ma_log {
-	return C.ma_device_get_log(p_device)
-}
-
-// MA_API ma_result ma_device_start(ma_device* pDevice);
-fn C.ma_device_start(p_device &C.ma_device) Result
-[inline]
-pub fn (mut p_device Device) start() Result {
-	return C.ma_device_start(p_device)
-}
-
-// MA_API ma_result ma_device_stop(ma_device* pDevice);
-fn C.ma_device_stop(p_device &C.ma_device) Result
-[inline]
-pub fn (mut p_device Device) stop() Result {
-	return C.ma_device_stop(p_device)
-}
-
-// MA_API ma_bool32 ma_device_is_started(const ma_device* pDevice);
-fn C.ma_device_is_started(p_device &C.ma_device) bool
-[inline]
-pub fn (mut p_device Device) is_started() bool {
-	return C.ma_device_is_started(p_device)
-}
-
-// MA_API ma_uint32 ma_device_get_state(const ma_device* pDevice);
-fn C.ma_device_get_state(p_device &C.ma_device) u32
-[inline]
-pub fn (mut p_device Device) get_state() u32 {
-	return C.ma_device_get_state(p_device)
-}
-
-// MA_API ma_result ma_device_set_master_volume(ma_device* pDevice, float volume);
-fn C.ma_device_set_master_volume(p_device &C.ma_device, volume f32) Result
-[inline]
-pub fn (mut p_device Device) set_master_volume(volume f32) Result {
-	return C.ma_device_set_master_volume(p_device, volume)
-}
-
-// MA_API ma_result ma_device_get_master_volume(ma_device* pDevice, float* pVolume);
-fn C.ma_device_get_master_volume(p_device &C.ma_device, p_volume &f32) Result
-[inline]
-pub fn (mut p_device Device) get_master_volume(p_volume &f32) Result {
-	return C.ma_device_get_master_volume(p_device, p_volume)
-}
-
-// MA_API ma_result ma_device_set_master_gain_db(ma_device* pDevice, float gainDB);
-fn C.ma_device_set_master_gain_db(p_device &C.ma_device, gain_d_b f32) Result
-[inline]
-pub fn (mut p_device Device) set_master_gain_db(gain_d_b f32) Result {
-	return C.ma_device_set_master_gain_db(p_device, gain_d_b)
-}
-
-// MA_API ma_result ma_device_get_master_gain_db(ma_device* pDevice, float* pGainDB);
-fn C.ma_device_get_master_gain_db(p_device &C.ma_device, p_gain_d_b &f32) Result
-[inline]
-pub fn (mut p_device Device) get_master_gain_db(p_gain_d_b &f32) Result {
-	return C.ma_device_get_master_gain_db(p_device, p_gain_d_b)
-}
-
-// MA_API ma_result ma_device_handle_backend_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
-fn C.ma_device_handle_backend_data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) Result
-[inline]
-pub fn (mut p_device Device) handle_backend_data_callback(p_output voidptr, p_input voidptr, frame_count u32) Result {
-	return C.ma_device_handle_backend_data_callback(p_device, p_output, p_input, frame_count)
-}
-
-// MA_API ma_uint32 ma_calculate_buffer_size_in_frames_from_descriptor(const ma_device_descriptor* pDescriptor, ma_uint32 nativeSampleRate, ma_performance_profile performanceProfile);
-fn C.ma_calculate_buffer_size_in_frames_from_descriptor(p_descriptor &C.ma_device_descriptor, native_sample_rate u32, performance_profile C.ma_performance_profile) u32
-[inline]
-pub fn calculate_buffer_size_in_frames_from_descriptor(p_descriptor &C.ma_device_descriptor, native_sample_rate u32, performance_profile C.ma_performance_profile) u32 {
-	return C.ma_calculate_buffer_size_in_frames_from_descriptor(p_descriptor, native_sample_rate,
-		performance_profile)
-}
-
-// MA_API const char* ma_get_backend_name(ma_backend backend);
-fn C.ma_get_backend_name(backend C.ma_backend) &char
-[inline]
-pub fn get_backend_name(backend C.ma_backend) &char {
-	return C.ma_get_backend_name(backend)
-}
-
-// MA_API ma_bool32 ma_is_backend_enabled(ma_backend backend);
-fn C.ma_is_backend_enabled(backend C.ma_backend) bool
-[inline]
-pub fn is_backend_enabled(backend C.ma_backend) bool {
-	return C.ma_is_backend_enabled(backend)
-}
-
-// MA_API ma_result ma_get_enabled_backends(ma_backend* pBackends, size_t backendCap, size_t* pBackendCount);
-fn C.ma_get_enabled_backends(p_backends &C.ma_backend, backend_cap usize, p_backend_count &usize) Result
-[inline]
-pub fn get_enabled_backends(p_backends &C.ma_backend, backend_cap usize, p_backend_count &usize) Result {
-	return C.ma_get_enabled_backends(p_backends, backend_cap, p_backend_count)
-}
-
-// MA_API ma_bool32 ma_is_loopback_supported(ma_backend backend);
-fn C.ma_is_loopback_supported(backend C.ma_backend) bool
-[inline]
-pub fn is_loopback_supported(backend C.ma_backend) bool {
-	return C.ma_is_loopback_supported(backend)
 }
 
 // MA_API ma_result ma_spinlock_lock(volatile ma_spinlock* pSpinlock);
@@ -1772,11 +2530,469 @@ pub fn (mut p_event Event) signal() Result {
 	return C.ma_event_signal(p_event)
 }
 
-// MA_API ma_uint32 ma_scale_buffer_size(ma_uint32 baseBufferSize, float scale);
-fn C.ma_scale_buffer_size(base_buffer_size u32, scale f32) u32
+// MA_API ma_result ma_fence_init(ma_fence* pFence);
+fn C.ma_fence_init(p_fence &C.ma_fence) Result
 [inline]
-pub fn scale_buffer_size(base_buffer_size u32, scale f32) u32 {
-	return C.ma_scale_buffer_size(base_buffer_size, scale)
+pub fn fence_init(p_fence &C.ma_fence) Result {
+	return C.ma_fence_init(p_fence)
+}
+
+// MA_API void ma_fence_uninit(ma_fence* pFence);
+fn C.ma_fence_uninit(p_fence &C.ma_fence)
+[inline]
+pub fn fence_uninit(p_fence &C.ma_fence) {
+	C.ma_fence_uninit(p_fence)
+}
+
+// MA_API ma_result ma_fence_acquire(ma_fence* pFence);    /* Increment counter. */
+fn C.ma_fence_acquire(p_fence &C.ma_fence) Result
+[inline]
+pub fn fence_acquire(p_fence &C.ma_fence) Result {
+	return C.ma_fence_acquire(p_fence)
+}
+
+// MA_API ma_result ma_fence_release(ma_fence* pFence);    /* Decrement counter. */
+fn C.ma_fence_release(p_fence &C.ma_fence) Result
+[inline]
+pub fn fence_release(p_fence &C.ma_fence) Result {
+	return C.ma_fence_release(p_fence)
+}
+
+// MA_API ma_result ma_fence_wait(ma_fence* pFence);       /* Wait for counter to reach 0. */
+fn C.ma_fence_wait(p_fence &C.ma_fence) Result
+[inline]
+pub fn fence_wait(p_fence &C.ma_fence) Result {
+	return C.ma_fence_wait(p_fence)
+}
+
+// MA_API ma_result ma_async_notification_signal(ma_async_notification* pNotification);
+fn C.ma_async_notification_signal(p_notification &C.ma_async_notification) Result
+[inline]
+pub fn async_notification_signal(p_notification &C.ma_async_notification) Result {
+	return C.ma_async_notification_signal(p_notification)
+}
+
+// MA_API ma_result ma_async_notification_poll_init(ma_async_notification_poll* pNotificationPoll);
+fn C.ma_async_notification_poll_init(p_notification_poll &C.ma_async_notification_poll) Result
+[inline]
+pub fn async_notification_poll_init(p_notification_poll &C.ma_async_notification_poll) Result {
+	return C.ma_async_notification_poll_init(p_notification_poll)
+}
+
+// MA_API ma_bool32 ma_async_notification_poll_is_signalled(const ma_async_notification_poll* pNotificationPoll);
+fn C.ma_async_notification_poll_is_signalled(p_notification_poll &C.ma_async_notification_poll) bool
+[inline]
+pub fn async_notification_poll_is_signalled(p_notification_poll &C.ma_async_notification_poll) bool {
+	return C.ma_async_notification_poll_is_signalled(p_notification_poll)
+}
+
+// MA_API ma_result ma_async_notification_event_init(ma_async_notification_event* pNotificationEvent);
+fn C.ma_async_notification_event_init(p_notification_event &C.ma_async_notification_event) Result
+[inline]
+pub fn async_notification_event_init(p_notification_event &C.ma_async_notification_event) Result {
+	return C.ma_async_notification_event_init(p_notification_event)
+}
+
+// MA_API ma_result ma_async_notification_event_uninit(ma_async_notification_event* pNotificationEvent);
+fn C.ma_async_notification_event_uninit(p_notification_event &C.ma_async_notification_event) Result
+[inline]
+pub fn async_notification_event_uninit(p_notification_event &C.ma_async_notification_event) Result {
+	return C.ma_async_notification_event_uninit(p_notification_event)
+}
+
+// MA_API ma_result ma_async_notification_event_wait(ma_async_notification_event* pNotificationEvent);
+fn C.ma_async_notification_event_wait(p_notification_event &C.ma_async_notification_event) Result
+[inline]
+pub fn async_notification_event_wait(p_notification_event &C.ma_async_notification_event) Result {
+	return C.ma_async_notification_event_wait(p_notification_event)
+}
+
+// MA_API ma_result ma_async_notification_event_signal(ma_async_notification_event* pNotificationEvent);
+fn C.ma_async_notification_event_signal(p_notification_event &C.ma_async_notification_event) Result
+[inline]
+pub fn async_notification_event_signal(p_notification_event &C.ma_async_notification_event) Result {
+	return C.ma_async_notification_event_signal(p_notification_event)
+}
+
+// MA_API ma_slot_allocator_config ma_slot_allocator_config_init(ma_uint32 capacity);
+fn C.ma_slot_allocator_config_init(capacity u32) C.ma_slot_allocator_config
+[inline]
+pub fn slot_allocator_config_init(capacity u32) C.ma_slot_allocator_config {
+	return C.ma_slot_allocator_config_init(capacity)
+}
+
+// MA_API ma_result ma_slot_allocator_get_heap_size(const ma_slot_allocator_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_slot_allocator_get_heap_size(p_config &C.ma_slot_allocator_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn slot_allocator_get_heap_size(p_config &C.ma_slot_allocator_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_slot_allocator_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_slot_allocator_init_preallocated(const ma_slot_allocator_config* pConfig, void* pHeap, ma_slot_allocator* pAllocator);
+fn C.ma_slot_allocator_init_preallocated(p_config &C.ma_slot_allocator_config, p_heap voidptr, p_allocator &C.ma_slot_allocator) Result
+[inline]
+pub fn slot_allocator_init_preallocated(p_config &C.ma_slot_allocator_config, p_heap voidptr, p_allocator &C.ma_slot_allocator) Result {
+	return C.ma_slot_allocator_init_preallocated(p_config, p_heap, p_allocator)
+}
+
+// MA_API ma_result ma_slot_allocator_init(const ma_slot_allocator_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_slot_allocator* pAllocator);
+fn C.ma_slot_allocator_init(p_config &C.ma_slot_allocator_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_allocator &C.ma_slot_allocator) Result
+[inline]
+pub fn slot_allocator_init(p_config &C.ma_slot_allocator_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_allocator &C.ma_slot_allocator) Result {
+	return C.ma_slot_allocator_init(p_config, p_allocation_callbacks, p_allocator)
+}
+
+// MA_API void ma_slot_allocator_uninit(ma_slot_allocator* pAllocator, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_slot_allocator_uninit(p_allocator &C.ma_slot_allocator, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn slot_allocator_uninit(p_allocator &C.ma_slot_allocator, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_slot_allocator_uninit(p_allocator, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_slot_allocator_alloc(ma_slot_allocator* pAllocator, ma_uint64* pSlot);
+fn C.ma_slot_allocator_alloc(p_allocator &C.ma_slot_allocator, p_slot &u64) Result
+[inline]
+pub fn slot_allocator_alloc(p_allocator &C.ma_slot_allocator, p_slot &u64) Result {
+	return C.ma_slot_allocator_alloc(p_allocator, p_slot)
+}
+
+// MA_API ma_result ma_slot_allocator_free(ma_slot_allocator* pAllocator, ma_uint64 slot);
+fn C.ma_slot_allocator_free(p_allocator &C.ma_slot_allocator, slot u64) Result
+[inline]
+pub fn slot_allocator_free(p_allocator &C.ma_slot_allocator, slot u64) Result {
+	return C.ma_slot_allocator_free(p_allocator, slot)
+}
+
+// MA_API ma_job ma_job_init(ma_uint16 code);
+fn C.ma_job_init(code C.ma_uint16) C.ma_job
+[inline]
+pub fn job_init(code C.ma_uint16) C.ma_job {
+	return C.ma_job_init(code)
+}
+
+// MA_API ma_result ma_job_process(ma_job* pJob);
+fn C.ma_job_process(p_job &C.ma_job) Result
+[inline]
+pub fn job_process(p_job &C.ma_job) Result {
+	return C.ma_job_process(p_job)
+}
+
+// MA_API ma_job_queue_config ma_job_queue_config_init(ma_uint32 flags, ma_uint32 capacity);
+fn C.ma_job_queue_config_init(flags u32, capacity u32) C.ma_job_queue_config
+[inline]
+pub fn job_queue_config_init(flags u32, capacity u32) C.ma_job_queue_config {
+	return C.ma_job_queue_config_init(flags, capacity)
+}
+
+// MA_API ma_result ma_job_queue_get_heap_size(const ma_job_queue_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_job_queue_get_heap_size(p_config &C.ma_job_queue_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn job_queue_get_heap_size(p_config &C.ma_job_queue_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_job_queue_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_job_queue_init_preallocated(const ma_job_queue_config* pConfig, void* pHeap, ma_job_queue* pQueue);
+fn C.ma_job_queue_init_preallocated(p_config &C.ma_job_queue_config, p_heap voidptr, p_queue &C.ma_job_queue) Result
+[inline]
+pub fn job_queue_init_preallocated(p_config &C.ma_job_queue_config, p_heap voidptr, p_queue &C.ma_job_queue) Result {
+	return C.ma_job_queue_init_preallocated(p_config, p_heap, p_queue)
+}
+
+// MA_API ma_result ma_job_queue_init(const ma_job_queue_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_job_queue* pQueue);
+fn C.ma_job_queue_init(p_config &C.ma_job_queue_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_queue &C.ma_job_queue) Result
+[inline]
+pub fn job_queue_init(p_config &C.ma_job_queue_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_queue &C.ma_job_queue) Result {
+	return C.ma_job_queue_init(p_config, p_allocation_callbacks, p_queue)
+}
+
+// MA_API void ma_job_queue_uninit(ma_job_queue* pQueue, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_job_queue_uninit(p_queue &C.ma_job_queue, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn job_queue_uninit(p_queue &C.ma_job_queue, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_job_queue_uninit(p_queue, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_job_queue_post(ma_job_queue* pQueue, const ma_job* pJob);
+fn C.ma_job_queue_post(p_queue &C.ma_job_queue, p_job &C.ma_job) Result
+[inline]
+pub fn job_queue_post(p_queue &C.ma_job_queue, p_job &C.ma_job) Result {
+	return C.ma_job_queue_post(p_queue, p_job)
+}
+
+// MA_API ma_result ma_job_queue_next(ma_job_queue* pQueue, ma_job* pJob); /* Returns MA_CANCELLED if the next job is a quit job. */
+fn C.ma_job_queue_next(p_queue &C.ma_job_queue, p_job &C.ma_job) Result
+[inline]
+pub fn job_queue_next(p_queue &C.ma_job_queue, p_job &C.ma_job) Result {
+	return C.ma_job_queue_next(p_queue, p_job)
+}
+
+// MA_API ma_device_job_thread_config ma_device_job_thread_config_init();
+fn C.ma_device_job_thread_config_init() C.ma_device_job_thread_config
+[inline]
+pub fn device_job_thread_config_init() C.ma_device_job_thread_config {
+	return C.ma_device_job_thread_config_init()
+}
+
+// MA_API ma_result ma_device_job_thread_init(const ma_device_job_thread_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_device_job_thread* pJobThread);
+fn C.ma_device_job_thread_init(p_config &C.ma_device_job_thread_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_job_thread &C.ma_device_job_thread) Result
+[inline]
+pub fn device_job_thread_init(p_config &C.ma_device_job_thread_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_job_thread &C.ma_device_job_thread) Result {
+	return C.ma_device_job_thread_init(p_config, p_allocation_callbacks, p_job_thread)
+}
+
+// MA_API void ma_device_job_thread_uninit(ma_device_job_thread* pJobThread, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_device_job_thread_uninit(p_job_thread &C.ma_device_job_thread, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn device_job_thread_uninit(p_job_thread &C.ma_device_job_thread, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_device_job_thread_uninit(p_job_thread, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_device_job_thread_post(ma_device_job_thread* pJobThread, const ma_job* pJob);
+fn C.ma_device_job_thread_post(p_job_thread &C.ma_device_job_thread, p_job &C.ma_job) Result
+[inline]
+pub fn device_job_thread_post(p_job_thread &C.ma_device_job_thread, p_job &C.ma_job) Result {
+	return C.ma_device_job_thread_post(p_job_thread, p_job)
+}
+
+// MA_API ma_result ma_device_job_thread_next(ma_device_job_thread* pJobThread, ma_job* pJob);
+fn C.ma_device_job_thread_next(p_job_thread &C.ma_device_job_thread, p_job &C.ma_job) Result
+[inline]
+pub fn device_job_thread_next(p_job_thread &C.ma_device_job_thread, p_job &C.ma_job) Result {
+	return C.ma_device_job_thread_next(p_job_thread, p_job)
+}
+
+// MA_API ma_context_config ma_context_config_init();
+fn C.ma_context_config_init() C.ma_context_config
+[inline]
+pub fn context_config_init() ContextConfig {
+	return C.ma_context_config_init()
+}
+
+// MA_API ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pConfig, ma_context* pContext);
+fn C.ma_context_init(backends []C.ma_backend, backend_count u32, p_config &C.ma_context_config, p_context &C.ma_context) Result
+
+/*
+TODO
+[inline]
+pub fn context_init(backends[] C.ma_backend, backend_count u32, p_config &ContextConfig, p_context &Context) Result{
+	return C.ma_context_init(backends, backend_count, p_config, p_context)
+}
+*/
+
+// MA_API ma_result ma_context_uninit(ma_context* pContext);
+fn C.ma_context_uninit(p_context &C.ma_context) Result
+[inline]
+pub fn (mut p_context Context) uninit() Result {
+	return C.ma_context_uninit(p_context)
+}
+
+// MA_API size_t ma_context_sizeof();
+fn C.ma_context_sizeof() usize
+[inline]
+pub fn context_sizeof() usize {
+	return C.ma_context_sizeof()
+}
+
+// MA_API ma_log* ma_context_get_log(ma_context* pContext);
+fn C.ma_context_get_log(p_context &C.ma_context) &C.ma_log
+[inline]
+pub fn (mut p_context Context) get_log() &C.ma_log {
+	return C.ma_context_get_log(p_context)
+}
+
+// MA_API ma_result ma_context_enumerate_devices(ma_context* pContext, ma_enum_devices_callback_proc callback, void* pUserData);
+fn C.ma_context_enumerate_devices(p_context &C.ma_context, callback C.ma_enum_devices_callback_proc, p_user_data voidptr) Result
+[inline]
+pub fn (mut p_context Context) enumerate_devices(callback C.ma_enum_devices_callback_proc, p_user_data voidptr) Result {
+	return C.ma_context_enumerate_devices(p_context, callback, p_user_data)
+}
+
+// MA_API ma_result ma_context_get_devices(ma_context* pContext, ma_device_info** ppPlaybackDeviceInfos, ma_uint32* pPlaybackDeviceCount, ma_device_info** ppCaptureDeviceInfos, ma_uint32* pCaptureDeviceCount);
+fn C.ma_context_get_devices(p_context &C.ma_context, pp_playback_device_infos &&C.ma_device_info, p_playback_device_count &u32, pp_capture_device_infos &&C.ma_device_info, p_capture_device_count &u32) Result
+[inline]
+pub fn (mut p_context Context) get_devices(pp_playback_device_infos &&C.ma_device_info, p_playback_device_count &u32, pp_capture_device_infos &&C.ma_device_info, p_capture_device_count &u32) Result {
+	return C.ma_context_get_devices(p_context, pp_playback_device_infos, p_playback_device_count,
+		pp_capture_device_infos, p_capture_device_count)
+}
+
+// MA_API ma_result ma_context_get_device_info(ma_context* pContext, ma_device_type deviceType, const ma_device_id* pDeviceID, ma_device_info* pDeviceInfo);
+fn C.ma_context_get_device_info(p_context &C.ma_context, device_type DeviceType, p_device_i_d &C.ma_device_id, p_device_info &C.ma_device_info) Result
+[inline]
+pub fn (mut p_context Context) get_device_info(device_type DeviceType, p_device_i_d &C.ma_device_id, p_device_info &C.ma_device_info) Result {
+	return C.ma_context_get_device_info(p_context, device_type, p_device_i_d, p_device_info)
+}
+
+// MA_API ma_bool32 ma_context_is_loopback_supported(ma_context* pContext);
+fn C.ma_context_is_loopback_supported(p_context &C.ma_context) bool
+[inline]
+pub fn (mut p_context Context) is_loopback_supported() bool {
+	return C.ma_context_is_loopback_supported(p_context)
+}
+
+// MA_API ma_device_config ma_device_config_init(ma_device_type deviceType);
+fn C.ma_device_config_init(device_type DeviceType) C.ma_device_config
+[inline]
+pub fn device_config_init(device_type DeviceType) DeviceConfig {
+	return C.ma_device_config_init(device_type)
+}
+
+// MA_API ma_result ma_device_init(ma_context* pContext, const ma_device_config* pConfig, ma_device* pDevice);
+fn C.ma_device_init(p_context &C.ma_context, p_config &C.ma_device_config, p_device &C.ma_device) Result
+[inline]
+pub fn device_init(p_context &Context, p_config &DeviceConfig, p_device &Device) Result {
+	return C.ma_device_init(p_context, p_config, p_device)
+}
+
+// MA_API ma_result ma_device_init_ex(const ma_backend backends[], ma_uint32 backendCount, const ma_context_config* pContextConfig, const ma_device_config* pConfig, ma_device* pDevice);
+fn C.ma_device_init_ex(backends []C.ma_backend, backend_count u32, p_context_config &C.ma_context_config, p_config &C.ma_device_config, p_device &C.ma_device) Result
+
+/*
+TODO
+[inline]
+pub fn device_init_ex(backends[] C.ma_backend, backend_count u32, p_context_config &ContextConfig, p_config &DeviceConfig, p_device &Device) Result{
+	return C.ma_device_init_ex(backends, backend_count, p_context_config, p_config, p_device)
+}
+*/
+
+// MA_API void ma_device_uninit(ma_device* pDevice);
+fn C.ma_device_uninit(p_device &C.ma_device)
+[inline]
+pub fn (mut p_device Device) uninit() {
+	C.ma_device_uninit(p_device)
+}
+
+// MA_API ma_context* ma_device_get_context(ma_device* pDevice);
+fn C.ma_device_get_context(p_device &C.ma_device) &C.ma_context
+[inline]
+pub fn (mut p_device Device) get_context() &Context {
+	return C.ma_device_get_context(p_device)
+}
+
+// MA_API ma_log* ma_device_get_log(ma_device* pDevice);
+fn C.ma_device_get_log(p_device &C.ma_device) &C.ma_log
+[inline]
+pub fn (mut p_device Device) get_log() &C.ma_log {
+	return C.ma_device_get_log(p_device)
+}
+
+// MA_API ma_result ma_device_get_info(ma_device* pDevice, ma_device_type type, ma_device_info* pDeviceInfo);
+fn C.ma_device_get_info(p_device &C.ma_device, typ DeviceType, p_device_info &C.ma_device_info) Result
+[inline]
+pub fn (mut p_device Device) get_info(typ DeviceType, p_device_info &C.ma_device_info) Result {
+	return C.ma_device_get_info(p_device, typ, p_device_info)
+}
+
+// MA_API ma_result ma_device_get_name(ma_device* pDevice, ma_device_type type, char* pName, size_t nameCap, size_t* pLengthNotIncludingNullTerminator);
+fn C.ma_device_get_name(p_device &C.ma_device, typ DeviceType, p_name charptr, name_cap usize, p_length_not_including_null_terminator &usize) Result
+[inline]
+pub fn (mut p_device Device) get_name(typ DeviceType, p_name &byte, name_cap usize, p_length_not_including_null_terminator &usize) Result {
+	return C.ma_device_get_name(p_device, typ, p_name, name_cap, p_length_not_including_null_terminator)
+}
+
+// MA_API ma_result ma_device_start(ma_device* pDevice);
+fn C.ma_device_start(p_device &C.ma_device) Result
+[inline]
+pub fn (mut p_device Device) start() Result {
+	return C.ma_device_start(p_device)
+}
+
+// MA_API ma_result ma_device_stop(ma_device* pDevice);
+fn C.ma_device_stop(p_device &C.ma_device) Result
+[inline]
+pub fn (mut p_device Device) stop() Result {
+	return C.ma_device_stop(p_device)
+}
+
+// MA_API ma_bool32 ma_device_is_started(const ma_device* pDevice);
+fn C.ma_device_is_started(p_device &C.ma_device) bool
+[inline]
+pub fn (mut p_device Device) is_started() bool {
+	return C.ma_device_is_started(p_device)
+}
+
+// MA_API ma_device_state ma_device_get_state(const ma_device* pDevice);
+fn C.ma_device_get_state(p_device &C.ma_device) C.ma_device_state
+[inline]
+pub fn (mut p_device Device) get_state() C.ma_device_state {
+	return C.ma_device_get_state(p_device)
+}
+
+// MA_API ma_result ma_device_post_init(ma_device* pDevice, ma_device_type deviceType, const ma_device_descriptor* pPlaybackDescriptor, const ma_device_descriptor* pCaptureDescriptor);
+fn C.ma_device_post_init(p_device &C.ma_device, device_type DeviceType, p_playback_descriptor &C.ma_device_descriptor, p_capture_descriptor &C.ma_device_descriptor) Result
+[inline]
+pub fn (mut p_device Device) post_init(device_type DeviceType, p_playback_descriptor &C.ma_device_descriptor, p_capture_descriptor &C.ma_device_descriptor) Result {
+	return C.ma_device_post_init(p_device, device_type, p_playback_descriptor, p_capture_descriptor)
+}
+
+// MA_API ma_result ma_device_set_master_volume(ma_device* pDevice, float volume);
+fn C.ma_device_set_master_volume(p_device &C.ma_device, volume f32) Result
+[inline]
+pub fn (mut p_device Device) set_master_volume(volume f32) Result {
+	return C.ma_device_set_master_volume(p_device, volume)
+}
+
+// MA_API ma_result ma_device_get_master_volume(ma_device* pDevice, float* pVolume);
+fn C.ma_device_get_master_volume(p_device &C.ma_device, p_volume &f32) Result
+[inline]
+pub fn (mut p_device Device) get_master_volume(p_volume &f32) Result {
+	return C.ma_device_get_master_volume(p_device, p_volume)
+}
+
+// MA_API ma_result ma_device_set_master_volume_db(ma_device* pDevice, float gainDB);
+fn C.ma_device_set_master_volume_db(p_device &C.ma_device, gain_d_b f32) Result
+[inline]
+pub fn (mut p_device Device) set_master_volume_db(gain_d_b f32) Result {
+	return C.ma_device_set_master_volume_db(p_device, gain_d_b)
+}
+
+// MA_API ma_result ma_device_get_master_volume_db(ma_device* pDevice, float* pGainDB);
+fn C.ma_device_get_master_volume_db(p_device &C.ma_device, p_gain_d_b &f32) Result
+[inline]
+pub fn (mut p_device Device) get_master_volume_db(p_gain_d_b &f32) Result {
+	return C.ma_device_get_master_volume_db(p_device, p_gain_d_b)
+}
+
+// MA_API ma_result ma_device_handle_backend_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+fn C.ma_device_handle_backend_data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) Result
+[inline]
+pub fn (mut p_device Device) handle_backend_data_callback(p_output voidptr, p_input voidptr, frame_count u32) Result {
+	return C.ma_device_handle_backend_data_callback(p_device, p_output, p_input, frame_count)
+}
+
+// MA_API ma_uint32 ma_calculate_buffer_size_in_frames_from_descriptor(const ma_device_descriptor* pDescriptor, ma_uint32 nativeSampleRate, ma_performance_profile performanceProfile);
+fn C.ma_calculate_buffer_size_in_frames_from_descriptor(p_descriptor &C.ma_device_descriptor, native_sample_rate u32, performance_profile C.ma_performance_profile) u32
+[inline]
+pub fn calculate_buffer_size_in_frames_from_descriptor(p_descriptor &C.ma_device_descriptor, native_sample_rate u32, performance_profile C.ma_performance_profile) u32 {
+	return C.ma_calculate_buffer_size_in_frames_from_descriptor(p_descriptor, native_sample_rate,
+		performance_profile)
+}
+
+// MA_API const char* ma_get_backend_name(ma_backend backend);
+fn C.ma_get_backend_name(backend C.ma_backend) &char
+[inline]
+pub fn get_backend_name(backend C.ma_backend) &char {
+	return C.ma_get_backend_name(backend)
+}
+
+// MA_API ma_bool32 ma_is_backend_enabled(ma_backend backend);
+fn C.ma_is_backend_enabled(backend C.ma_backend) bool
+[inline]
+pub fn is_backend_enabled(backend C.ma_backend) bool {
+	return C.ma_is_backend_enabled(backend)
+}
+
+// MA_API ma_result ma_get_enabled_backends(ma_backend* pBackends, size_t backendCap, size_t* pBackendCount);
+fn C.ma_get_enabled_backends(p_backends &C.ma_backend, backend_cap usize, p_backend_count &usize) Result
+[inline]
+pub fn get_enabled_backends(p_backends &C.ma_backend, backend_cap usize, p_backend_count &usize) Result {
+	return C.ma_get_enabled_backends(p_backends, backend_cap, p_backend_count)
+}
+
+// MA_API ma_bool32 ma_is_loopback_supported(ma_backend backend);
+fn C.ma_is_loopback_supported(backend C.ma_backend) bool
+[inline]
+pub fn is_loopback_supported(backend C.ma_backend) bool {
+	return C.ma_is_loopback_supported(backend)
 }
 
 // MA_API ma_uint32 ma_calculate_buffer_size_in_milliseconds_from_frames(ma_uint32 bufferSizeInFrames, ma_uint32 sampleRate);
@@ -1823,11 +3039,46 @@ pub fn offset_pcm_frames_const_ptr(p voidptr, offset_in_frames u64, format Forma
 	return C.ma_offset_pcm_frames_const_ptr(p, offset_in_frames, format, channels)
 }
 
-// MA_API void ma_clip_samples_f32(float* p, ma_uint64 sampleCount);
-fn C.ma_clip_samples_f32(p &f32, sample_count u64)
+// MA_API void ma_clip_samples_u8(ma_uint8* pDst, const ma_int16* pSrc, ma_uint64 count);
+fn C.ma_clip_samples_u8(p_dst &C.ma_uint8, p_src &C.ma_int16, count u64)
 [inline]
-pub fn clip_samples_f32(p &f32, sample_count u64) {
-	C.ma_clip_samples_f32(p, sample_count)
+pub fn clip_samples_u8(p_dst &C.ma_uint8, p_src &C.ma_int16, count u64) {
+	C.ma_clip_samples_u8(p_dst, p_src, count)
+}
+
+// MA_API void ma_clip_samples_s16(ma_int16* pDst, const ma_int32* pSrc, ma_uint64 count);
+fn C.ma_clip_samples_s16(p_dst &C.ma_int16, p_src &int, count u64)
+[inline]
+pub fn clip_samples_s16(p_dst &C.ma_int16, p_src &int, count u64) {
+	C.ma_clip_samples_s16(p_dst, p_src, count)
+}
+
+// MA_API void ma_clip_samples_s24(ma_uint8* pDst, const ma_int64* pSrc, ma_uint64 count);
+fn C.ma_clip_samples_s24(p_dst &C.ma_uint8, p_src &C.ma_int64, count u64)
+[inline]
+pub fn clip_samples_s24(p_dst &C.ma_uint8, p_src &C.ma_int64, count u64) {
+	C.ma_clip_samples_s24(p_dst, p_src, count)
+}
+
+// MA_API void ma_clip_samples_s32(ma_int32* pDst, const ma_int64* pSrc, ma_uint64 count);
+fn C.ma_clip_samples_s32(p_dst &int, p_src &C.ma_int64, count u64)
+[inline]
+pub fn clip_samples_s32(p_dst &int, p_src &C.ma_int64, count u64) {
+	C.ma_clip_samples_s32(p_dst, p_src, count)
+}
+
+// MA_API void ma_clip_samples_f32(float* pDst, const float* pSrc, ma_uint64 count);
+fn C.ma_clip_samples_f32(p_dst &f32, p_src &f32, count u64)
+[inline]
+pub fn clip_samples_f32(p_dst &f32, p_src &f32, count u64) {
+	C.ma_clip_samples_f32(p_dst, p_src, count)
+}
+
+// MA_API void ma_clip_pcm_frames(void* pDst, const void* pSrc, ma_uint64 frameCount, ma_format format, ma_uint32 channels);
+fn C.ma_clip_pcm_frames(p_dst voidptr, p_src voidptr, frame_count u64, format Format, channels u32)
+[inline]
+pub fn clip_pcm_frames(p_dst voidptr, p_src voidptr, frame_count u64, format Format, channels u32) {
+	C.ma_clip_pcm_frames(p_dst, p_src, frame_count, format, channels)
 }
 
 // MA_API void ma_copy_and_apply_volume_factor_u8(ma_uint8* pSamplesOut, const ma_uint8* pSamplesIn, ma_uint64 sampleCount, float factor);
@@ -1900,44 +3151,44 @@ pub fn apply_volume_factor_f32(p_samples &f32, sample_count u64, factor f32) {
 	C.ma_apply_volume_factor_f32(p_samples, sample_count, factor)
 }
 
-// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_u8(ma_uint8* pPCMFramesOut, const ma_uint8* pPCMFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
-fn C.ma_copy_and_apply_volume_factor_pcm_frames_u8(p_p_c_m_frames_out &C.ma_uint8, p_p_c_m_frames_in &C.ma_uint8, frame_count u64, channels u32, factor f32)
+// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_u8(ma_uint8* pFramesOut, const ma_uint8* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
+fn C.ma_copy_and_apply_volume_factor_pcm_frames_u8(p_frames_out &C.ma_uint8, p_frames_in &C.ma_uint8, frame_count u64, channels u32, factor f32)
 [inline]
-pub fn copy_and_apply_volume_factor_pcm_frames_u8(p_p_c_m_frames_out &C.ma_uint8, p_p_c_m_frames_in &C.ma_uint8, frame_count u64, channels u32, factor f32) {
-	C.ma_copy_and_apply_volume_factor_pcm_frames_u8(p_p_c_m_frames_out, p_p_c_m_frames_in,
-		frame_count, channels, factor)
+pub fn copy_and_apply_volume_factor_pcm_frames_u8(p_frames_out &C.ma_uint8, p_frames_in &C.ma_uint8, frame_count u64, channels u32, factor f32) {
+	C.ma_copy_and_apply_volume_factor_pcm_frames_u8(p_frames_out, p_frames_in, frame_count,
+		channels, factor)
 }
 
-// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s16(ma_int16* pPCMFramesOut, const ma_int16* pPCMFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
-fn C.ma_copy_and_apply_volume_factor_pcm_frames_s16(p_p_c_m_frames_out &C.ma_int16, p_p_c_m_frames_in &C.ma_int16, frame_count u64, channels u32, factor f32)
+// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s16(ma_int16* pFramesOut, const ma_int16* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
+fn C.ma_copy_and_apply_volume_factor_pcm_frames_s16(p_frames_out &C.ma_int16, p_frames_in &C.ma_int16, frame_count u64, channels u32, factor f32)
 [inline]
-pub fn copy_and_apply_volume_factor_pcm_frames_s16(p_p_c_m_frames_out &C.ma_int16, p_p_c_m_frames_in &C.ma_int16, frame_count u64, channels u32, factor f32) {
-	C.ma_copy_and_apply_volume_factor_pcm_frames_s16(p_p_c_m_frames_out, p_p_c_m_frames_in,
-		frame_count, channels, factor)
+pub fn copy_and_apply_volume_factor_pcm_frames_s16(p_frames_out &C.ma_int16, p_frames_in &C.ma_int16, frame_count u64, channels u32, factor f32) {
+	C.ma_copy_and_apply_volume_factor_pcm_frames_s16(p_frames_out, p_frames_in, frame_count,
+		channels, factor)
 }
 
-// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s24(void* pPCMFramesOut, const void* pPCMFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
-fn C.ma_copy_and_apply_volume_factor_pcm_frames_s24(p_p_c_m_frames_out voidptr, p_p_c_m_frames_in voidptr, frame_count u64, channels u32, factor f32)
+// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s24(void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
+fn C.ma_copy_and_apply_volume_factor_pcm_frames_s24(p_frames_out voidptr, p_frames_in voidptr, frame_count u64, channels u32, factor f32)
 [inline]
-pub fn copy_and_apply_volume_factor_pcm_frames_s24(p_p_c_m_frames_out voidptr, p_p_c_m_frames_in voidptr, frame_count u64, channels u32, factor f32) {
-	C.ma_copy_and_apply_volume_factor_pcm_frames_s24(p_p_c_m_frames_out, p_p_c_m_frames_in,
-		frame_count, channels, factor)
+pub fn copy_and_apply_volume_factor_pcm_frames_s24(p_frames_out voidptr, p_frames_in voidptr, frame_count u64, channels u32, factor f32) {
+	C.ma_copy_and_apply_volume_factor_pcm_frames_s24(p_frames_out, p_frames_in, frame_count,
+		channels, factor)
 }
 
-// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s32(ma_int32* pPCMFramesOut, const ma_int32* pPCMFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
-fn C.ma_copy_and_apply_volume_factor_pcm_frames_s32(p_p_c_m_frames_out &int, p_p_c_m_frames_in &int, frame_count u64, channels u32, factor f32)
+// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_s32(ma_int32* pFramesOut, const ma_int32* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
+fn C.ma_copy_and_apply_volume_factor_pcm_frames_s32(p_frames_out &int, p_frames_in &int, frame_count u64, channels u32, factor f32)
 [inline]
-pub fn copy_and_apply_volume_factor_pcm_frames_s32(p_p_c_m_frames_out &int, p_p_c_m_frames_in &int, frame_count u64, channels u32, factor f32) {
-	C.ma_copy_and_apply_volume_factor_pcm_frames_s32(p_p_c_m_frames_out, p_p_c_m_frames_in,
-		frame_count, channels, factor)
+pub fn copy_and_apply_volume_factor_pcm_frames_s32(p_frames_out &int, p_frames_in &int, frame_count u64, channels u32, factor f32) {
+	C.ma_copy_and_apply_volume_factor_pcm_frames_s32(p_frames_out, p_frames_in, frame_count,
+		channels, factor)
 }
 
-// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_f32(float* pPCMFramesOut, const float* pPCMFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
-fn C.ma_copy_and_apply_volume_factor_pcm_frames_f32(p_p_c_m_frames_out &f32, p_p_c_m_frames_in &f32, frame_count u64, channels u32, factor f32)
+// MA_API void ma_copy_and_apply_volume_factor_pcm_frames_f32(float* pFramesOut, const float* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float factor);
+fn C.ma_copy_and_apply_volume_factor_pcm_frames_f32(p_frames_out &f32, p_frames_in &f32, frame_count u64, channels u32, factor f32)
 [inline]
-pub fn copy_and_apply_volume_factor_pcm_frames_f32(p_p_c_m_frames_out &f32, p_p_c_m_frames_in &f32, frame_count u64, channels u32, factor f32) {
-	C.ma_copy_and_apply_volume_factor_pcm_frames_f32(p_p_c_m_frames_out, p_p_c_m_frames_in,
-		frame_count, channels, factor)
+pub fn copy_and_apply_volume_factor_pcm_frames_f32(p_frames_out &f32, p_frames_in &f32, frame_count u64, channels u32, factor f32) {
+	C.ma_copy_and_apply_volume_factor_pcm_frames_f32(p_frames_out, p_frames_in, frame_count,
+		channels, factor)
 }
 
 // MA_API void ma_copy_and_apply_volume_factor_pcm_frames(void* pFramesOut, const void* pFramesIn, ma_uint64 frameCount, ma_format format, ma_uint32 channels, float factor);
@@ -1990,18 +3241,69 @@ pub fn apply_volume_factor_pcm_frames(p_frames voidptr, frame_count u64, format 
 	C.ma_apply_volume_factor_pcm_frames(p_frames, frame_count, format, channels, factor)
 }
 
-// MA_API float ma_factor_to_gain_db(float factor);
-fn C.ma_factor_to_gain_db(factor f32) f32
+// MA_API void ma_copy_and_apply_volume_factor_per_channel_f32(float* pFramesOut, const float* pFramesIn, ma_uint64 frameCount, ma_uint32 channels, float* pChannelGains);
+fn C.ma_copy_and_apply_volume_factor_per_channel_f32(p_frames_out &f32, p_frames_in &f32, frame_count u64, channels u32, p_channel_gains &f32)
 [inline]
-pub fn factor_to_gain_db(factor f32) f32 {
-	return C.ma_factor_to_gain_db(factor)
+pub fn copy_and_apply_volume_factor_per_channel_f32(p_frames_out &f32, p_frames_in &f32, frame_count u64, channels u32, p_channel_gains &f32) {
+	C.ma_copy_and_apply_volume_factor_per_channel_f32(p_frames_out, p_frames_in, frame_count,
+		channels, p_channel_gains)
 }
 
-// MA_API float ma_gain_db_to_factor(float gain);
-fn C.ma_gain_db_to_factor(gain f32) f32
+// MA_API void ma_copy_and_apply_volume_and_clip_samples_u8(ma_uint8* pDst, const ma_int16* pSrc, ma_uint64 count, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_samples_u8(p_dst &C.ma_uint8, p_src &C.ma_int16, count u64, volume f32)
 [inline]
-pub fn gain_db_to_factor(gain f32) f32 {
-	return C.ma_gain_db_to_factor(gain)
+pub fn copy_and_apply_volume_and_clip_samples_u8(p_dst &C.ma_uint8, p_src &C.ma_int16, count u64, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_samples_u8(p_dst, p_src, count, volume)
+}
+
+// MA_API void ma_copy_and_apply_volume_and_clip_samples_s16(ma_int16* pDst, const ma_int32* pSrc, ma_uint64 count, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_samples_s16(p_dst &C.ma_int16, p_src &int, count u64, volume f32)
+[inline]
+pub fn copy_and_apply_volume_and_clip_samples_s16(p_dst &C.ma_int16, p_src &int, count u64, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_samples_s16(p_dst, p_src, count, volume)
+}
+
+// MA_API void ma_copy_and_apply_volume_and_clip_samples_s24(ma_uint8* pDst, const ma_int64* pSrc, ma_uint64 count, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_samples_s24(p_dst &C.ma_uint8, p_src &C.ma_int64, count u64, volume f32)
+[inline]
+pub fn copy_and_apply_volume_and_clip_samples_s24(p_dst &C.ma_uint8, p_src &C.ma_int64, count u64, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_samples_s24(p_dst, p_src, count, volume)
+}
+
+// MA_API void ma_copy_and_apply_volume_and_clip_samples_s32(ma_int32* pDst, const ma_int64* pSrc, ma_uint64 count, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_samples_s32(p_dst &int, p_src &C.ma_int64, count u64, volume f32)
+[inline]
+pub fn copy_and_apply_volume_and_clip_samples_s32(p_dst &int, p_src &C.ma_int64, count u64, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_samples_s32(p_dst, p_src, count, volume)
+}
+
+// MA_API void ma_copy_and_apply_volume_and_clip_samples_f32(float* pDst, const float* pSrc, ma_uint64 count, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_samples_f32(p_dst &f32, p_src &f32, count u64, volume f32)
+[inline]
+pub fn copy_and_apply_volume_and_clip_samples_f32(p_dst &f32, p_src &f32, count u64, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_samples_f32(p_dst, p_src, count, volume)
+}
+
+// MA_API void ma_copy_and_apply_volume_and_clip_pcm_frames(void* pDst, const void* pSrc, ma_uint64 frameCount, ma_format format, ma_uint32 channels, float volume);
+fn C.ma_copy_and_apply_volume_and_clip_pcm_frames(p_dst voidptr, p_src voidptr, frame_count u64, format Format, channels u32, volume f32)
+[inline]
+pub fn copy_and_apply_volume_and_clip_pcm_frames(p_dst voidptr, p_src voidptr, frame_count u64, format Format, channels u32, volume f32) {
+	C.ma_copy_and_apply_volume_and_clip_pcm_frames(p_dst, p_src, frame_count, format,
+		channels, volume)
+}
+
+// MA_API float ma_volume_linear_to_db(float factor);
+fn C.ma_volume_linear_to_db(factor f32) f32
+[inline]
+pub fn volume_linear_to_db(factor f32) f32 {
+	return C.ma_volume_linear_to_db(factor)
+}
+
+// MA_API float ma_volume_db_to_linear(float gain);
+fn C.ma_volume_db_to_linear(gain f32) f32
+[inline]
+pub fn volume_db_to_linear(gain f32) f32 {
+	return C.ma_volume_db_to_linear(gain)
 }
 
 // MA_API ma_data_source_config ma_data_source_config_init();
@@ -2025,20 +3327,19 @@ pub fn data_source_uninit(p_data_source &C.ma_data_source) {
 	C.ma_data_source_uninit(p_data_source)
 }
 
-// MA_API ma_result ma_data_source_read_pcm_frames(ma_data_source* pDataSource, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead, ma_bool32 loop);   /* Must support pFramesOut = NULL in which case a forward seek should be performed. */
-fn C.ma_data_source_read_pcm_frames(p_data_source &C.ma_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64, loop bool) Result
+// MA_API ma_result ma_data_source_read_pcm_frames(ma_data_source* pDataSource, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);   /* Must support pFramesOut = NULL in which case a forward seek should be performed. */
+fn C.ma_data_source_read_pcm_frames(p_data_source &C.ma_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
 [inline]
-pub fn data_source_read_pcm_frames(p_data_source &C.ma_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64, loop bool) Result {
+pub fn data_source_read_pcm_frames(p_data_source &C.ma_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
 	return C.ma_data_source_read_pcm_frames(p_data_source, p_frames_out, frame_count,
-		p_frames_read, loop)
+		p_frames_read)
 }
 
-// MA_API ma_result ma_data_source_seek_pcm_frames(ma_data_source* pDataSource, ma_uint64 frameCount, ma_uint64* pFramesSeeked, ma_bool32 loop); /* Can only seek forward. Equivalent to ma_data_source_read_pcm_frames(pDataSource, NULL, frameCount); */
-fn C.ma_data_source_seek_pcm_frames(p_data_source &C.ma_data_source, frame_count u64, p_frames_seeked &u64, loop bool) Result
+// MA_API ma_result ma_data_source_seek_pcm_frames(ma_data_source* pDataSource, ma_uint64 frameCount, ma_uint64* pFramesSeeked); /* Can only seek forward. Equivalent to ma_data_source_read_pcm_frames(pDataSource, NULL, frameCount, &framesRead); */
+fn C.ma_data_source_seek_pcm_frames(p_data_source &C.ma_data_source, frame_count u64, p_frames_seeked &u64) Result
 [inline]
-pub fn data_source_seek_pcm_frames(p_data_source &C.ma_data_source, frame_count u64, p_frames_seeked &u64, loop bool) Result {
-	return C.ma_data_source_seek_pcm_frames(p_data_source, frame_count, p_frames_seeked,
-		loop)
+pub fn data_source_seek_pcm_frames(p_data_source &C.ma_data_source, frame_count u64, p_frames_seeked &u64) Result {
+	return C.ma_data_source_seek_pcm_frames(p_data_source, frame_count, p_frames_seeked)
 }
 
 // MA_API ma_result ma_data_source_seek_to_pcm_frame(ma_data_source* pDataSource, ma_uint64 frameIndex);
@@ -2048,25 +3349,12 @@ pub fn data_source_seek_to_pcm_frame(p_data_source &C.ma_data_source, frame_inde
 	return C.ma_data_source_seek_to_pcm_frame(p_data_source, frame_index)
 }
 
-// MA_API ma_result ma_data_source_map(ma_data_source* pDataSource, void** ppFramesOut, ma_uint64* pFrameCount);   /* Returns MA_NOT_IMPLEMENTED if mapping is not supported. */
-fn C.ma_data_source_map(p_data_source &C.ma_data_source, pp_frames_out &voidptr, p_frame_count &u64) Result
+// MA_API ma_result ma_data_source_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_data_source_get_data_format(p_data_source &C.ma_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
 [inline]
-pub fn data_source_map(p_data_source &C.ma_data_source, pp_frames_out &voidptr, p_frame_count &u64) Result {
-	return C.ma_data_source_map(p_data_source, pp_frames_out, p_frame_count)
-}
-
-// MA_API ma_result ma_data_source_unmap(ma_data_source* pDataSource, ma_uint64 frameCount);       /* Returns MA_AT_END if the end has been reached. */
-fn C.ma_data_source_unmap(p_data_source &C.ma_data_source, frame_count u64) Result
-[inline]
-pub fn data_source_unmap(p_data_source &C.ma_data_source, frame_count u64) Result {
-	return C.ma_data_source_unmap(p_data_source, frame_count)
-}
-
-// MA_API ma_result ma_data_source_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate);
-fn C.ma_data_source_get_data_format(p_data_source &C.ma_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32) Result
-[inline]
-pub fn data_source_get_data_format(p_data_source &C.ma_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32) Result {
-	return C.ma_data_source_get_data_format(p_data_source, p_format, p_channels, p_sample_rate)
+pub fn data_source_get_data_format(p_data_source &C.ma_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_data_source_get_data_format(p_data_source, p_format, p_channels, p_sample_rate,
+		p_channel_map, channel_map_cap)
 }
 
 // MA_API ma_result ma_data_source_get_cursor_in_pcm_frames(ma_data_source* pDataSource, ma_uint64* pCursor);
@@ -2081,6 +3369,107 @@ fn C.ma_data_source_get_length_in_pcm_frames(p_data_source &C.ma_data_source, p_
 [inline]
 pub fn data_source_get_length_in_pcm_frames(p_data_source &C.ma_data_source, p_length &u64) Result {
 	return C.ma_data_source_get_length_in_pcm_frames(p_data_source, p_length)
+}
+
+// MA_API ma_result ma_data_source_get_cursor_in_seconds(ma_data_source* pDataSource, float* pCursor);
+fn C.ma_data_source_get_cursor_in_seconds(p_data_source &C.ma_data_source, p_cursor &f32) Result
+[inline]
+pub fn data_source_get_cursor_in_seconds(p_data_source &C.ma_data_source, p_cursor &f32) Result {
+	return C.ma_data_source_get_cursor_in_seconds(p_data_source, p_cursor)
+}
+
+// MA_API ma_result ma_data_source_get_length_in_seconds(ma_data_source* pDataSource, float* pLength);
+fn C.ma_data_source_get_length_in_seconds(p_data_source &C.ma_data_source, p_length &f32) Result
+[inline]
+pub fn data_source_get_length_in_seconds(p_data_source &C.ma_data_source, p_length &f32) Result {
+	return C.ma_data_source_get_length_in_seconds(p_data_source, p_length)
+}
+
+// MA_API ma_result ma_data_source_set_looping(ma_data_source* pDataSource, ma_bool32 isLooping);
+fn C.ma_data_source_set_looping(p_data_source &C.ma_data_source, is_looping bool) Result
+[inline]
+pub fn data_source_set_looping(p_data_source &C.ma_data_source, is_looping bool) Result {
+	return C.ma_data_source_set_looping(p_data_source, is_looping)
+}
+
+// MA_API ma_bool32 ma_data_source_is_looping(ma_data_source* pDataSource);
+fn C.ma_data_source_is_looping(p_data_source &C.ma_data_source) bool
+[inline]
+pub fn data_source_is_looping(p_data_source &C.ma_data_source) bool {
+	return C.ma_data_source_is_looping(p_data_source)
+}
+
+// MA_API ma_result ma_data_source_set_range_in_pcm_frames(ma_data_source* pDataSource, ma_uint64 rangeBegInFrames, ma_uint64 rangeEndInFrames);
+fn C.ma_data_source_set_range_in_pcm_frames(p_data_source &C.ma_data_source, range_beg_in_frames u64, range_end_in_frames u64) Result
+[inline]
+pub fn data_source_set_range_in_pcm_frames(p_data_source &C.ma_data_source, range_beg_in_frames u64, range_end_in_frames u64) Result {
+	return C.ma_data_source_set_range_in_pcm_frames(p_data_source, range_beg_in_frames,
+		range_end_in_frames)
+}
+
+// MA_API void ma_data_source_get_range_in_pcm_frames(ma_data_source* pDataSource, ma_uint64* pRangeBegInFrames, ma_uint64* pRangeEndInFrames);
+fn C.ma_data_source_get_range_in_pcm_frames(p_data_source &C.ma_data_source, p_range_beg_in_frames &u64, p_range_end_in_frames &u64)
+[inline]
+pub fn data_source_get_range_in_pcm_frames(p_data_source &C.ma_data_source, p_range_beg_in_frames &u64, p_range_end_in_frames &u64) {
+	C.ma_data_source_get_range_in_pcm_frames(p_data_source, p_range_beg_in_frames, p_range_end_in_frames)
+}
+
+// MA_API ma_result ma_data_source_set_loop_point_in_pcm_frames(ma_data_source* pDataSource, ma_uint64 loopBegInFrames, ma_uint64 loopEndInFrames);
+fn C.ma_data_source_set_loop_point_in_pcm_frames(p_data_source &C.ma_data_source, loop_beg_in_frames u64, loop_end_in_frames u64) Result
+[inline]
+pub fn data_source_set_loop_point_in_pcm_frames(p_data_source &C.ma_data_source, loop_beg_in_frames u64, loop_end_in_frames u64) Result {
+	return C.ma_data_source_set_loop_point_in_pcm_frames(p_data_source, loop_beg_in_frames,
+		loop_end_in_frames)
+}
+
+// MA_API void ma_data_source_get_loop_point_in_pcm_frames(ma_data_source* pDataSource, ma_uint64* pLoopBegInFrames, ma_uint64* pLoopEndInFrames);
+fn C.ma_data_source_get_loop_point_in_pcm_frames(p_data_source &C.ma_data_source, p_loop_beg_in_frames &u64, p_loop_end_in_frames &u64)
+[inline]
+pub fn data_source_get_loop_point_in_pcm_frames(p_data_source &C.ma_data_source, p_loop_beg_in_frames &u64, p_loop_end_in_frames &u64) {
+	C.ma_data_source_get_loop_point_in_pcm_frames(p_data_source, p_loop_beg_in_frames,
+		p_loop_end_in_frames)
+}
+
+// MA_API ma_result ma_data_source_set_current(ma_data_source* pDataSource, ma_data_source* pCurrentDataSource);
+fn C.ma_data_source_set_current(p_data_source &C.ma_data_source, p_current_data_source &C.ma_data_source) Result
+[inline]
+pub fn data_source_set_current(p_data_source &C.ma_data_source, p_current_data_source &C.ma_data_source) Result {
+	return C.ma_data_source_set_current(p_data_source, p_current_data_source)
+}
+
+// MA_API ma_data_source* ma_data_source_get_current(ma_data_source* pDataSource);
+fn C.ma_data_source_get_current(p_data_source &C.ma_data_source) &C.ma_data_source
+[inline]
+pub fn data_source_get_current(p_data_source &C.ma_data_source) &C.ma_data_source {
+	return C.ma_data_source_get_current(p_data_source)
+}
+
+// MA_API ma_result ma_data_source_set_next(ma_data_source* pDataSource, ma_data_source* pNextDataSource);
+fn C.ma_data_source_set_next(p_data_source &C.ma_data_source, p_next_data_source &C.ma_data_source) Result
+[inline]
+pub fn data_source_set_next(p_data_source &C.ma_data_source, p_next_data_source &C.ma_data_source) Result {
+	return C.ma_data_source_set_next(p_data_source, p_next_data_source)
+}
+
+// MA_API ma_data_source* ma_data_source_get_next(ma_data_source* pDataSource);
+fn C.ma_data_source_get_next(p_data_source &C.ma_data_source) &C.ma_data_source
+[inline]
+pub fn data_source_get_next(p_data_source &C.ma_data_source) &C.ma_data_source {
+	return C.ma_data_source_get_next(p_data_source)
+}
+
+// MA_API ma_result ma_data_source_set_next_callback(ma_data_source* pDataSource, ma_data_source_get_next_proc onGetNext);
+fn C.ma_data_source_set_next_callback(p_data_source &C.ma_data_source, on_get_next C.ma_data_source_get_next_proc) Result
+[inline]
+pub fn data_source_set_next_callback(p_data_source &C.ma_data_source, on_get_next C.ma_data_source_get_next_proc) Result {
+	return C.ma_data_source_set_next_callback(p_data_source, on_get_next)
+}
+
+// MA_API ma_data_source_get_next_proc ma_data_source_get_next_callback(ma_data_source* pDataSource);
+fn C.ma_data_source_get_next_callback(p_data_source &C.ma_data_source) C.ma_data_source_get_next_proc
+[inline]
+pub fn data_source_get_next_callback(p_data_source &C.ma_data_source) C.ma_data_source_get_next_proc {
+	return C.ma_data_source_get_next_callback(p_data_source)
 }
 
 // MA_API ma_result ma_audio_buffer_ref_init(ma_format format, ma_uint32 channels, const void* pData, ma_uint64 sizeInFrames, ma_audio_buffer_ref* pAudioBufferRef);
@@ -2260,6 +3649,121 @@ pub fn audio_buffer_get_available_frames(p_audio_buffer &C.ma_audio_buffer, p_av
 	return C.ma_audio_buffer_get_available_frames(p_audio_buffer, p_available_frames)
 }
 
+// MA_API ma_result ma_paged_audio_buffer_data_init(ma_format format, ma_uint32 channels, ma_paged_audio_buffer_data* pData);
+fn C.ma_paged_audio_buffer_data_init(format Format, channels u32, p_data &C.ma_paged_audio_buffer_data) Result
+[inline]
+pub fn paged_audio_buffer_data_init(format Format, channels u32, p_data &C.ma_paged_audio_buffer_data) Result {
+	return C.ma_paged_audio_buffer_data_init(format, channels, p_data)
+}
+
+// MA_API void ma_paged_audio_buffer_data_uninit(ma_paged_audio_buffer_data* pData, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_paged_audio_buffer_data_uninit(p_data &C.ma_paged_audio_buffer_data, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn paged_audio_buffer_data_uninit(p_data &C.ma_paged_audio_buffer_data, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_paged_audio_buffer_data_uninit(p_data, p_allocation_callbacks)
+}
+
+// MA_API ma_paged_audio_buffer_page* ma_paged_audio_buffer_data_get_head(ma_paged_audio_buffer_data* pData);
+fn C.ma_paged_audio_buffer_data_get_head(p_data &C.ma_paged_audio_buffer_data) &C.ma_paged_audio_buffer_page
+[inline]
+pub fn paged_audio_buffer_data_get_head(p_data &C.ma_paged_audio_buffer_data) &C.ma_paged_audio_buffer_page {
+	return C.ma_paged_audio_buffer_data_get_head(p_data)
+}
+
+// MA_API ma_paged_audio_buffer_page* ma_paged_audio_buffer_data_get_tail(ma_paged_audio_buffer_data* pData);
+fn C.ma_paged_audio_buffer_data_get_tail(p_data &C.ma_paged_audio_buffer_data) &C.ma_paged_audio_buffer_page
+[inline]
+pub fn paged_audio_buffer_data_get_tail(p_data &C.ma_paged_audio_buffer_data) &C.ma_paged_audio_buffer_page {
+	return C.ma_paged_audio_buffer_data_get_tail(p_data)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_data_get_length_in_pcm_frames(ma_paged_audio_buffer_data* pData, ma_uint64* pLength);
+fn C.ma_paged_audio_buffer_data_get_length_in_pcm_frames(p_data &C.ma_paged_audio_buffer_data, p_length &u64) Result
+[inline]
+pub fn paged_audio_buffer_data_get_length_in_pcm_frames(p_data &C.ma_paged_audio_buffer_data, p_length &u64) Result {
+	return C.ma_paged_audio_buffer_data_get_length_in_pcm_frames(p_data, p_length)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_data_allocate_page(ma_paged_audio_buffer_data* pData, ma_uint64 pageSizeInFrames, const void* pInitialData, const ma_allocation_callbacks* pAllocationCallbacks, ma_paged_audio_buffer_page** ppPage);
+fn C.ma_paged_audio_buffer_data_allocate_page(p_data &C.ma_paged_audio_buffer_data, page_size_in_frames u64, p_initial_data voidptr, p_allocation_callbacks &C.ma_allocation_callbacks, pp_page &&C.ma_paged_audio_buffer_page) Result
+[inline]
+pub fn paged_audio_buffer_data_allocate_page(p_data &C.ma_paged_audio_buffer_data, page_size_in_frames u64, p_initial_data voidptr, p_allocation_callbacks &C.ma_allocation_callbacks, pp_page &&C.ma_paged_audio_buffer_page) Result {
+	return C.ma_paged_audio_buffer_data_allocate_page(p_data, page_size_in_frames, p_initial_data,
+		p_allocation_callbacks, pp_page)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_data_free_page(ma_paged_audio_buffer_data* pData, ma_paged_audio_buffer_page* pPage, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_paged_audio_buffer_data_free_page(p_data &C.ma_paged_audio_buffer_data, p_page &C.ma_paged_audio_buffer_page, p_allocation_callbacks &C.ma_allocation_callbacks) Result
+[inline]
+pub fn paged_audio_buffer_data_free_page(p_data &C.ma_paged_audio_buffer_data, p_page &C.ma_paged_audio_buffer_page, p_allocation_callbacks &C.ma_allocation_callbacks) Result {
+	return C.ma_paged_audio_buffer_data_free_page(p_data, p_page, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_data_append_page(ma_paged_audio_buffer_data* pData, ma_paged_audio_buffer_page* pPage);
+fn C.ma_paged_audio_buffer_data_append_page(p_data &C.ma_paged_audio_buffer_data, p_page &C.ma_paged_audio_buffer_page) Result
+[inline]
+pub fn paged_audio_buffer_data_append_page(p_data &C.ma_paged_audio_buffer_data, p_page &C.ma_paged_audio_buffer_page) Result {
+	return C.ma_paged_audio_buffer_data_append_page(p_data, p_page)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_data_allocate_and_append_page(ma_paged_audio_buffer_data* pData, ma_uint32 pageSizeInFrames, const void* pInitialData, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_paged_audio_buffer_data_allocate_and_append_page(p_data &C.ma_paged_audio_buffer_data, page_size_in_frames u32, p_initial_data voidptr, p_allocation_callbacks &C.ma_allocation_callbacks) Result
+[inline]
+pub fn paged_audio_buffer_data_allocate_and_append_page(p_data &C.ma_paged_audio_buffer_data, page_size_in_frames u32, p_initial_data voidptr, p_allocation_callbacks &C.ma_allocation_callbacks) Result {
+	return C.ma_paged_audio_buffer_data_allocate_and_append_page(p_data, page_size_in_frames,
+		p_initial_data, p_allocation_callbacks)
+}
+
+// MA_API ma_paged_audio_buffer_config ma_paged_audio_buffer_config_init(ma_paged_audio_buffer_data* pData);
+fn C.ma_paged_audio_buffer_config_init(p_data &C.ma_paged_audio_buffer_data) C.ma_paged_audio_buffer_config
+[inline]
+pub fn paged_audio_buffer_config_init(p_data &C.ma_paged_audio_buffer_data) C.ma_paged_audio_buffer_config {
+	return C.ma_paged_audio_buffer_config_init(p_data)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_init(const ma_paged_audio_buffer_config* pConfig, ma_paged_audio_buffer* pPagedAudioBuffer);
+fn C.ma_paged_audio_buffer_init(p_config &C.ma_paged_audio_buffer_config, p_paged_audio_buffer &C.ma_paged_audio_buffer) Result
+[inline]
+pub fn paged_audio_buffer_init(p_config &C.ma_paged_audio_buffer_config, p_paged_audio_buffer &C.ma_paged_audio_buffer) Result {
+	return C.ma_paged_audio_buffer_init(p_config, p_paged_audio_buffer)
+}
+
+// MA_API void ma_paged_audio_buffer_uninit(ma_paged_audio_buffer* pPagedAudioBuffer);
+fn C.ma_paged_audio_buffer_uninit(p_paged_audio_buffer &C.ma_paged_audio_buffer)
+[inline]
+pub fn paged_audio_buffer_uninit(p_paged_audio_buffer &C.ma_paged_audio_buffer) {
+	C.ma_paged_audio_buffer_uninit(p_paged_audio_buffer)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_read_pcm_frames(ma_paged_audio_buffer* pPagedAudioBuffer, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);   /* Returns MA_AT_END if no more pages available. */
+fn C.ma_paged_audio_buffer_read_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn paged_audio_buffer_read_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_paged_audio_buffer_read_pcm_frames(p_paged_audio_buffer, p_frames_out,
+		frame_count, p_frames_read)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_seek_to_pcm_frame(ma_paged_audio_buffer* pPagedAudioBuffer, ma_uint64 frameIndex);
+fn C.ma_paged_audio_buffer_seek_to_pcm_frame(p_paged_audio_buffer &C.ma_paged_audio_buffer, frame_index u64) Result
+[inline]
+pub fn paged_audio_buffer_seek_to_pcm_frame(p_paged_audio_buffer &C.ma_paged_audio_buffer, frame_index u64) Result {
+	return C.ma_paged_audio_buffer_seek_to_pcm_frame(p_paged_audio_buffer, frame_index)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_get_cursor_in_pcm_frames(ma_paged_audio_buffer* pPagedAudioBuffer, ma_uint64* pCursor);
+fn C.ma_paged_audio_buffer_get_cursor_in_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_cursor &u64) Result
+[inline]
+pub fn paged_audio_buffer_get_cursor_in_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_cursor &u64) Result {
+	return C.ma_paged_audio_buffer_get_cursor_in_pcm_frames(p_paged_audio_buffer, p_cursor)
+}
+
+// MA_API ma_result ma_paged_audio_buffer_get_length_in_pcm_frames(ma_paged_audio_buffer* pPagedAudioBuffer, ma_uint64* pLength);
+fn C.ma_paged_audio_buffer_get_length_in_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_length &u64) Result
+[inline]
+pub fn paged_audio_buffer_get_length_in_pcm_frames(p_paged_audio_buffer &C.ma_paged_audio_buffer, p_length &u64) Result {
+	return C.ma_paged_audio_buffer_get_length_in_pcm_frames(p_paged_audio_buffer, p_length)
+}
+
 // MA_API ma_result ma_vfs_open(ma_vfs* pVFS, const char* pFilePath, ma_uint32 openMode, ma_vfs_file* pFile);
 fn C.ma_vfs_open(p_v_f_s &C.ma_vfs, p_file_path charptr, open_mode u32, p_file &C.ma_vfs_file) Result
 [inline]
@@ -2330,11 +3834,11 @@ pub fn default_vfs_init(p_v_f_s &C.ma_default_vfs, p_allocation_callbacks &C.ma_
 	return C.ma_default_vfs_init(p_v_f_s, p_allocation_callbacks)
 }
 
-// MA_API ma_decoding_backend_config ma_decoding_backend_config_init(ma_format preferredFormat);
-fn C.ma_decoding_backend_config_init(preferred_format Format) C.ma_decoding_backend_config
+// MA_API ma_decoding_backend_config ma_decoding_backend_config_init(ma_format preferredFormat, ma_uint32 seekPointCount);
+fn C.ma_decoding_backend_config_init(preferred_format Format, seek_point_count u32) C.ma_decoding_backend_config
 [inline]
-pub fn decoding_backend_config_init(preferred_format Format) C.ma_decoding_backend_config {
-	return C.ma_decoding_backend_config_init(preferred_format)
+pub fn decoding_backend_config_init(preferred_format Format, seek_point_count u32) C.ma_decoding_backend_config {
+	return C.ma_decoding_backend_config_init(preferred_format, seek_point_count)
 }
 
 // MA_API ma_decoder_config ma_decoder_config_init(ma_format outputFormat, ma_uint32 outputChannels, ma_uint32 outputSampleRate);
@@ -2400,25 +3904,11 @@ pub fn (mut p_decoder Decoder) uninit() Result {
 	return C.ma_decoder_uninit(p_decoder)
 }
 
-// MA_API ma_result ma_decoder_get_cursor_in_pcm_frames(ma_decoder* pDecoder, ma_uint64* pCursor);
-fn C.ma_decoder_get_cursor_in_pcm_frames(p_decoder &C.ma_decoder, p_cursor &u64) Result
+// MA_API ma_result ma_decoder_read_pcm_frames(ma_decoder* pDecoder, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_decoder_read_pcm_frames(p_decoder &C.ma_decoder, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
 [inline]
-pub fn (mut p_decoder Decoder) get_cursor_in_pcm_frames(p_cursor &u64) Result {
-	return C.ma_decoder_get_cursor_in_pcm_frames(p_decoder, p_cursor)
-}
-
-// MA_API ma_uint64 ma_decoder_get_length_in_pcm_frames(ma_decoder* pDecoder);
-fn C.ma_decoder_get_length_in_pcm_frames(p_decoder &C.ma_decoder) u64
-[inline]
-pub fn (mut p_decoder Decoder) get_length_in_pcm_frames() u64 {
-	return C.ma_decoder_get_length_in_pcm_frames(p_decoder)
-}
-
-// MA_API ma_uint64 ma_decoder_read_pcm_frames(ma_decoder* pDecoder, void* pFramesOut, ma_uint64 frameCount);
-fn C.ma_decoder_read_pcm_frames(p_decoder &C.ma_decoder, p_frames_out voidptr, frame_count u64) u64
-[inline]
-pub fn (mut p_decoder Decoder) read_pcm_frames(p_frames_out voidptr, frame_count u64) u64 {
-	return C.ma_decoder_read_pcm_frames(p_decoder, p_frames_out, frame_count)
+pub fn (mut p_decoder Decoder) read_pcm_frames(p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_decoder_read_pcm_frames(p_decoder, p_frames_out, frame_count, p_frames_read)
 }
 
 // MA_API ma_result ma_decoder_seek_to_pcm_frame(ma_decoder* pDecoder, ma_uint64 frameIndex);
@@ -2426,6 +3916,28 @@ fn C.ma_decoder_seek_to_pcm_frame(p_decoder &C.ma_decoder, frame_index u64) Resu
 [inline]
 pub fn (mut p_decoder Decoder) seek_to_pcm_frame(frame_index u64) Result {
 	return C.ma_decoder_seek_to_pcm_frame(p_decoder, frame_index)
+}
+
+// MA_API ma_result ma_decoder_get_data_format(ma_decoder* pDecoder, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_decoder_get_data_format(p_decoder &C.ma_decoder, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn (mut p_decoder Decoder) get_data_format(p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_decoder_get_data_format(p_decoder, p_format, p_channels, p_sample_rate,
+		p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_decoder_get_cursor_in_pcm_frames(ma_decoder* pDecoder, ma_uint64* pCursor);
+fn C.ma_decoder_get_cursor_in_pcm_frames(p_decoder &C.ma_decoder, p_cursor &u64) Result
+[inline]
+pub fn (mut p_decoder Decoder) get_cursor_in_pcm_frames(p_cursor &u64) Result {
+	return C.ma_decoder_get_cursor_in_pcm_frames(p_decoder, p_cursor)
+}
+
+// MA_API ma_result ma_decoder_get_length_in_pcm_frames(ma_decoder* pDecoder, ma_uint64* pLength);
+fn C.ma_decoder_get_length_in_pcm_frames(p_decoder &C.ma_decoder, p_length &u64) Result
+[inline]
+pub fn (mut p_decoder Decoder) get_length_in_pcm_frames(p_length &u64) Result {
+	return C.ma_decoder_get_length_in_pcm_frames(p_decoder, p_length)
 }
 
 // MA_API ma_result ma_decoder_get_available_frames(ma_decoder* pDecoder, ma_uint64* pAvailableFrames);
@@ -2456,179 +3968,11 @@ pub fn decode_memory(p_data voidptr, data_size usize, p_config &DecoderConfig, p
 	return C.ma_decode_memory(p_data, data_size, p_config, p_frame_count_out, pp_p_c_m_frames_out)
 }
 
-// MA_API ma_result ma_decoder_init_wav(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void* pUserData, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_wav(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
+// MA_API ma_encoder_config ma_encoder_config_init(ma_encoding_format encodingFormat, ma_format format, ma_uint32 channels, ma_uint32 sampleRate);
+fn C.ma_encoder_config_init(encoding_format C.ma_encoding_format, format Format, channels u32, sample_rate u32) C.ma_encoder_config
 [inline]
-pub fn decoder_init_wav(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_wav(on_read, on_seek, p_user_data, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_flac(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void* pUserData, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_flac(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_flac(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_flac(on_read, on_seek, p_user_data, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_mp3(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void* pUserData, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_mp3(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_mp3(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_mp3(on_read, on_seek, p_user_data, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vorbis(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void* pUserData, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vorbis(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vorbis(on_read C.ma_decoder_read_proc, on_seek C.ma_decoder_seek_proc, p_user_data voidptr, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vorbis(on_read, on_seek, p_user_data, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_memory_wav(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_memory_wav(p_data voidptr, data_size usize, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_memory_wav(p_data voidptr, data_size usize, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_memory_wav(p_data, data_size, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_memory_flac(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_memory_flac(p_data voidptr, data_size usize, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_memory_flac(p_data voidptr, data_size usize, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_memory_flac(p_data, data_size, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_memory_mp3(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_memory_mp3(p_data voidptr, data_size usize, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_memory_mp3(p_data voidptr, data_size usize, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_memory_mp3(p_data, data_size, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_memory_vorbis(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_memory_vorbis(p_data voidptr, data_size usize, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_memory_vorbis(p_data voidptr, data_size usize, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_memory_vorbis(p_data, data_size, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_wav(ma_vfs* pVFS, const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_wav(p_v_f_s &C.ma_vfs, p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_wav(p_v_f_s &C.ma_vfs, p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_wav(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_flac(ma_vfs* pVFS, const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_flac(p_v_f_s &C.ma_vfs, p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_flac(p_v_f_s &C.ma_vfs, p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_flac(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_mp3(ma_vfs* pVFS, const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_mp3(p_v_f_s &C.ma_vfs, p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_mp3(p_v_f_s &C.ma_vfs, p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_mp3(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_vorbis(ma_vfs* pVFS, const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_vorbis(p_v_f_s &C.ma_vfs, p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_vorbis(p_v_f_s &C.ma_vfs, p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_vorbis(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_wav_w(ma_vfs* pVFS, const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_wav_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_wav_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_wav_w(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_flac_w(ma_vfs* pVFS, const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_flac_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_flac_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_flac_w(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_mp3_w(ma_vfs* pVFS, const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_mp3_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_mp3_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_mp3_w(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_vfs_vorbis_w(ma_vfs* pVFS, const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_vfs_vorbis_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_vfs_vorbis_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_vfs_vorbis_w(p_v_f_s, p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_wav(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_wav(p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_wav(p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_wav(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_flac(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_flac(p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_flac(p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_flac(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_mp3(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_mp3(p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_mp3(p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_mp3(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_vorbis(const char* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_vorbis(p_file_path charptr, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_vorbis(p_file_path &byte, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_vorbis(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_wav_w(const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_wav_w(p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_wav_w(p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_wav_w(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_flac_w(const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_flac_w(p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_flac_w(p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_flac_w(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_mp3_w(const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_mp3_w(p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_mp3_w(p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_mp3_w(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_result ma_decoder_init_file_vorbis_w(const wchar_t* pFilePath, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
-fn C.ma_decoder_init_file_vorbis_w(p_file_path &C.wchar_t, p_config &C.ma_decoder_config, p_decoder &C.ma_decoder) Result
-[inline]
-pub fn decoder_init_file_vorbis_w(p_file_path &C.wchar_t, p_config &DecoderConfig, p_decoder &Decoder) Result {
-	return C.ma_decoder_init_file_vorbis_w(p_file_path, p_config, p_decoder)
-}
-
-// MA_API ma_encoder_config ma_encoder_config_init(ma_resource_format resourceFormat, ma_format format, ma_uint32 channels, ma_uint32 sampleRate);
-fn C.ma_encoder_config_init(resource_format C.ma_resource_format, format Format, channels u32, sample_rate u32) C.ma_encoder_config
-[inline]
-pub fn encoder_config_init(resource_format C.ma_resource_format, format Format, channels u32, sample_rate u32) C.ma_encoder_config {
-	return C.ma_encoder_config_init(resource_format, format, channels, sample_rate)
+pub fn encoder_config_init(encoding_format C.ma_encoding_format, format Format, channels u32, sample_rate u32) C.ma_encoder_config {
+	return C.ma_encoder_config_init(encoding_format, format, channels, sample_rate)
 }
 
 // MA_API ma_result ma_encoder_init(ma_encoder_write_proc onWrite, ma_encoder_seek_proc onSeek, void* pUserData, const ma_encoder_config* pConfig, ma_encoder* pEncoder);
@@ -2636,6 +3980,20 @@ fn C.ma_encoder_init(on_write C.ma_encoder_write_proc, on_seek C.ma_encoder_seek
 [inline]
 pub fn encoder_init(on_write C.ma_encoder_write_proc, on_seek C.ma_encoder_seek_proc, p_user_data voidptr, p_config &C.ma_encoder_config, p_encoder &C.ma_encoder) Result {
 	return C.ma_encoder_init(on_write, on_seek, p_user_data, p_config, p_encoder)
+}
+
+// MA_API ma_result ma_encoder_init_vfs(ma_vfs* pVFS, const char* pFilePath, const ma_encoder_config* pConfig, ma_encoder* pEncoder);
+fn C.ma_encoder_init_vfs(p_v_f_s &C.ma_vfs, p_file_path charptr, p_config &C.ma_encoder_config, p_encoder &C.ma_encoder) Result
+[inline]
+pub fn encoder_init_vfs(p_v_f_s &C.ma_vfs, p_file_path &byte, p_config &C.ma_encoder_config, p_encoder &C.ma_encoder) Result {
+	return C.ma_encoder_init_vfs(p_v_f_s, p_file_path, p_config, p_encoder)
+}
+
+// MA_API ma_result ma_encoder_init_vfs_w(ma_vfs* pVFS, const wchar_t* pFilePath, const ma_encoder_config* pConfig, ma_encoder* pEncoder);
+fn C.ma_encoder_init_vfs_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_encoder_config, p_encoder &C.ma_encoder) Result
+[inline]
+pub fn encoder_init_vfs_w(p_v_f_s &C.ma_vfs, p_file_path &C.wchar_t, p_config &C.ma_encoder_config, p_encoder &C.ma_encoder) Result {
+	return C.ma_encoder_init_vfs_w(p_v_f_s, p_file_path, p_config, p_encoder)
 }
 
 // MA_API ma_result ma_encoder_init_file(const char* pFilePath, const ma_encoder_config* pConfig, ma_encoder* pEncoder);
@@ -2659,11 +4017,11 @@ pub fn encoder_uninit(p_encoder &C.ma_encoder) {
 	C.ma_encoder_uninit(p_encoder)
 }
 
-// MA_API ma_uint64 ma_encoder_write_pcm_frames(ma_encoder* pEncoder, const void* pFramesIn, ma_uint64 frameCount);
-fn C.ma_encoder_write_pcm_frames(p_encoder &C.ma_encoder, p_frames_in voidptr, frame_count u64) u64
+// MA_API ma_result ma_encoder_write_pcm_frames(ma_encoder* pEncoder, const void* pFramesIn, ma_uint64 frameCount, ma_uint64* pFramesWritten);
+fn C.ma_encoder_write_pcm_frames(p_encoder &C.ma_encoder, p_frames_in voidptr, frame_count u64, p_frames_written &u64) Result
 [inline]
-pub fn encoder_write_pcm_frames(p_encoder &C.ma_encoder, p_frames_in voidptr, frame_count u64) u64 {
-	return C.ma_encoder_write_pcm_frames(p_encoder, p_frames_in, frame_count)
+pub fn encoder_write_pcm_frames(p_encoder &C.ma_encoder, p_frames_in voidptr, frame_count u64, p_frames_written &u64) Result {
+	return C.ma_encoder_write_pcm_frames(p_encoder, p_frames_in, frame_count, p_frames_written)
 }
 
 // MA_API ma_waveform_config ma_waveform_config_init(ma_format format, ma_uint32 channels, ma_uint32 sampleRate, ma_waveform_type type, double amplitude, double frequency);
@@ -2687,11 +4045,11 @@ pub fn waveform_uninit(p_waveform &C.ma_waveform) {
 	C.ma_waveform_uninit(p_waveform)
 }
 
-// MA_API ma_uint64 ma_waveform_read_pcm_frames(ma_waveform* pWaveform, void* pFramesOut, ma_uint64 frameCount);
-fn C.ma_waveform_read_pcm_frames(p_waveform &C.ma_waveform, p_frames_out voidptr, frame_count u64) u64
+// MA_API ma_result ma_waveform_read_pcm_frames(ma_waveform* pWaveform, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_waveform_read_pcm_frames(p_waveform &C.ma_waveform, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
 [inline]
-pub fn waveform_read_pcm_frames(p_waveform &C.ma_waveform, p_frames_out voidptr, frame_count u64) u64 {
-	return C.ma_waveform_read_pcm_frames(p_waveform, p_frames_out, frame_count)
+pub fn waveform_read_pcm_frames(p_waveform &C.ma_waveform, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_waveform_read_pcm_frames(p_waveform, p_frames_out, frame_count, p_frames_read)
 }
 
 // MA_API ma_result ma_waveform_seek_to_pcm_frame(ma_waveform* pWaveform, ma_uint64 frameIndex);
@@ -2736,25 +4094,39 @@ pub fn noise_config_init(format Format, channels u32, typ C.ma_noise_type, seed 
 	return C.ma_noise_config_init(format, channels, typ, seed, amplitude)
 }
 
-// MA_API ma_result ma_noise_init(const ma_noise_config* pConfig, ma_noise* pNoise);
-fn C.ma_noise_init(p_config &C.ma_noise_config, p_noise &C.ma_noise) Result
+// MA_API ma_result ma_noise_get_heap_size(const ma_noise_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_noise_get_heap_size(p_config &C.ma_noise_config, p_heap_size_in_bytes &usize) Result
 [inline]
-pub fn noise_init(p_config &C.ma_noise_config, p_noise &C.ma_noise) Result {
-	return C.ma_noise_init(p_config, p_noise)
+pub fn noise_get_heap_size(p_config &C.ma_noise_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_noise_get_heap_size(p_config, p_heap_size_in_bytes)
 }
 
-// MA_API void ma_noise_uninit(ma_noise* pNoise);
-fn C.ma_noise_uninit(p_noise &C.ma_noise)
+// MA_API ma_result ma_noise_init_preallocated(const ma_noise_config* pConfig, void* pHeap, ma_noise* pNoise);
+fn C.ma_noise_init_preallocated(p_config &C.ma_noise_config, p_heap voidptr, p_noise &C.ma_noise) Result
 [inline]
-pub fn noise_uninit(p_noise &C.ma_noise) {
-	C.ma_noise_uninit(p_noise)
+pub fn noise_init_preallocated(p_config &C.ma_noise_config, p_heap voidptr, p_noise &C.ma_noise) Result {
+	return C.ma_noise_init_preallocated(p_config, p_heap, p_noise)
 }
 
-// MA_API ma_uint64 ma_noise_read_pcm_frames(ma_noise* pNoise, void* pFramesOut, ma_uint64 frameCount);
-fn C.ma_noise_read_pcm_frames(p_noise &C.ma_noise, p_frames_out voidptr, frame_count u64) u64
+// MA_API ma_result ma_noise_init(const ma_noise_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_noise* pNoise);
+fn C.ma_noise_init(p_config &C.ma_noise_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_noise &C.ma_noise) Result
 [inline]
-pub fn noise_read_pcm_frames(p_noise &C.ma_noise, p_frames_out voidptr, frame_count u64) u64 {
-	return C.ma_noise_read_pcm_frames(p_noise, p_frames_out, frame_count)
+pub fn noise_init(p_config &C.ma_noise_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_noise &C.ma_noise) Result {
+	return C.ma_noise_init(p_config, p_allocation_callbacks, p_noise)
+}
+
+// MA_API void ma_noise_uninit(ma_noise* pNoise, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_noise_uninit(p_noise &C.ma_noise, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn noise_uninit(p_noise &C.ma_noise, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_noise_uninit(p_noise, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_noise_read_pcm_frames(ma_noise* pNoise, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_noise_read_pcm_frames(p_noise &C.ma_noise, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn noise_read_pcm_frames(p_noise &C.ma_noise, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_noise_read_pcm_frames(p_noise, p_frames_out, frame_count, p_frames_read)
 }
 
 // MA_API ma_result ma_noise_set_amplitude(ma_noise* pNoise, double amplitude);
@@ -2776,4 +4148,2166 @@ fn C.ma_noise_set_type(p_noise &C.ma_noise, typ C.ma_noise_type) Result
 [inline]
 pub fn noise_set_type(p_noise &C.ma_noise, typ C.ma_noise_type) Result {
 	return C.ma_noise_set_type(p_noise, typ)
+}
+
+// MA_API ma_resource_manager_pipeline_notifications ma_resource_manager_pipeline_notifications_init();
+fn C.ma_resource_manager_pipeline_notifications_init() C.ma_resource_manager_pipeline_notifications
+[inline]
+pub fn resource_manager_pipeline_notifications_init() C.ma_resource_manager_pipeline_notifications {
+	return C.ma_resource_manager_pipeline_notifications_init()
+}
+
+// MA_API ma_resource_manager_data_source_config ma_resource_manager_data_source_config_init();
+fn C.ma_resource_manager_data_source_config_init() C.ma_resource_manager_data_source_config
+[inline]
+pub fn resource_manager_data_source_config_init() C.ma_resource_manager_data_source_config {
+	return C.ma_resource_manager_data_source_config_init()
+}
+
+// MA_API ma_resource_manager_config ma_resource_manager_config_init();
+fn C.ma_resource_manager_config_init() C.ma_resource_manager_config
+[inline]
+pub fn resource_manager_config_init() C.ma_resource_manager_config {
+	return C.ma_resource_manager_config_init()
+}
+
+// MA_API ma_result ma_resource_manager_init(const ma_resource_manager_config* pConfig, ma_resource_manager* pResourceManager);
+fn C.ma_resource_manager_init(p_config &C.ma_resource_manager_config, p_resource_manager &C.ma_resource_manager) Result
+[inline]
+pub fn resource_manager_init(p_config &C.ma_resource_manager_config, p_resource_manager &C.ma_resource_manager) Result {
+	return C.ma_resource_manager_init(p_config, p_resource_manager)
+}
+
+// MA_API void ma_resource_manager_uninit(ma_resource_manager* pResourceManager);
+fn C.ma_resource_manager_uninit(p_resource_manager &C.ma_resource_manager)
+[inline]
+pub fn resource_manager_uninit(p_resource_manager &C.ma_resource_manager) {
+	C.ma_resource_manager_uninit(p_resource_manager)
+}
+
+// MA_API ma_log* ma_resource_manager_get_log(ma_resource_manager* pResourceManager);
+fn C.ma_resource_manager_get_log(p_resource_manager &C.ma_resource_manager) &C.ma_log
+[inline]
+pub fn resource_manager_get_log(p_resource_manager &C.ma_resource_manager) &C.ma_log {
+	return C.ma_resource_manager_get_log(p_resource_manager)
+}
+
+// MA_API ma_result ma_resource_manager_register_file(ma_resource_manager* pResourceManager, const char* pFilePath, ma_uint32 flags);
+fn C.ma_resource_manager_register_file(p_resource_manager &C.ma_resource_manager, p_file_path charptr, flags u32) Result
+[inline]
+pub fn resource_manager_register_file(p_resource_manager &C.ma_resource_manager, p_file_path &byte, flags u32) Result {
+	return C.ma_resource_manager_register_file(p_resource_manager, p_file_path, flags)
+}
+
+// MA_API ma_result ma_resource_manager_register_file_w(ma_resource_manager* pResourceManager, const wchar_t* pFilePath, ma_uint32 flags);
+fn C.ma_resource_manager_register_file_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32) Result
+[inline]
+pub fn resource_manager_register_file_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32) Result {
+	return C.ma_resource_manager_register_file_w(p_resource_manager, p_file_path, flags)
+}
+
+// MA_API ma_result ma_resource_manager_register_decoded_data(ma_resource_manager* pResourceManager, const char* pName, const void* pData, ma_uint64 frameCount, ma_format format, ma_uint32 channels, ma_uint32 sampleRate);  /* Does not copy. Increments the reference count if already exists and returns MA_SUCCESS. */
+fn C.ma_resource_manager_register_decoded_data(p_resource_manager &C.ma_resource_manager, p_name charptr, p_data voidptr, frame_count u64, format Format, channels u32, sample_rate u32) Result
+[inline]
+pub fn resource_manager_register_decoded_data(p_resource_manager &C.ma_resource_manager, p_name &byte, p_data voidptr, frame_count u64, format Format, channels u32, sample_rate u32) Result {
+	return C.ma_resource_manager_register_decoded_data(p_resource_manager, p_name, p_data,
+		frame_count, format, channels, sample_rate)
+}
+
+// MA_API ma_result ma_resource_manager_register_decoded_data_w(ma_resource_manager* pResourceManager, const wchar_t* pName, const void* pData, ma_uint64 frameCount, ma_format format, ma_uint32 channels, ma_uint32 sampleRate);
+fn C.ma_resource_manager_register_decoded_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, p_data voidptr, frame_count u64, format Format, channels u32, sample_rate u32) Result
+[inline]
+pub fn resource_manager_register_decoded_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, p_data voidptr, frame_count u64, format Format, channels u32, sample_rate u32) Result {
+	return C.ma_resource_manager_register_decoded_data_w(p_resource_manager, p_name, p_data,
+		frame_count, format, channels, sample_rate)
+}
+
+// MA_API ma_result ma_resource_manager_register_encoded_data(ma_resource_manager* pResourceManager, const char* pName, const void* pData, size_t sizeInBytes);    /* Does not copy. Increments the reference count if already exists and returns MA_SUCCESS. */
+fn C.ma_resource_manager_register_encoded_data(p_resource_manager &C.ma_resource_manager, p_name charptr, p_data voidptr, size_in_bytes usize) Result
+[inline]
+pub fn resource_manager_register_encoded_data(p_resource_manager &C.ma_resource_manager, p_name &byte, p_data voidptr, size_in_bytes usize) Result {
+	return C.ma_resource_manager_register_encoded_data(p_resource_manager, p_name, p_data,
+		size_in_bytes)
+}
+
+// MA_API ma_result ma_resource_manager_register_encoded_data_w(ma_resource_manager* pResourceManager, const wchar_t* pName, const void* pData, size_t sizeInBytes);
+fn C.ma_resource_manager_register_encoded_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, p_data voidptr, size_in_bytes usize) Result
+[inline]
+pub fn resource_manager_register_encoded_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, p_data voidptr, size_in_bytes usize) Result {
+	return C.ma_resource_manager_register_encoded_data_w(p_resource_manager, p_name, p_data,
+		size_in_bytes)
+}
+
+// MA_API ma_result ma_resource_manager_unregister_file(ma_resource_manager* pResourceManager, const char* pFilePath);
+fn C.ma_resource_manager_unregister_file(p_resource_manager &C.ma_resource_manager, p_file_path charptr) Result
+[inline]
+pub fn resource_manager_unregister_file(p_resource_manager &C.ma_resource_manager, p_file_path &byte) Result {
+	return C.ma_resource_manager_unregister_file(p_resource_manager, p_file_path)
+}
+
+// MA_API ma_result ma_resource_manager_unregister_file_w(ma_resource_manager* pResourceManager, const wchar_t* pFilePath);
+fn C.ma_resource_manager_unregister_file_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t) Result
+[inline]
+pub fn resource_manager_unregister_file_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t) Result {
+	return C.ma_resource_manager_unregister_file_w(p_resource_manager, p_file_path)
+}
+
+// MA_API ma_result ma_resource_manager_unregister_data(ma_resource_manager* pResourceManager, const char* pName);
+fn C.ma_resource_manager_unregister_data(p_resource_manager &C.ma_resource_manager, p_name charptr) Result
+[inline]
+pub fn resource_manager_unregister_data(p_resource_manager &C.ma_resource_manager, p_name &byte) Result {
+	return C.ma_resource_manager_unregister_data(p_resource_manager, p_name)
+}
+
+// MA_API ma_result ma_resource_manager_unregister_data_w(ma_resource_manager* pResourceManager, const wchar_t* pName);
+fn C.ma_resource_manager_unregister_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t) Result
+[inline]
+pub fn resource_manager_unregister_data_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t) Result {
+	return C.ma_resource_manager_unregister_data_w(p_resource_manager, p_name)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_init_ex(ma_resource_manager* pResourceManager, const ma_resource_manager_data_source_config* pConfig, ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_init_ex(p_resource_manager, p_config, p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_init(ma_resource_manager* pResourceManager, const char* pFilePath, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_init(p_resource_manager &C.ma_resource_manager, p_file_path charptr, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_init(p_resource_manager &C.ma_resource_manager, p_file_path &byte, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_init(p_resource_manager, p_file_path, flags,
+		p_notifications, p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_init_w(ma_resource_manager* pResourceManager, const wchar_t* pFilePath, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_init_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_init_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_init_w(p_resource_manager, p_file_path, flags,
+		p_notifications, p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_init_copy(ma_resource_manager* pResourceManager, const ma_resource_manager_data_buffer* pExistingDataBuffer, ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_init_copy(p_resource_manager &C.ma_resource_manager, p_existing_data_buffer &C.ma_resource_manager_data_buffer, p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_init_copy(p_resource_manager &C.ma_resource_manager, p_existing_data_buffer &C.ma_resource_manager_data_buffer, p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_init_copy(p_resource_manager, p_existing_data_buffer,
+		p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_uninit(ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_uninit(p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_uninit(p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_uninit(p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_read_pcm_frames(ma_resource_manager_data_buffer* pDataBuffer, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_resource_manager_data_buffer_read_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn resource_manager_data_buffer_read_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_resource_manager_data_buffer_read_pcm_frames(p_data_buffer, p_frames_out,
+		frame_count, p_frames_read)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_seek_to_pcm_frame(ma_resource_manager_data_buffer* pDataBuffer, ma_uint64 frameIndex);
+fn C.ma_resource_manager_data_buffer_seek_to_pcm_frame(p_data_buffer &C.ma_resource_manager_data_buffer, frame_index u64) Result
+[inline]
+pub fn resource_manager_data_buffer_seek_to_pcm_frame(p_data_buffer &C.ma_resource_manager_data_buffer, frame_index u64) Result {
+	return C.ma_resource_manager_data_buffer_seek_to_pcm_frame(p_data_buffer, frame_index)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_get_data_format(ma_resource_manager_data_buffer* pDataBuffer, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_resource_manager_data_buffer_get_data_format(p_data_buffer &C.ma_resource_manager_data_buffer, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn resource_manager_data_buffer_get_data_format(p_data_buffer &C.ma_resource_manager_data_buffer, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_resource_manager_data_buffer_get_data_format(p_data_buffer, p_format,
+		p_channels, p_sample_rate, p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_get_cursor_in_pcm_frames(ma_resource_manager_data_buffer* pDataBuffer, ma_uint64* pCursor);
+fn C.ma_resource_manager_data_buffer_get_cursor_in_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_cursor &u64) Result
+[inline]
+pub fn resource_manager_data_buffer_get_cursor_in_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_cursor &u64) Result {
+	return C.ma_resource_manager_data_buffer_get_cursor_in_pcm_frames(p_data_buffer, p_cursor)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_get_length_in_pcm_frames(ma_resource_manager_data_buffer* pDataBuffer, ma_uint64* pLength);
+fn C.ma_resource_manager_data_buffer_get_length_in_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_length &u64) Result
+[inline]
+pub fn resource_manager_data_buffer_get_length_in_pcm_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_length &u64) Result {
+	return C.ma_resource_manager_data_buffer_get_length_in_pcm_frames(p_data_buffer, p_length)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_result(const ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_result(p_data_buffer &C.ma_resource_manager_data_buffer) Result
+[inline]
+pub fn resource_manager_data_buffer_result(p_data_buffer &C.ma_resource_manager_data_buffer) Result {
+	return C.ma_resource_manager_data_buffer_result(p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_set_looping(ma_resource_manager_data_buffer* pDataBuffer, ma_bool32 isLooping);
+fn C.ma_resource_manager_data_buffer_set_looping(p_data_buffer &C.ma_resource_manager_data_buffer, is_looping bool) Result
+[inline]
+pub fn resource_manager_data_buffer_set_looping(p_data_buffer &C.ma_resource_manager_data_buffer, is_looping bool) Result {
+	return C.ma_resource_manager_data_buffer_set_looping(p_data_buffer, is_looping)
+}
+
+// MA_API ma_bool32 ma_resource_manager_data_buffer_is_looping(const ma_resource_manager_data_buffer* pDataBuffer);
+fn C.ma_resource_manager_data_buffer_is_looping(p_data_buffer &C.ma_resource_manager_data_buffer) bool
+[inline]
+pub fn resource_manager_data_buffer_is_looping(p_data_buffer &C.ma_resource_manager_data_buffer) bool {
+	return C.ma_resource_manager_data_buffer_is_looping(p_data_buffer)
+}
+
+// MA_API ma_result ma_resource_manager_data_buffer_get_available_frames(ma_resource_manager_data_buffer* pDataBuffer, ma_uint64* pAvailableFrames);
+fn C.ma_resource_manager_data_buffer_get_available_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_available_frames &u64) Result
+[inline]
+pub fn resource_manager_data_buffer_get_available_frames(p_data_buffer &C.ma_resource_manager_data_buffer, p_available_frames &u64) Result {
+	return C.ma_resource_manager_data_buffer_get_available_frames(p_data_buffer, p_available_frames)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_init_ex(ma_resource_manager* pResourceManager, const ma_resource_manager_data_source_config* pConfig, ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_stream &C.ma_resource_manager_data_stream) Result
+[inline]
+pub fn resource_manager_data_stream_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_stream &C.ma_resource_manager_data_stream) Result {
+	return C.ma_resource_manager_data_stream_init_ex(p_resource_manager, p_config, p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_init(ma_resource_manager* pResourceManager, const char* pFilePath, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_init(p_resource_manager &C.ma_resource_manager, p_file_path charptr, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_stream &C.ma_resource_manager_data_stream) Result
+[inline]
+pub fn resource_manager_data_stream_init(p_resource_manager &C.ma_resource_manager, p_file_path &byte, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_stream &C.ma_resource_manager_data_stream) Result {
+	return C.ma_resource_manager_data_stream_init(p_resource_manager, p_file_path, flags,
+		p_notifications, p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_init_w(ma_resource_manager* pResourceManager, const wchar_t* pFilePath, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_init_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_stream &C.ma_resource_manager_data_stream) Result
+[inline]
+pub fn resource_manager_data_stream_init_w(p_resource_manager &C.ma_resource_manager, p_file_path &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_stream &C.ma_resource_manager_data_stream) Result {
+	return C.ma_resource_manager_data_stream_init_w(p_resource_manager, p_file_path, flags,
+		p_notifications, p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_uninit(ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_uninit(p_data_stream &C.ma_resource_manager_data_stream) Result
+[inline]
+pub fn resource_manager_data_stream_uninit(p_data_stream &C.ma_resource_manager_data_stream) Result {
+	return C.ma_resource_manager_data_stream_uninit(p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_read_pcm_frames(ma_resource_manager_data_stream* pDataStream, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_resource_manager_data_stream_read_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn resource_manager_data_stream_read_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_resource_manager_data_stream_read_pcm_frames(p_data_stream, p_frames_out,
+		frame_count, p_frames_read)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_seek_to_pcm_frame(ma_resource_manager_data_stream* pDataStream, ma_uint64 frameIndex);
+fn C.ma_resource_manager_data_stream_seek_to_pcm_frame(p_data_stream &C.ma_resource_manager_data_stream, frame_index u64) Result
+[inline]
+pub fn resource_manager_data_stream_seek_to_pcm_frame(p_data_stream &C.ma_resource_manager_data_stream, frame_index u64) Result {
+	return C.ma_resource_manager_data_stream_seek_to_pcm_frame(p_data_stream, frame_index)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_get_data_format(ma_resource_manager_data_stream* pDataStream, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_resource_manager_data_stream_get_data_format(p_data_stream &C.ma_resource_manager_data_stream, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn resource_manager_data_stream_get_data_format(p_data_stream &C.ma_resource_manager_data_stream, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_resource_manager_data_stream_get_data_format(p_data_stream, p_format,
+		p_channels, p_sample_rate, p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_get_cursor_in_pcm_frames(ma_resource_manager_data_stream* pDataStream, ma_uint64* pCursor);
+fn C.ma_resource_manager_data_stream_get_cursor_in_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_cursor &u64) Result
+[inline]
+pub fn resource_manager_data_stream_get_cursor_in_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_cursor &u64) Result {
+	return C.ma_resource_manager_data_stream_get_cursor_in_pcm_frames(p_data_stream, p_cursor)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_get_length_in_pcm_frames(ma_resource_manager_data_stream* pDataStream, ma_uint64* pLength);
+fn C.ma_resource_manager_data_stream_get_length_in_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_length &u64) Result
+[inline]
+pub fn resource_manager_data_stream_get_length_in_pcm_frames(p_data_stream &C.ma_resource_manager_data_stream, p_length &u64) Result {
+	return C.ma_resource_manager_data_stream_get_length_in_pcm_frames(p_data_stream, p_length)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_result(const ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_result(p_data_stream &C.ma_resource_manager_data_stream) Result
+[inline]
+pub fn resource_manager_data_stream_result(p_data_stream &C.ma_resource_manager_data_stream) Result {
+	return C.ma_resource_manager_data_stream_result(p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_set_looping(ma_resource_manager_data_stream* pDataStream, ma_bool32 isLooping);
+fn C.ma_resource_manager_data_stream_set_looping(p_data_stream &C.ma_resource_manager_data_stream, is_looping bool) Result
+[inline]
+pub fn resource_manager_data_stream_set_looping(p_data_stream &C.ma_resource_manager_data_stream, is_looping bool) Result {
+	return C.ma_resource_manager_data_stream_set_looping(p_data_stream, is_looping)
+}
+
+// MA_API ma_bool32 ma_resource_manager_data_stream_is_looping(const ma_resource_manager_data_stream* pDataStream);
+fn C.ma_resource_manager_data_stream_is_looping(p_data_stream &C.ma_resource_manager_data_stream) bool
+[inline]
+pub fn resource_manager_data_stream_is_looping(p_data_stream &C.ma_resource_manager_data_stream) bool {
+	return C.ma_resource_manager_data_stream_is_looping(p_data_stream)
+}
+
+// MA_API ma_result ma_resource_manager_data_stream_get_available_frames(ma_resource_manager_data_stream* pDataStream, ma_uint64* pAvailableFrames);
+fn C.ma_resource_manager_data_stream_get_available_frames(p_data_stream &C.ma_resource_manager_data_stream, p_available_frames &u64) Result
+[inline]
+pub fn resource_manager_data_stream_get_available_frames(p_data_stream &C.ma_resource_manager_data_stream, p_available_frames &u64) Result {
+	return C.ma_resource_manager_data_stream_get_available_frames(p_data_stream, p_available_frames)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_init_ex(ma_resource_manager* pResourceManager, const ma_resource_manager_data_source_config* pConfig, ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_init_ex(p_resource_manager &C.ma_resource_manager, p_config &C.ma_resource_manager_data_source_config, p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_init_ex(p_resource_manager, p_config, p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_init(ma_resource_manager* pResourceManager, const char* pName, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_init(p_resource_manager &C.ma_resource_manager, p_name charptr, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_init(p_resource_manager &C.ma_resource_manager, p_name &byte, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_init(p_resource_manager, p_name, flags, p_notifications,
+		p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_init_w(ma_resource_manager* pResourceManager, const wchar_t* pName, ma_uint32 flags, const ma_resource_manager_pipeline_notifications* pNotifications, ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_init_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_init_w(p_resource_manager &C.ma_resource_manager, p_name &C.wchar_t, flags u32, p_notifications &C.ma_resource_manager_pipeline_notifications, p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_init_w(p_resource_manager, p_name, flags,
+		p_notifications, p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_init_copy(ma_resource_manager* pResourceManager, const ma_resource_manager_data_source* pExistingDataSource, ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_init_copy(p_resource_manager &C.ma_resource_manager, p_existing_data_source &C.ma_resource_manager_data_source, p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_init_copy(p_resource_manager &C.ma_resource_manager, p_existing_data_source &C.ma_resource_manager_data_source, p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_init_copy(p_resource_manager, p_existing_data_source,
+		p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_uninit(ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_uninit(p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_uninit(p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_uninit(p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_read_pcm_frames(ma_resource_manager_data_source* pDataSource, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_resource_manager_data_source_read_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn resource_manager_data_source_read_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_resource_manager_data_source_read_pcm_frames(p_data_source, p_frames_out,
+		frame_count, p_frames_read)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_seek_to_pcm_frame(ma_resource_manager_data_source* pDataSource, ma_uint64 frameIndex);
+fn C.ma_resource_manager_data_source_seek_to_pcm_frame(p_data_source &C.ma_resource_manager_data_source, frame_index u64) Result
+[inline]
+pub fn resource_manager_data_source_seek_to_pcm_frame(p_data_source &C.ma_resource_manager_data_source, frame_index u64) Result {
+	return C.ma_resource_manager_data_source_seek_to_pcm_frame(p_data_source, frame_index)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_get_data_format(ma_resource_manager_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_resource_manager_data_source_get_data_format(p_data_source &C.ma_resource_manager_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn resource_manager_data_source_get_data_format(p_data_source &C.ma_resource_manager_data_source, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_resource_manager_data_source_get_data_format(p_data_source, p_format,
+		p_channels, p_sample_rate, p_channel_map, channel_map_cap)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_get_cursor_in_pcm_frames(ma_resource_manager_data_source* pDataSource, ma_uint64* pCursor);
+fn C.ma_resource_manager_data_source_get_cursor_in_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_cursor &u64) Result
+[inline]
+pub fn resource_manager_data_source_get_cursor_in_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_cursor &u64) Result {
+	return C.ma_resource_manager_data_source_get_cursor_in_pcm_frames(p_data_source, p_cursor)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_get_length_in_pcm_frames(ma_resource_manager_data_source* pDataSource, ma_uint64* pLength);
+fn C.ma_resource_manager_data_source_get_length_in_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_length &u64) Result
+[inline]
+pub fn resource_manager_data_source_get_length_in_pcm_frames(p_data_source &C.ma_resource_manager_data_source, p_length &u64) Result {
+	return C.ma_resource_manager_data_source_get_length_in_pcm_frames(p_data_source, p_length)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_result(const ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_result(p_data_source &C.ma_resource_manager_data_source) Result
+[inline]
+pub fn resource_manager_data_source_result(p_data_source &C.ma_resource_manager_data_source) Result {
+	return C.ma_resource_manager_data_source_result(p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_set_looping(ma_resource_manager_data_source* pDataSource, ma_bool32 isLooping);
+fn C.ma_resource_manager_data_source_set_looping(p_data_source &C.ma_resource_manager_data_source, is_looping bool) Result
+[inline]
+pub fn resource_manager_data_source_set_looping(p_data_source &C.ma_resource_manager_data_source, is_looping bool) Result {
+	return C.ma_resource_manager_data_source_set_looping(p_data_source, is_looping)
+}
+
+// MA_API ma_bool32 ma_resource_manager_data_source_is_looping(const ma_resource_manager_data_source* pDataSource);
+fn C.ma_resource_manager_data_source_is_looping(p_data_source &C.ma_resource_manager_data_source) bool
+[inline]
+pub fn resource_manager_data_source_is_looping(p_data_source &C.ma_resource_manager_data_source) bool {
+	return C.ma_resource_manager_data_source_is_looping(p_data_source)
+}
+
+// MA_API ma_result ma_resource_manager_data_source_get_available_frames(ma_resource_manager_data_source* pDataSource, ma_uint64* pAvailableFrames);
+fn C.ma_resource_manager_data_source_get_available_frames(p_data_source &C.ma_resource_manager_data_source, p_available_frames &u64) Result
+[inline]
+pub fn resource_manager_data_source_get_available_frames(p_data_source &C.ma_resource_manager_data_source, p_available_frames &u64) Result {
+	return C.ma_resource_manager_data_source_get_available_frames(p_data_source, p_available_frames)
+}
+
+// MA_API ma_result ma_resource_manager_post_job(ma_resource_manager* pResourceManager, const ma_job* pJob);
+fn C.ma_resource_manager_post_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result
+[inline]
+pub fn resource_manager_post_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result {
+	return C.ma_resource_manager_post_job(p_resource_manager, p_job)
+}
+
+// MA_API ma_result ma_resource_manager_post_job_quit(ma_resource_manager* pResourceManager);  /* Helper for posting a quit job. */
+fn C.ma_resource_manager_post_job_quit(p_resource_manager &C.ma_resource_manager) Result
+[inline]
+pub fn resource_manager_post_job_quit(p_resource_manager &C.ma_resource_manager) Result {
+	return C.ma_resource_manager_post_job_quit(p_resource_manager)
+}
+
+// MA_API ma_result ma_resource_manager_next_job(ma_resource_manager* pResourceManager, ma_job* pJob);
+fn C.ma_resource_manager_next_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result
+[inline]
+pub fn resource_manager_next_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result {
+	return C.ma_resource_manager_next_job(p_resource_manager, p_job)
+}
+
+// MA_API ma_result ma_resource_manager_process_job(ma_resource_manager* pResourceManager, ma_job* pJob);  /* DEPRECATED. Use ma_job_process(). Will be removed in version 0.12. */
+fn C.ma_resource_manager_process_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result
+[inline]
+pub fn resource_manager_process_job(p_resource_manager &C.ma_resource_manager, p_job &C.ma_job) Result {
+	return C.ma_resource_manager_process_job(p_resource_manager, p_job)
+}
+
+// MA_API ma_result ma_resource_manager_process_next_job(ma_resource_manager* pResourceManager);   /* Returns MA_CANCELLED if a MA_JOB_TYPE_QUIT job is found. In non-blocking mode, returns MA_NO_DATA_AVAILABLE if no jobs are available. */
+fn C.ma_resource_manager_process_next_job(p_resource_manager &C.ma_resource_manager) Result
+[inline]
+pub fn resource_manager_process_next_job(p_resource_manager &C.ma_resource_manager) Result {
+	return C.ma_resource_manager_process_next_job(p_resource_manager)
+}
+
+// MA_API ma_node_config ma_node_config_init();
+fn C.ma_node_config_init() C.ma_node_config
+[inline]
+pub fn node_config_init() C.ma_node_config {
+	return C.ma_node_config_init()
+}
+
+// MA_API ma_result ma_node_get_heap_size(ma_node_graph* pNodeGraph, const ma_node_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_node_get_heap_size(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn node_get_heap_size(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_node_get_heap_size(p_node_graph, p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_node_init_preallocated(ma_node_graph* pNodeGraph, const ma_node_config* pConfig, void* pHeap, ma_node* pNode);
+fn C.ma_node_init_preallocated(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_heap voidptr, p_node &C.ma_node) Result
+[inline]
+pub fn node_init_preallocated(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_heap voidptr, p_node &C.ma_node) Result {
+	return C.ma_node_init_preallocated(p_node_graph, p_config, p_heap, p_node)
+}
+
+// MA_API ma_result ma_node_init(ma_node_graph* pNodeGraph, const ma_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_node* pNode);
+fn C.ma_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_node) Result
+[inline]
+pub fn node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_node) Result {
+	return C.ma_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API void ma_node_uninit(ma_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_node_uninit(p_node &C.ma_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn node_uninit(p_node &C.ma_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_node_graph* ma_node_get_node_graph(const ma_node* pNode);
+fn C.ma_node_get_node_graph(p_node &C.ma_node) &C.ma_node_graph
+[inline]
+pub fn node_get_node_graph(p_node &C.ma_node) &C.ma_node_graph {
+	return C.ma_node_get_node_graph(p_node)
+}
+
+// MA_API ma_uint32 ma_node_get_input_bus_count(const ma_node* pNode);
+fn C.ma_node_get_input_bus_count(p_node &C.ma_node) u32
+[inline]
+pub fn node_get_input_bus_count(p_node &C.ma_node) u32 {
+	return C.ma_node_get_input_bus_count(p_node)
+}
+
+// MA_API ma_uint32 ma_node_get_output_bus_count(const ma_node* pNode);
+fn C.ma_node_get_output_bus_count(p_node &C.ma_node) u32
+[inline]
+pub fn node_get_output_bus_count(p_node &C.ma_node) u32 {
+	return C.ma_node_get_output_bus_count(p_node)
+}
+
+// MA_API ma_uint32 ma_node_get_input_channels(const ma_node* pNode, ma_uint32 inputBusIndex);
+fn C.ma_node_get_input_channels(p_node &C.ma_node, input_bus_index u32) u32
+[inline]
+pub fn node_get_input_channels(p_node &C.ma_node, input_bus_index u32) u32 {
+	return C.ma_node_get_input_channels(p_node, input_bus_index)
+}
+
+// MA_API ma_uint32 ma_node_get_output_channels(const ma_node* pNode, ma_uint32 outputBusIndex);
+fn C.ma_node_get_output_channels(p_node &C.ma_node, output_bus_index u32) u32
+[inline]
+pub fn node_get_output_channels(p_node &C.ma_node, output_bus_index u32) u32 {
+	return C.ma_node_get_output_channels(p_node, output_bus_index)
+}
+
+// MA_API ma_result ma_node_attach_output_bus(ma_node* pNode, ma_uint32 outputBusIndex, ma_node* pOtherNode, ma_uint32 otherNodeInputBusIndex);
+fn C.ma_node_attach_output_bus(p_node &C.ma_node, output_bus_index u32, p_other_node &C.ma_node, other_node_input_bus_index u32) Result
+[inline]
+pub fn node_attach_output_bus(p_node &C.ma_node, output_bus_index u32, p_other_node &C.ma_node, other_node_input_bus_index u32) Result {
+	return C.ma_node_attach_output_bus(p_node, output_bus_index, p_other_node, other_node_input_bus_index)
+}
+
+// MA_API ma_result ma_node_detach_output_bus(ma_node* pNode, ma_uint32 outputBusIndex);
+fn C.ma_node_detach_output_bus(p_node &C.ma_node, output_bus_index u32) Result
+[inline]
+pub fn node_detach_output_bus(p_node &C.ma_node, output_bus_index u32) Result {
+	return C.ma_node_detach_output_bus(p_node, output_bus_index)
+}
+
+// MA_API ma_result ma_node_detach_all_output_buses(ma_node* pNode);
+fn C.ma_node_detach_all_output_buses(p_node &C.ma_node) Result
+[inline]
+pub fn node_detach_all_output_buses(p_node &C.ma_node) Result {
+	return C.ma_node_detach_all_output_buses(p_node)
+}
+
+// MA_API ma_result ma_node_set_output_bus_volume(ma_node* pNode, ma_uint32 outputBusIndex, float volume);
+fn C.ma_node_set_output_bus_volume(p_node &C.ma_node, output_bus_index u32, volume f32) Result
+[inline]
+pub fn node_set_output_bus_volume(p_node &C.ma_node, output_bus_index u32, volume f32) Result {
+	return C.ma_node_set_output_bus_volume(p_node, output_bus_index, volume)
+}
+
+// MA_API float ma_node_get_output_bus_volume(const ma_node* pNode, ma_uint32 outputBusIndex);
+fn C.ma_node_get_output_bus_volume(p_node &C.ma_node, output_bus_index u32) f32
+[inline]
+pub fn node_get_output_bus_volume(p_node &C.ma_node, output_bus_index u32) f32 {
+	return C.ma_node_get_output_bus_volume(p_node, output_bus_index)
+}
+
+// MA_API ma_result ma_node_set_state(ma_node* pNode, ma_node_state state);
+fn C.ma_node_set_state(p_node &C.ma_node, state C.ma_node_state) Result
+[inline]
+pub fn node_set_state(p_node &C.ma_node, state C.ma_node_state) Result {
+	return C.ma_node_set_state(p_node, state)
+}
+
+// MA_API ma_node_state ma_node_get_state(const ma_node* pNode);
+fn C.ma_node_get_state(p_node &C.ma_node) C.ma_node_state
+[inline]
+pub fn node_get_state(p_node &C.ma_node) C.ma_node_state {
+	return C.ma_node_get_state(p_node)
+}
+
+// MA_API ma_result ma_node_set_state_time(ma_node* pNode, ma_node_state state, ma_uint64 globalTime);
+fn C.ma_node_set_state_time(p_node &C.ma_node, state C.ma_node_state, global_time u64) Result
+[inline]
+pub fn node_set_state_time(p_node &C.ma_node, state C.ma_node_state, global_time u64) Result {
+	return C.ma_node_set_state_time(p_node, state, global_time)
+}
+
+// MA_API ma_uint64 ma_node_get_state_time(const ma_node* pNode, ma_node_state state);
+fn C.ma_node_get_state_time(p_node &C.ma_node, state C.ma_node_state) u64
+[inline]
+pub fn node_get_state_time(p_node &C.ma_node, state C.ma_node_state) u64 {
+	return C.ma_node_get_state_time(p_node, state)
+}
+
+// MA_API ma_node_state ma_node_get_state_by_time(const ma_node* pNode, ma_uint64 globalTime);
+fn C.ma_node_get_state_by_time(p_node &C.ma_node, global_time u64) C.ma_node_state
+[inline]
+pub fn node_get_state_by_time(p_node &C.ma_node, global_time u64) C.ma_node_state {
+	return C.ma_node_get_state_by_time(p_node, global_time)
+}
+
+// MA_API ma_node_state ma_node_get_state_by_time_range(const ma_node* pNode, ma_uint64 globalTimeBeg, ma_uint64 globalTimeEnd);
+fn C.ma_node_get_state_by_time_range(p_node &C.ma_node, global_time_beg u64, global_time_end u64) C.ma_node_state
+[inline]
+pub fn node_get_state_by_time_range(p_node &C.ma_node, global_time_beg u64, global_time_end u64) C.ma_node_state {
+	return C.ma_node_get_state_by_time_range(p_node, global_time_beg, global_time_end)
+}
+
+// MA_API ma_uint64 ma_node_get_time(const ma_node* pNode);
+fn C.ma_node_get_time(p_node &C.ma_node) u64
+[inline]
+pub fn node_get_time(p_node &C.ma_node) u64 {
+	return C.ma_node_get_time(p_node)
+}
+
+// MA_API ma_result ma_node_set_time(ma_node* pNode, ma_uint64 localTime);
+fn C.ma_node_set_time(p_node &C.ma_node, local_time u64) Result
+[inline]
+pub fn node_set_time(p_node &C.ma_node, local_time u64) Result {
+	return C.ma_node_set_time(p_node, local_time)
+}
+
+// MA_API ma_node_graph_config ma_node_graph_config_init(ma_uint32 channels);
+fn C.ma_node_graph_config_init(channels u32) C.ma_node_graph_config
+[inline]
+pub fn node_graph_config_init(channels u32) C.ma_node_graph_config {
+	return C.ma_node_graph_config_init(channels)
+}
+
+// MA_API ma_result ma_node_graph_init(const ma_node_graph_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_node_graph* pNodeGraph);
+fn C.ma_node_graph_init(p_config &C.ma_node_graph_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node_graph &C.ma_node_graph) Result
+[inline]
+pub fn node_graph_init(p_config &C.ma_node_graph_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node_graph &C.ma_node_graph) Result {
+	return C.ma_node_graph_init(p_config, p_allocation_callbacks, p_node_graph)
+}
+
+// MA_API void ma_node_graph_uninit(ma_node_graph* pNodeGraph, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_node_graph_uninit(p_node_graph &C.ma_node_graph, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn node_graph_uninit(p_node_graph &C.ma_node_graph, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_node_graph_uninit(p_node_graph, p_allocation_callbacks)
+}
+
+// MA_API ma_node* ma_node_graph_get_endpoint(ma_node_graph* pNodeGraph);
+fn C.ma_node_graph_get_endpoint(p_node_graph &C.ma_node_graph) &C.ma_node
+[inline]
+pub fn node_graph_get_endpoint(p_node_graph &C.ma_node_graph) &C.ma_node {
+	return C.ma_node_graph_get_endpoint(p_node_graph)
+}
+
+// MA_API ma_result ma_node_graph_read_pcm_frames(ma_node_graph* pNodeGraph, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_node_graph_read_pcm_frames(p_node_graph &C.ma_node_graph, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn node_graph_read_pcm_frames(p_node_graph &C.ma_node_graph, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_node_graph_read_pcm_frames(p_node_graph, p_frames_out, frame_count, p_frames_read)
+}
+
+// MA_API ma_uint32 ma_node_graph_get_channels(const ma_node_graph* pNodeGraph);
+fn C.ma_node_graph_get_channels(p_node_graph &C.ma_node_graph) u32
+[inline]
+pub fn node_graph_get_channels(p_node_graph &C.ma_node_graph) u32 {
+	return C.ma_node_graph_get_channels(p_node_graph)
+}
+
+// MA_API ma_uint64 ma_node_graph_get_time(const ma_node_graph* pNodeGraph);
+fn C.ma_node_graph_get_time(p_node_graph &C.ma_node_graph) u64
+[inline]
+pub fn node_graph_get_time(p_node_graph &C.ma_node_graph) u64 {
+	return C.ma_node_graph_get_time(p_node_graph)
+}
+
+// MA_API ma_result ma_node_graph_set_time(ma_node_graph* pNodeGraph, ma_uint64 globalTime);
+fn C.ma_node_graph_set_time(p_node_graph &C.ma_node_graph, global_time u64) Result
+[inline]
+pub fn node_graph_set_time(p_node_graph &C.ma_node_graph, global_time u64) Result {
+	return C.ma_node_graph_set_time(p_node_graph, global_time)
+}
+
+// MA_API ma_data_source_node_config ma_data_source_node_config_init(ma_data_source* pDataSource);
+fn C.ma_data_source_node_config_init(p_data_source &C.ma_data_source) C.ma_data_source_node_config
+[inline]
+pub fn data_source_node_config_init(p_data_source &C.ma_data_source) C.ma_data_source_node_config {
+	return C.ma_data_source_node_config_init(p_data_source)
+}
+
+// MA_API ma_result ma_data_source_node_init(ma_node_graph* pNodeGraph, const ma_data_source_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_data_source_node* pDataSourceNode);
+fn C.ma_data_source_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_data_source_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_data_source_node &C.ma_data_source_node) Result
+[inline]
+pub fn data_source_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_data_source_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_data_source_node &C.ma_data_source_node) Result {
+	return C.ma_data_source_node_init(p_node_graph, p_config, p_allocation_callbacks,
+		p_data_source_node)
+}
+
+// MA_API void ma_data_source_node_uninit(ma_data_source_node* pDataSourceNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_data_source_node_uninit(p_data_source_node &C.ma_data_source_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn data_source_node_uninit(p_data_source_node &C.ma_data_source_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_data_source_node_uninit(p_data_source_node, p_allocation_callbacks)
+}
+
+// MA_API ma_result ma_data_source_node_set_looping(ma_data_source_node* pDataSourceNode, ma_bool32 isLooping);
+fn C.ma_data_source_node_set_looping(p_data_source_node &C.ma_data_source_node, is_looping bool) Result
+[inline]
+pub fn data_source_node_set_looping(p_data_source_node &C.ma_data_source_node, is_looping bool) Result {
+	return C.ma_data_source_node_set_looping(p_data_source_node, is_looping)
+}
+
+// MA_API ma_bool32 ma_data_source_node_is_looping(ma_data_source_node* pDataSourceNode);
+fn C.ma_data_source_node_is_looping(p_data_source_node &C.ma_data_source_node) bool
+[inline]
+pub fn data_source_node_is_looping(p_data_source_node &C.ma_data_source_node) bool {
+	return C.ma_data_source_node_is_looping(p_data_source_node)
+}
+
+// MA_API ma_splitter_node_config ma_splitter_node_config_init(ma_uint32 channels);
+fn C.ma_splitter_node_config_init(channels u32) C.ma_splitter_node_config
+[inline]
+pub fn splitter_node_config_init(channels u32) C.ma_splitter_node_config {
+	return C.ma_splitter_node_config_init(channels)
+}
+
+// MA_API ma_result ma_splitter_node_init(ma_node_graph* pNodeGraph, const ma_splitter_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_splitter_node* pSplitterNode);
+fn C.ma_splitter_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_splitter_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_splitter_node &C.ma_splitter_node) Result
+[inline]
+pub fn splitter_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_splitter_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_splitter_node &C.ma_splitter_node) Result {
+	return C.ma_splitter_node_init(p_node_graph, p_config, p_allocation_callbacks, p_splitter_node)
+}
+
+// MA_API void ma_splitter_node_uninit(ma_splitter_node* pSplitterNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_splitter_node_uninit(p_splitter_node &C.ma_splitter_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn splitter_node_uninit(p_splitter_node &C.ma_splitter_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_splitter_node_uninit(p_splitter_node, p_allocation_callbacks)
+}
+
+// MA_API ma_biquad_node_config ma_biquad_node_config_init(ma_uint32 channels, float b0, float b1, float b2, float a0, float a1, float a2);
+fn C.ma_biquad_node_config_init(channels u32, b0 f32, b1 f32, b2 f32, a0 f32, a1 f32, a2 f32) C.ma_biquad_node_config
+[inline]
+pub fn biquad_node_config_init(channels u32, b0 f32, b1 f32, b2 f32, a0 f32, a1 f32, a2 f32) C.ma_biquad_node_config {
+	return C.ma_biquad_node_config_init(channels, b0, b1, b2, a0, a1, a2)
+}
+
+// MA_API ma_result ma_biquad_node_init(ma_node_graph* pNodeGraph, const ma_biquad_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_biquad_node* pNode);
+fn C.ma_biquad_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_biquad_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_biquad_node) Result
+[inline]
+pub fn biquad_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_biquad_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_biquad_node) Result {
+	return C.ma_biquad_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_biquad_node_reinit(const ma_biquad_config* pConfig, ma_biquad_node* pNode);
+fn C.ma_biquad_node_reinit(p_config &C.ma_biquad_config, p_node &C.ma_biquad_node) Result
+[inline]
+pub fn biquad_node_reinit(p_config &C.ma_biquad_config, p_node &C.ma_biquad_node) Result {
+	return C.ma_biquad_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_biquad_node_uninit(ma_biquad_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_biquad_node_uninit(p_node &C.ma_biquad_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn biquad_node_uninit(p_node &C.ma_biquad_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_biquad_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_lpf_node_config ma_lpf_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double cutoffFrequency, ma_uint32 order);
+fn C.ma_lpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_lpf_node_config
+[inline]
+pub fn lpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_lpf_node_config {
+	return C.ma_lpf_node_config_init(channels, sample_rate, cutoff_frequency, order)
+}
+
+// MA_API ma_result ma_lpf_node_init(ma_node_graph* pNodeGraph, const ma_lpf_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_lpf_node* pNode);
+fn C.ma_lpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_lpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_lpf_node) Result
+[inline]
+pub fn lpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_lpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_lpf_node) Result {
+	return C.ma_lpf_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_lpf_node_reinit(const ma_lpf_config* pConfig, ma_lpf_node* pNode);
+fn C.ma_lpf_node_reinit(p_config &C.ma_lpf_config, p_node &C.ma_lpf_node) Result
+[inline]
+pub fn lpf_node_reinit(p_config &C.ma_lpf_config, p_node &C.ma_lpf_node) Result {
+	return C.ma_lpf_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_lpf_node_uninit(ma_lpf_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_lpf_node_uninit(p_node &C.ma_lpf_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn lpf_node_uninit(p_node &C.ma_lpf_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_lpf_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_hpf_node_config ma_hpf_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double cutoffFrequency, ma_uint32 order);
+fn C.ma_hpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_hpf_node_config
+[inline]
+pub fn hpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_hpf_node_config {
+	return C.ma_hpf_node_config_init(channels, sample_rate, cutoff_frequency, order)
+}
+
+// MA_API ma_result ma_hpf_node_init(ma_node_graph* pNodeGraph, const ma_hpf_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hpf_node* pNode);
+fn C.ma_hpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_hpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_hpf_node) Result
+[inline]
+pub fn hpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_hpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_hpf_node) Result {
+	return C.ma_hpf_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_hpf_node_reinit(const ma_hpf_config* pConfig, ma_hpf_node* pNode);
+fn C.ma_hpf_node_reinit(p_config &C.ma_hpf_config, p_node &C.ma_hpf_node) Result
+[inline]
+pub fn hpf_node_reinit(p_config &C.ma_hpf_config, p_node &C.ma_hpf_node) Result {
+	return C.ma_hpf_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_hpf_node_uninit(ma_hpf_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hpf_node_uninit(p_node &C.ma_hpf_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hpf_node_uninit(p_node &C.ma_hpf_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hpf_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_bpf_node_config ma_bpf_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double cutoffFrequency, ma_uint32 order);
+fn C.ma_bpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_bpf_node_config
+[inline]
+pub fn bpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64, order u32) C.ma_bpf_node_config {
+	return C.ma_bpf_node_config_init(channels, sample_rate, cutoff_frequency, order)
+}
+
+// MA_API ma_result ma_bpf_node_init(ma_node_graph* pNodeGraph, const ma_bpf_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_bpf_node* pNode);
+fn C.ma_bpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_bpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_bpf_node) Result
+[inline]
+pub fn bpf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_bpf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_bpf_node) Result {
+	return C.ma_bpf_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_bpf_node_reinit(const ma_bpf_config* pConfig, ma_bpf_node* pNode);
+fn C.ma_bpf_node_reinit(p_config &C.ma_bpf_config, p_node &C.ma_bpf_node) Result
+[inline]
+pub fn bpf_node_reinit(p_config &C.ma_bpf_config, p_node &C.ma_bpf_node) Result {
+	return C.ma_bpf_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_bpf_node_uninit(ma_bpf_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_bpf_node_uninit(p_node &C.ma_bpf_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn bpf_node_uninit(p_node &C.ma_bpf_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_bpf_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_notch_node_config ma_notch_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double q, double frequency);
+fn C.ma_notch_node_config_init(channels u32, sample_rate u32, q f64, frequency f64) C.ma_notch_node_config
+[inline]
+pub fn notch_node_config_init(channels u32, sample_rate u32, q f64, frequency f64) C.ma_notch_node_config {
+	return C.ma_notch_node_config_init(channels, sample_rate, q, frequency)
+}
+
+// MA_API ma_result ma_notch_node_init(ma_node_graph* pNodeGraph, const ma_notch_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_notch_node* pNode);
+fn C.ma_notch_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_notch_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_notch_node) Result
+[inline]
+pub fn notch_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_notch_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_notch_node) Result {
+	return C.ma_notch_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_notch_node_reinit(const ma_notch_config* pConfig, ma_notch_node* pNode);
+fn C.ma_notch_node_reinit(p_config &C.ma_notch_config, p_node &C.ma_notch_node) Result
+[inline]
+pub fn notch_node_reinit(p_config &C.ma_notch_config, p_node &C.ma_notch_node) Result {
+	return C.ma_notch_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_notch_node_uninit(ma_notch_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_notch_node_uninit(p_node &C.ma_notch_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn notch_node_uninit(p_node &C.ma_notch_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_notch_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_peak_node_config ma_peak_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double gainDB, double q, double frequency);
+fn C.ma_peak_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_peak_node_config
+[inline]
+pub fn peak_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_peak_node_config {
+	return C.ma_peak_node_config_init(channels, sample_rate, gain_d_b, q, frequency)
+}
+
+// MA_API ma_result ma_peak_node_init(ma_node_graph* pNodeGraph, const ma_peak_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_peak_node* pNode);
+fn C.ma_peak_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_peak_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_peak_node) Result
+[inline]
+pub fn peak_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_peak_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_peak_node) Result {
+	return C.ma_peak_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_peak_node_reinit(const ma_peak_config* pConfig, ma_peak_node* pNode);
+fn C.ma_peak_node_reinit(p_config &C.ma_peak_config, p_node &C.ma_peak_node) Result
+[inline]
+pub fn peak_node_reinit(p_config &C.ma_peak_config, p_node &C.ma_peak_node) Result {
+	return C.ma_peak_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_peak_node_uninit(ma_peak_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_peak_node_uninit(p_node &C.ma_peak_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn peak_node_uninit(p_node &C.ma_peak_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_peak_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_loshelf_node_config ma_loshelf_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double gainDB, double q, double frequency);
+fn C.ma_loshelf_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_loshelf_node_config
+[inline]
+pub fn loshelf_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_loshelf_node_config {
+	return C.ma_loshelf_node_config_init(channels, sample_rate, gain_d_b, q, frequency)
+}
+
+// MA_API ma_result ma_loshelf_node_init(ma_node_graph* pNodeGraph, const ma_loshelf_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_loshelf_node* pNode);
+fn C.ma_loshelf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_loshelf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_loshelf_node) Result
+[inline]
+pub fn loshelf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_loshelf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_loshelf_node) Result {
+	return C.ma_loshelf_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_loshelf_node_reinit(const ma_loshelf_config* pConfig, ma_loshelf_node* pNode);
+fn C.ma_loshelf_node_reinit(p_config &C.ma_loshelf_config, p_node &C.ma_loshelf_node) Result
+[inline]
+pub fn loshelf_node_reinit(p_config &C.ma_loshelf_config, p_node &C.ma_loshelf_node) Result {
+	return C.ma_loshelf_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_loshelf_node_uninit(ma_loshelf_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_loshelf_node_uninit(p_node &C.ma_loshelf_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn loshelf_node_uninit(p_node &C.ma_loshelf_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_loshelf_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_hishelf_node_config ma_hishelf_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, double gainDB, double q, double frequency);
+fn C.ma_hishelf_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_hishelf_node_config
+[inline]
+pub fn hishelf_node_config_init(channels u32, sample_rate u32, gain_d_b f64, q f64, frequency f64) C.ma_hishelf_node_config {
+	return C.ma_hishelf_node_config_init(channels, sample_rate, gain_d_b, q, frequency)
+}
+
+// MA_API ma_result ma_hishelf_node_init(ma_node_graph* pNodeGraph, const ma_hishelf_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_hishelf_node* pNode);
+fn C.ma_hishelf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_hishelf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_hishelf_node) Result
+[inline]
+pub fn hishelf_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_hishelf_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_node &C.ma_hishelf_node) Result {
+	return C.ma_hishelf_node_init(p_node_graph, p_config, p_allocation_callbacks, p_node)
+}
+
+// MA_API ma_result ma_hishelf_node_reinit(const ma_hishelf_config* pConfig, ma_hishelf_node* pNode);
+fn C.ma_hishelf_node_reinit(p_config &C.ma_hishelf_config, p_node &C.ma_hishelf_node) Result
+[inline]
+pub fn hishelf_node_reinit(p_config &C.ma_hishelf_config, p_node &C.ma_hishelf_node) Result {
+	return C.ma_hishelf_node_reinit(p_config, p_node)
+}
+
+// MA_API void ma_hishelf_node_uninit(ma_hishelf_node* pNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_hishelf_node_uninit(p_node &C.ma_hishelf_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn hishelf_node_uninit(p_node &C.ma_hishelf_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_hishelf_node_uninit(p_node, p_allocation_callbacks)
+}
+
+// MA_API ma_delay_node_config ma_delay_node_config_init(ma_uint32 channels, ma_uint32 sampleRate, ma_uint32 delayInFrames, float decay);
+fn C.ma_delay_node_config_init(channels u32, sample_rate u32, delay_in_frames u32, decay f32) C.ma_delay_node_config
+[inline]
+pub fn delay_node_config_init(channels u32, sample_rate u32, delay_in_frames u32, decay f32) C.ma_delay_node_config {
+	return C.ma_delay_node_config_init(channels, sample_rate, delay_in_frames, decay)
+}
+
+// MA_API ma_result ma_delay_node_init(ma_node_graph* pNodeGraph, const ma_delay_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_delay_node* pDelayNode);
+fn C.ma_delay_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_delay_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_delay_node &C.ma_delay_node) Result
+[inline]
+pub fn delay_node_init(p_node_graph &C.ma_node_graph, p_config &C.ma_delay_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_delay_node &C.ma_delay_node) Result {
+	return C.ma_delay_node_init(p_node_graph, p_config, p_allocation_callbacks, p_delay_node)
+}
+
+// MA_API void ma_delay_node_uninit(ma_delay_node* pDelayNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_delay_node_uninit(p_delay_node &C.ma_delay_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn delay_node_uninit(p_delay_node &C.ma_delay_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_delay_node_uninit(p_delay_node, p_allocation_callbacks)
+}
+
+// MA_API void ma_delay_node_set_wet(ma_delay_node* pDelayNode, float value);
+fn C.ma_delay_node_set_wet(p_delay_node &C.ma_delay_node, value f32)
+[inline]
+pub fn delay_node_set_wet(p_delay_node &C.ma_delay_node, value f32) {
+	C.ma_delay_node_set_wet(p_delay_node, value)
+}
+
+// MA_API float ma_delay_node_get_wet(const ma_delay_node* pDelayNode);
+fn C.ma_delay_node_get_wet(p_delay_node &C.ma_delay_node) f32
+[inline]
+pub fn delay_node_get_wet(p_delay_node &C.ma_delay_node) f32 {
+	return C.ma_delay_node_get_wet(p_delay_node)
+}
+
+// MA_API void ma_delay_node_set_dry(ma_delay_node* pDelayNode, float value);
+fn C.ma_delay_node_set_dry(p_delay_node &C.ma_delay_node, value f32)
+[inline]
+pub fn delay_node_set_dry(p_delay_node &C.ma_delay_node, value f32) {
+	C.ma_delay_node_set_dry(p_delay_node, value)
+}
+
+// MA_API float ma_delay_node_get_dry(const ma_delay_node* pDelayNode);
+fn C.ma_delay_node_get_dry(p_delay_node &C.ma_delay_node) f32
+[inline]
+pub fn delay_node_get_dry(p_delay_node &C.ma_delay_node) f32 {
+	return C.ma_delay_node_get_dry(p_delay_node)
+}
+
+// MA_API void ma_delay_node_set_decay(ma_delay_node* pDelayNode, float value);
+fn C.ma_delay_node_set_decay(p_delay_node &C.ma_delay_node, value f32)
+[inline]
+pub fn delay_node_set_decay(p_delay_node &C.ma_delay_node, value f32) {
+	C.ma_delay_node_set_decay(p_delay_node, value)
+}
+
+// MA_API float ma_delay_node_get_decay(const ma_delay_node* pDelayNode);
+fn C.ma_delay_node_get_decay(p_delay_node &C.ma_delay_node) f32
+[inline]
+pub fn delay_node_get_decay(p_delay_node &C.ma_delay_node) f32 {
+	return C.ma_delay_node_get_decay(p_delay_node)
+}
+
+// MA_API ma_engine_node_config ma_engine_node_config_init(ma_engine* pEngine, ma_engine_node_type type, ma_uint32 flags);
+fn C.ma_engine_node_config_init(p_engine &C.ma_engine, typ C.ma_engine_node_type, flags u32) C.ma_engine_node_config
+[inline]
+pub fn engine_node_config_init(p_engine &C.ma_engine, typ C.ma_engine_node_type, flags u32) C.ma_engine_node_config {
+	return C.ma_engine_node_config_init(p_engine, typ, flags)
+}
+
+// MA_API ma_result ma_engine_node_get_heap_size(const ma_engine_node_config* pConfig, size_t* pHeapSizeInBytes);
+fn C.ma_engine_node_get_heap_size(p_config &C.ma_engine_node_config, p_heap_size_in_bytes &usize) Result
+[inline]
+pub fn engine_node_get_heap_size(p_config &C.ma_engine_node_config, p_heap_size_in_bytes &usize) Result {
+	return C.ma_engine_node_get_heap_size(p_config, p_heap_size_in_bytes)
+}
+
+// MA_API ma_result ma_engine_node_init_preallocated(const ma_engine_node_config* pConfig, void* pHeap, ma_engine_node* pEngineNode);
+fn C.ma_engine_node_init_preallocated(p_config &C.ma_engine_node_config, p_heap voidptr, p_engine_node &C.ma_engine_node) Result
+[inline]
+pub fn engine_node_init_preallocated(p_config &C.ma_engine_node_config, p_heap voidptr, p_engine_node &C.ma_engine_node) Result {
+	return C.ma_engine_node_init_preallocated(p_config, p_heap, p_engine_node)
+}
+
+// MA_API ma_result ma_engine_node_init(const ma_engine_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_engine_node* pEngineNode);
+fn C.ma_engine_node_init(p_config &C.ma_engine_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_engine_node &C.ma_engine_node) Result
+[inline]
+pub fn engine_node_init(p_config &C.ma_engine_node_config, p_allocation_callbacks &C.ma_allocation_callbacks, p_engine_node &C.ma_engine_node) Result {
+	return C.ma_engine_node_init(p_config, p_allocation_callbacks, p_engine_node)
+}
+
+// MA_API void ma_engine_node_uninit(ma_engine_node* pEngineNode, const ma_allocation_callbacks* pAllocationCallbacks);
+fn C.ma_engine_node_uninit(p_engine_node &C.ma_engine_node, p_allocation_callbacks &C.ma_allocation_callbacks)
+[inline]
+pub fn engine_node_uninit(p_engine_node &C.ma_engine_node, p_allocation_callbacks &C.ma_allocation_callbacks) {
+	C.ma_engine_node_uninit(p_engine_node, p_allocation_callbacks)
+}
+
+// MA_API ma_sound_config ma_sound_config_init();
+fn C.ma_sound_config_init() C.ma_sound_config
+[inline]
+pub fn sound_config_init() C.ma_sound_config {
+	return C.ma_sound_config_init()
+}
+
+// MA_API ma_sound_group_config ma_sound_group_config_init();
+fn C.ma_sound_group_config_init() C.ma_sound_group_config
+[inline]
+pub fn sound_group_config_init() C.ma_sound_group_config {
+	return C.ma_sound_group_config_init()
+}
+
+// MA_API ma_engine_config ma_engine_config_init();
+fn C.ma_engine_config_init() C.ma_engine_config
+[inline]
+pub fn engine_config_init() C.ma_engine_config {
+	return C.ma_engine_config_init()
+}
+
+// MA_API ma_result ma_engine_init(const ma_engine_config* pConfig, ma_engine* pEngine);
+fn C.ma_engine_init(p_config &C.ma_engine_config, p_engine &C.ma_engine) Result
+[inline]
+pub fn engine_init(p_config &C.ma_engine_config, p_engine &C.ma_engine) Result {
+	return C.ma_engine_init(p_config, p_engine)
+}
+
+// MA_API void ma_engine_uninit(ma_engine* pEngine);
+fn C.ma_engine_uninit(p_engine &C.ma_engine)
+[inline]
+pub fn engine_uninit(p_engine &C.ma_engine) {
+	C.ma_engine_uninit(p_engine)
+}
+
+// MA_API ma_result ma_engine_read_pcm_frames(ma_engine* pEngine, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead);
+fn C.ma_engine_read_pcm_frames(p_engine &C.ma_engine, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result
+[inline]
+pub fn engine_read_pcm_frames(p_engine &C.ma_engine, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result {
+	return C.ma_engine_read_pcm_frames(p_engine, p_frames_out, frame_count, p_frames_read)
+}
+
+// MA_API ma_node_graph* ma_engine_get_node_graph(ma_engine* pEngine);
+fn C.ma_engine_get_node_graph(p_engine &C.ma_engine) &C.ma_node_graph
+[inline]
+pub fn engine_get_node_graph(p_engine &C.ma_engine) &C.ma_node_graph {
+	return C.ma_engine_get_node_graph(p_engine)
+}
+
+// MA_API ma_resource_manager* ma_engine_get_resource_manager(ma_engine* pEngine);
+fn C.ma_engine_get_resource_manager(p_engine &C.ma_engine) &C.ma_resource_manager
+[inline]
+pub fn engine_get_resource_manager(p_engine &C.ma_engine) &C.ma_resource_manager {
+	return C.ma_engine_get_resource_manager(p_engine)
+}
+
+// MA_API ma_device* ma_engine_get_device(ma_engine* pEngine);
+fn C.ma_engine_get_device(p_engine &C.ma_engine) &C.ma_device
+[inline]
+pub fn engine_get_device(p_engine &C.ma_engine) &Device {
+	return C.ma_engine_get_device(p_engine)
+}
+
+// MA_API ma_log* ma_engine_get_log(ma_engine* pEngine);
+fn C.ma_engine_get_log(p_engine &C.ma_engine) &C.ma_log
+[inline]
+pub fn engine_get_log(p_engine &C.ma_engine) &C.ma_log {
+	return C.ma_engine_get_log(p_engine)
+}
+
+// MA_API ma_node* ma_engine_get_endpoint(ma_engine* pEngine);
+fn C.ma_engine_get_endpoint(p_engine &C.ma_engine) &C.ma_node
+[inline]
+pub fn engine_get_endpoint(p_engine &C.ma_engine) &C.ma_node {
+	return C.ma_engine_get_endpoint(p_engine)
+}
+
+// MA_API ma_uint64 ma_engine_get_time(const ma_engine* pEngine);
+fn C.ma_engine_get_time(p_engine &C.ma_engine) u64
+[inline]
+pub fn engine_get_time(p_engine &C.ma_engine) u64 {
+	return C.ma_engine_get_time(p_engine)
+}
+
+// MA_API ma_result ma_engine_set_time(ma_engine* pEngine, ma_uint64 globalTime);
+fn C.ma_engine_set_time(p_engine &C.ma_engine, global_time u64) Result
+[inline]
+pub fn engine_set_time(p_engine &C.ma_engine, global_time u64) Result {
+	return C.ma_engine_set_time(p_engine, global_time)
+}
+
+// MA_API ma_uint32 ma_engine_get_channels(const ma_engine* pEngine);
+fn C.ma_engine_get_channels(p_engine &C.ma_engine) u32
+[inline]
+pub fn engine_get_channels(p_engine &C.ma_engine) u32 {
+	return C.ma_engine_get_channels(p_engine)
+}
+
+// MA_API ma_uint32 ma_engine_get_sample_rate(const ma_engine* pEngine);
+fn C.ma_engine_get_sample_rate(p_engine &C.ma_engine) u32
+[inline]
+pub fn engine_get_sample_rate(p_engine &C.ma_engine) u32 {
+	return C.ma_engine_get_sample_rate(p_engine)
+}
+
+// MA_API ma_result ma_engine_start(ma_engine* pEngine);
+fn C.ma_engine_start(p_engine &C.ma_engine) Result
+[inline]
+pub fn engine_start(p_engine &C.ma_engine) Result {
+	return C.ma_engine_start(p_engine)
+}
+
+// MA_API ma_result ma_engine_stop(ma_engine* pEngine);
+fn C.ma_engine_stop(p_engine &C.ma_engine) Result
+[inline]
+pub fn engine_stop(p_engine &C.ma_engine) Result {
+	return C.ma_engine_stop(p_engine)
+}
+
+// MA_API ma_result ma_engine_set_volume(ma_engine* pEngine, float volume);
+fn C.ma_engine_set_volume(p_engine &C.ma_engine, volume f32) Result
+[inline]
+pub fn engine_set_volume(p_engine &C.ma_engine, volume f32) Result {
+	return C.ma_engine_set_volume(p_engine, volume)
+}
+
+// MA_API ma_result ma_engine_set_gain_db(ma_engine* pEngine, float gainDB);
+fn C.ma_engine_set_gain_db(p_engine &C.ma_engine, gain_d_b f32) Result
+[inline]
+pub fn engine_set_gain_db(p_engine &C.ma_engine, gain_d_b f32) Result {
+	return C.ma_engine_set_gain_db(p_engine, gain_d_b)
+}
+
+// MA_API ma_uint32 ma_engine_get_listener_count(const ma_engine* pEngine);
+fn C.ma_engine_get_listener_count(p_engine &C.ma_engine) u32
+[inline]
+pub fn engine_get_listener_count(p_engine &C.ma_engine) u32 {
+	return C.ma_engine_get_listener_count(p_engine)
+}
+
+// MA_API ma_uint32 ma_engine_find_closest_listener(const ma_engine* pEngine, float absolutePosX, float absolutePosY, float absolutePosZ);
+fn C.ma_engine_find_closest_listener(p_engine &C.ma_engine, absolute_pos_x f32, absolute_pos_y f32, absolute_pos_z f32) u32
+[inline]
+pub fn engine_find_closest_listener(p_engine &C.ma_engine, absolute_pos_x f32, absolute_pos_y f32, absolute_pos_z f32) u32 {
+	return C.ma_engine_find_closest_listener(p_engine, absolute_pos_x, absolute_pos_y,
+		absolute_pos_z)
+}
+
+// MA_API void ma_engine_listener_set_position(ma_engine* pEngine, ma_uint32 listenerIndex, float x, float y, float z);
+fn C.ma_engine_listener_set_position(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32)
+[inline]
+pub fn engine_listener_set_position(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32) {
+	C.ma_engine_listener_set_position(p_engine, listener_index, x, y, z)
+}
+
+// MA_API ma_vec3f ma_engine_listener_get_position(const ma_engine* pEngine, ma_uint32 listenerIndex);
+fn C.ma_engine_listener_get_position(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f
+[inline]
+pub fn engine_listener_get_position(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f {
+	return C.ma_engine_listener_get_position(p_engine, listener_index)
+}
+
+// MA_API void ma_engine_listener_set_direction(ma_engine* pEngine, ma_uint32 listenerIndex, float x, float y, float z);
+fn C.ma_engine_listener_set_direction(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32)
+[inline]
+pub fn engine_listener_set_direction(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32) {
+	C.ma_engine_listener_set_direction(p_engine, listener_index, x, y, z)
+}
+
+// MA_API ma_vec3f ma_engine_listener_get_direction(const ma_engine* pEngine, ma_uint32 listenerIndex);
+fn C.ma_engine_listener_get_direction(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f
+[inline]
+pub fn engine_listener_get_direction(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f {
+	return C.ma_engine_listener_get_direction(p_engine, listener_index)
+}
+
+// MA_API void ma_engine_listener_set_velocity(ma_engine* pEngine, ma_uint32 listenerIndex, float x, float y, float z);
+fn C.ma_engine_listener_set_velocity(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32)
+[inline]
+pub fn engine_listener_set_velocity(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32) {
+	C.ma_engine_listener_set_velocity(p_engine, listener_index, x, y, z)
+}
+
+// MA_API ma_vec3f ma_engine_listener_get_velocity(const ma_engine* pEngine, ma_uint32 listenerIndex);
+fn C.ma_engine_listener_get_velocity(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f
+[inline]
+pub fn engine_listener_get_velocity(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f {
+	return C.ma_engine_listener_get_velocity(p_engine, listener_index)
+}
+
+// MA_API void ma_engine_listener_set_cone(ma_engine* pEngine, ma_uint32 listenerIndex, float innerAngleInRadians, float outerAngleInRadians, float outerGain);
+fn C.ma_engine_listener_set_cone(p_engine &C.ma_engine, listener_index u32, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32)
+[inline]
+pub fn engine_listener_set_cone(p_engine &C.ma_engine, listener_index u32, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32) {
+	C.ma_engine_listener_set_cone(p_engine, listener_index, inner_angle_in_radians, outer_angle_in_radians,
+		outer_gain)
+}
+
+// MA_API void ma_engine_listener_get_cone(const ma_engine* pEngine, ma_uint32 listenerIndex, float* pInnerAngleInRadians, float* pOuterAngleInRadians, float* pOuterGain);
+fn C.ma_engine_listener_get_cone(p_engine &C.ma_engine, listener_index u32, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32)
+[inline]
+pub fn engine_listener_get_cone(p_engine &C.ma_engine, listener_index u32, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32) {
+	C.ma_engine_listener_get_cone(p_engine, listener_index, p_inner_angle_in_radians,
+		p_outer_angle_in_radians, p_outer_gain)
+}
+
+// MA_API void ma_engine_listener_set_world_up(ma_engine* pEngine, ma_uint32 listenerIndex, float x, float y, float z);
+fn C.ma_engine_listener_set_world_up(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32)
+[inline]
+pub fn engine_listener_set_world_up(p_engine &C.ma_engine, listener_index u32, x f32, y f32, z f32) {
+	C.ma_engine_listener_set_world_up(p_engine, listener_index, x, y, z)
+}
+
+// MA_API ma_vec3f ma_engine_listener_get_world_up(const ma_engine* pEngine, ma_uint32 listenerIndex);
+fn C.ma_engine_listener_get_world_up(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f
+[inline]
+pub fn engine_listener_get_world_up(p_engine &C.ma_engine, listener_index u32) C.ma_vec3f {
+	return C.ma_engine_listener_get_world_up(p_engine, listener_index)
+}
+
+// MA_API void ma_engine_listener_set_enabled(ma_engine* pEngine, ma_uint32 listenerIndex, ma_bool32 isEnabled);
+fn C.ma_engine_listener_set_enabled(p_engine &C.ma_engine, listener_index u32, is_enabled bool)
+[inline]
+pub fn engine_listener_set_enabled(p_engine &C.ma_engine, listener_index u32, is_enabled bool) {
+	C.ma_engine_listener_set_enabled(p_engine, listener_index, is_enabled)
+}
+
+// MA_API ma_bool32 ma_engine_listener_is_enabled(const ma_engine* pEngine, ma_uint32 listenerIndex);
+fn C.ma_engine_listener_is_enabled(p_engine &C.ma_engine, listener_index u32) bool
+[inline]
+pub fn engine_listener_is_enabled(p_engine &C.ma_engine, listener_index u32) bool {
+	return C.ma_engine_listener_is_enabled(p_engine, listener_index)
+}
+
+// MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePath, ma_node* pNode, ma_uint32 nodeInputBusIndex);
+fn C.ma_engine_play_sound_ex(p_engine &C.ma_engine, p_file_path charptr, p_node &C.ma_node, node_input_bus_index u32) Result
+[inline]
+pub fn engine_play_sound_ex(p_engine &C.ma_engine, p_file_path &byte, p_node &C.ma_node, node_input_bus_index u32) Result {
+	return C.ma_engine_play_sound_ex(p_engine, p_file_path, p_node, node_input_bus_index)
+}
+
+// MA_API ma_result ma_engine_play_sound(ma_engine* pEngine, const char* pFilePath, ma_sound_group* pGroup);   /* Fire and forget. */
+fn C.ma_engine_play_sound(p_engine &C.ma_engine, p_file_path charptr, p_group &C.ma_sound_group) Result
+[inline]
+pub fn engine_play_sound(p_engine &C.ma_engine, p_file_path &byte, p_group &C.ma_sound_group) Result {
+	return C.ma_engine_play_sound(p_engine, p_file_path, p_group)
+}
+
+// MA_API ma_result ma_sound_init_from_file(ma_engine* pEngine, const char* pFilePath, ma_uint32 flags, ma_sound_group* pGroup, ma_fence* pDoneFence, ma_sound* pSound);
+fn C.ma_sound_init_from_file(p_engine &C.ma_engine, p_file_path charptr, flags u32, p_group &C.ma_sound_group, p_done_fence &C.ma_fence, p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_init_from_file(p_engine &C.ma_engine, p_file_path &byte, flags u32, p_group &C.ma_sound_group, p_done_fence &C.ma_fence, p_sound &C.ma_sound) Result {
+	return C.ma_sound_init_from_file(p_engine, p_file_path, flags, p_group, p_done_fence,
+		p_sound)
+}
+
+// MA_API ma_result ma_sound_init_from_file_w(ma_engine* pEngine, const wchar_t* pFilePath, ma_uint32 flags, ma_sound_group* pGroup, ma_fence* pDoneFence, ma_sound* pSound);
+fn C.ma_sound_init_from_file_w(p_engine &C.ma_engine, p_file_path &C.wchar_t, flags u32, p_group &C.ma_sound_group, p_done_fence &C.ma_fence, p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_init_from_file_w(p_engine &C.ma_engine, p_file_path &C.wchar_t, flags u32, p_group &C.ma_sound_group, p_done_fence &C.ma_fence, p_sound &C.ma_sound) Result {
+	return C.ma_sound_init_from_file_w(p_engine, p_file_path, flags, p_group, p_done_fence,
+		p_sound)
+}
+
+// MA_API ma_result ma_sound_init_copy(ma_engine* pEngine, const ma_sound* pExistingSound, ma_uint32 flags, ma_sound_group* pGroup, ma_sound* pSound);
+fn C.ma_sound_init_copy(p_engine &C.ma_engine, p_existing_sound &C.ma_sound, flags u32, p_group &C.ma_sound_group, p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_init_copy(p_engine &C.ma_engine, p_existing_sound &C.ma_sound, flags u32, p_group &C.ma_sound_group, p_sound &C.ma_sound) Result {
+	return C.ma_sound_init_copy(p_engine, p_existing_sound, flags, p_group, p_sound)
+}
+
+// MA_API ma_result ma_sound_init_from_data_source(ma_engine* pEngine, ma_data_source* pDataSource, ma_uint32 flags, ma_sound_group* pGroup, ma_sound* pSound);
+fn C.ma_sound_init_from_data_source(p_engine &C.ma_engine, p_data_source &C.ma_data_source, flags u32, p_group &C.ma_sound_group, p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_init_from_data_source(p_engine &C.ma_engine, p_data_source &C.ma_data_source, flags u32, p_group &C.ma_sound_group, p_sound &C.ma_sound) Result {
+	return C.ma_sound_init_from_data_source(p_engine, p_data_source, flags, p_group, p_sound)
+}
+
+// MA_API ma_result ma_sound_init_ex(ma_engine* pEngine, const ma_sound_config* pConfig, ma_sound* pSound);
+fn C.ma_sound_init_ex(p_engine &C.ma_engine, p_config &C.ma_sound_config, p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_init_ex(p_engine &C.ma_engine, p_config &C.ma_sound_config, p_sound &C.ma_sound) Result {
+	return C.ma_sound_init_ex(p_engine, p_config, p_sound)
+}
+
+// MA_API void ma_sound_uninit(ma_sound* pSound);
+fn C.ma_sound_uninit(p_sound &C.ma_sound)
+[inline]
+pub fn sound_uninit(p_sound &C.ma_sound) {
+	C.ma_sound_uninit(p_sound)
+}
+
+// MA_API ma_engine* ma_sound_get_engine(const ma_sound* pSound);
+fn C.ma_sound_get_engine(p_sound &C.ma_sound) &C.ma_engine
+[inline]
+pub fn sound_get_engine(p_sound &C.ma_sound) &C.ma_engine {
+	return C.ma_sound_get_engine(p_sound)
+}
+
+// MA_API ma_data_source* ma_sound_get_data_source(const ma_sound* pSound);
+fn C.ma_sound_get_data_source(p_sound &C.ma_sound) &C.ma_data_source
+[inline]
+pub fn sound_get_data_source(p_sound &C.ma_sound) &C.ma_data_source {
+	return C.ma_sound_get_data_source(p_sound)
+}
+
+// MA_API ma_result ma_sound_start(ma_sound* pSound);
+fn C.ma_sound_start(p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_start(p_sound &C.ma_sound) Result {
+	return C.ma_sound_start(p_sound)
+}
+
+// MA_API ma_result ma_sound_stop(ma_sound* pSound);
+fn C.ma_sound_stop(p_sound &C.ma_sound) Result
+[inline]
+pub fn sound_stop(p_sound &C.ma_sound) Result {
+	return C.ma_sound_stop(p_sound)
+}
+
+// MA_API void ma_sound_set_volume(ma_sound* pSound, float volume);
+fn C.ma_sound_set_volume(p_sound &C.ma_sound, volume f32)
+[inline]
+pub fn sound_set_volume(p_sound &C.ma_sound, volume f32) {
+	C.ma_sound_set_volume(p_sound, volume)
+}
+
+// MA_API float ma_sound_get_volume(const ma_sound* pSound);
+fn C.ma_sound_get_volume(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_volume(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_volume(p_sound)
+}
+
+// MA_API void ma_sound_set_pan(ma_sound* pSound, float pan);
+fn C.ma_sound_set_pan(p_sound &C.ma_sound, pan f32)
+[inline]
+pub fn sound_set_pan(p_sound &C.ma_sound, pan f32) {
+	C.ma_sound_set_pan(p_sound, pan)
+}
+
+// MA_API float ma_sound_get_pan(const ma_sound* pSound);
+fn C.ma_sound_get_pan(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_pan(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_pan(p_sound)
+}
+
+// MA_API void ma_sound_set_pan_mode(ma_sound* pSound, ma_pan_mode panMode);
+fn C.ma_sound_set_pan_mode(p_sound &C.ma_sound, pan_mode C.ma_pan_mode)
+[inline]
+pub fn sound_set_pan_mode(p_sound &C.ma_sound, pan_mode C.ma_pan_mode) {
+	C.ma_sound_set_pan_mode(p_sound, pan_mode)
+}
+
+// MA_API ma_pan_mode ma_sound_get_pan_mode(const ma_sound* pSound);
+fn C.ma_sound_get_pan_mode(p_sound &C.ma_sound) C.ma_pan_mode
+[inline]
+pub fn sound_get_pan_mode(p_sound &C.ma_sound) C.ma_pan_mode {
+	return C.ma_sound_get_pan_mode(p_sound)
+}
+
+// MA_API void ma_sound_set_pitch(ma_sound* pSound, float pitch);
+fn C.ma_sound_set_pitch(p_sound &C.ma_sound, pitch f32)
+[inline]
+pub fn sound_set_pitch(p_sound &C.ma_sound, pitch f32) {
+	C.ma_sound_set_pitch(p_sound, pitch)
+}
+
+// MA_API float ma_sound_get_pitch(const ma_sound* pSound);
+fn C.ma_sound_get_pitch(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_pitch(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_pitch(p_sound)
+}
+
+// MA_API void ma_sound_set_spatialization_enabled(ma_sound* pSound, ma_bool32 enabled);
+fn C.ma_sound_set_spatialization_enabled(p_sound &C.ma_sound, enabled bool)
+[inline]
+pub fn sound_set_spatialization_enabled(p_sound &C.ma_sound, enabled bool) {
+	C.ma_sound_set_spatialization_enabled(p_sound, enabled)
+}
+
+// MA_API ma_bool32 ma_sound_is_spatialization_enabled(const ma_sound* pSound);
+fn C.ma_sound_is_spatialization_enabled(p_sound &C.ma_sound) bool
+[inline]
+pub fn sound_is_spatialization_enabled(p_sound &C.ma_sound) bool {
+	return C.ma_sound_is_spatialization_enabled(p_sound)
+}
+
+// MA_API void ma_sound_set_pinned_listener_index(ma_sound* pSound, ma_uint32 listenerIndex);
+fn C.ma_sound_set_pinned_listener_index(p_sound &C.ma_sound, listener_index u32)
+[inline]
+pub fn sound_set_pinned_listener_index(p_sound &C.ma_sound, listener_index u32) {
+	C.ma_sound_set_pinned_listener_index(p_sound, listener_index)
+}
+
+// MA_API ma_uint32 ma_sound_get_pinned_listener_index(const ma_sound* pSound);
+fn C.ma_sound_get_pinned_listener_index(p_sound &C.ma_sound) u32
+[inline]
+pub fn sound_get_pinned_listener_index(p_sound &C.ma_sound) u32 {
+	return C.ma_sound_get_pinned_listener_index(p_sound)
+}
+
+// MA_API ma_uint32 ma_sound_get_listener_index(const ma_sound* pSound);
+fn C.ma_sound_get_listener_index(p_sound &C.ma_sound) u32
+[inline]
+pub fn sound_get_listener_index(p_sound &C.ma_sound) u32 {
+	return C.ma_sound_get_listener_index(p_sound)
+}
+
+// MA_API ma_vec3f ma_sound_get_direction_to_listener(const ma_sound* pSound);
+fn C.ma_sound_get_direction_to_listener(p_sound &C.ma_sound) C.ma_vec3f
+[inline]
+pub fn sound_get_direction_to_listener(p_sound &C.ma_sound) C.ma_vec3f {
+	return C.ma_sound_get_direction_to_listener(p_sound)
+}
+
+// MA_API void ma_sound_set_position(ma_sound* pSound, float x, float y, float z);
+fn C.ma_sound_set_position(p_sound &C.ma_sound, x f32, y f32, z f32)
+[inline]
+pub fn sound_set_position(p_sound &C.ma_sound, x f32, y f32, z f32) {
+	C.ma_sound_set_position(p_sound, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_get_position(const ma_sound* pSound);
+fn C.ma_sound_get_position(p_sound &C.ma_sound) C.ma_vec3f
+[inline]
+pub fn sound_get_position(p_sound &C.ma_sound) C.ma_vec3f {
+	return C.ma_sound_get_position(p_sound)
+}
+
+// MA_API void ma_sound_set_direction(ma_sound* pSound, float x, float y, float z);
+fn C.ma_sound_set_direction(p_sound &C.ma_sound, x f32, y f32, z f32)
+[inline]
+pub fn sound_set_direction(p_sound &C.ma_sound, x f32, y f32, z f32) {
+	C.ma_sound_set_direction(p_sound, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_get_direction(const ma_sound* pSound);
+fn C.ma_sound_get_direction(p_sound &C.ma_sound) C.ma_vec3f
+[inline]
+pub fn sound_get_direction(p_sound &C.ma_sound) C.ma_vec3f {
+	return C.ma_sound_get_direction(p_sound)
+}
+
+// MA_API void ma_sound_set_velocity(ma_sound* pSound, float x, float y, float z);
+fn C.ma_sound_set_velocity(p_sound &C.ma_sound, x f32, y f32, z f32)
+[inline]
+pub fn sound_set_velocity(p_sound &C.ma_sound, x f32, y f32, z f32) {
+	C.ma_sound_set_velocity(p_sound, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_get_velocity(const ma_sound* pSound);
+fn C.ma_sound_get_velocity(p_sound &C.ma_sound) C.ma_vec3f
+[inline]
+pub fn sound_get_velocity(p_sound &C.ma_sound) C.ma_vec3f {
+	return C.ma_sound_get_velocity(p_sound)
+}
+
+// MA_API void ma_sound_set_attenuation_model(ma_sound* pSound, ma_attenuation_model attenuationModel);
+fn C.ma_sound_set_attenuation_model(p_sound &C.ma_sound, attenuation_model C.ma_attenuation_model)
+[inline]
+pub fn sound_set_attenuation_model(p_sound &C.ma_sound, attenuation_model C.ma_attenuation_model) {
+	C.ma_sound_set_attenuation_model(p_sound, attenuation_model)
+}
+
+// MA_API ma_attenuation_model ma_sound_get_attenuation_model(const ma_sound* pSound);
+fn C.ma_sound_get_attenuation_model(p_sound &C.ma_sound) C.ma_attenuation_model
+[inline]
+pub fn sound_get_attenuation_model(p_sound &C.ma_sound) C.ma_attenuation_model {
+	return C.ma_sound_get_attenuation_model(p_sound)
+}
+
+// MA_API void ma_sound_set_positioning(ma_sound* pSound, ma_positioning positioning);
+fn C.ma_sound_set_positioning(p_sound &C.ma_sound, positioning C.ma_positioning)
+[inline]
+pub fn sound_set_positioning(p_sound &C.ma_sound, positioning C.ma_positioning) {
+	C.ma_sound_set_positioning(p_sound, positioning)
+}
+
+// MA_API ma_positioning ma_sound_get_positioning(const ma_sound* pSound);
+fn C.ma_sound_get_positioning(p_sound &C.ma_sound) C.ma_positioning
+[inline]
+pub fn sound_get_positioning(p_sound &C.ma_sound) C.ma_positioning {
+	return C.ma_sound_get_positioning(p_sound)
+}
+
+// MA_API void ma_sound_set_rolloff(ma_sound* pSound, float rolloff);
+fn C.ma_sound_set_rolloff(p_sound &C.ma_sound, rolloff f32)
+[inline]
+pub fn sound_set_rolloff(p_sound &C.ma_sound, rolloff f32) {
+	C.ma_sound_set_rolloff(p_sound, rolloff)
+}
+
+// MA_API float ma_sound_get_rolloff(const ma_sound* pSound);
+fn C.ma_sound_get_rolloff(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_rolloff(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_rolloff(p_sound)
+}
+
+// MA_API void ma_sound_set_min_gain(ma_sound* pSound, float minGain);
+fn C.ma_sound_set_min_gain(p_sound &C.ma_sound, min_gain f32)
+[inline]
+pub fn sound_set_min_gain(p_sound &C.ma_sound, min_gain f32) {
+	C.ma_sound_set_min_gain(p_sound, min_gain)
+}
+
+// MA_API float ma_sound_get_min_gain(const ma_sound* pSound);
+fn C.ma_sound_get_min_gain(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_min_gain(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_min_gain(p_sound)
+}
+
+// MA_API void ma_sound_set_max_gain(ma_sound* pSound, float maxGain);
+fn C.ma_sound_set_max_gain(p_sound &C.ma_sound, max_gain f32)
+[inline]
+pub fn sound_set_max_gain(p_sound &C.ma_sound, max_gain f32) {
+	C.ma_sound_set_max_gain(p_sound, max_gain)
+}
+
+// MA_API float ma_sound_get_max_gain(const ma_sound* pSound);
+fn C.ma_sound_get_max_gain(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_max_gain(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_max_gain(p_sound)
+}
+
+// MA_API void ma_sound_set_min_distance(ma_sound* pSound, float minDistance);
+fn C.ma_sound_set_min_distance(p_sound &C.ma_sound, min_distance f32)
+[inline]
+pub fn sound_set_min_distance(p_sound &C.ma_sound, min_distance f32) {
+	C.ma_sound_set_min_distance(p_sound, min_distance)
+}
+
+// MA_API float ma_sound_get_min_distance(const ma_sound* pSound);
+fn C.ma_sound_get_min_distance(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_min_distance(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_min_distance(p_sound)
+}
+
+// MA_API void ma_sound_set_max_distance(ma_sound* pSound, float maxDistance);
+fn C.ma_sound_set_max_distance(p_sound &C.ma_sound, max_distance f32)
+[inline]
+pub fn sound_set_max_distance(p_sound &C.ma_sound, max_distance f32) {
+	C.ma_sound_set_max_distance(p_sound, max_distance)
+}
+
+// MA_API float ma_sound_get_max_distance(const ma_sound* pSound);
+fn C.ma_sound_get_max_distance(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_max_distance(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_max_distance(p_sound)
+}
+
+// MA_API void ma_sound_set_cone(ma_sound* pSound, float innerAngleInRadians, float outerAngleInRadians, float outerGain);
+fn C.ma_sound_set_cone(p_sound &C.ma_sound, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32)
+[inline]
+pub fn sound_set_cone(p_sound &C.ma_sound, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32) {
+	C.ma_sound_set_cone(p_sound, inner_angle_in_radians, outer_angle_in_radians, outer_gain)
+}
+
+// MA_API void ma_sound_get_cone(const ma_sound* pSound, float* pInnerAngleInRadians, float* pOuterAngleInRadians, float* pOuterGain);
+fn C.ma_sound_get_cone(p_sound &C.ma_sound, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32)
+[inline]
+pub fn sound_get_cone(p_sound &C.ma_sound, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32) {
+	C.ma_sound_get_cone(p_sound, p_inner_angle_in_radians, p_outer_angle_in_radians, p_outer_gain)
+}
+
+// MA_API void ma_sound_set_doppler_factor(ma_sound* pSound, float dopplerFactor);
+fn C.ma_sound_set_doppler_factor(p_sound &C.ma_sound, doppler_factor f32)
+[inline]
+pub fn sound_set_doppler_factor(p_sound &C.ma_sound, doppler_factor f32) {
+	C.ma_sound_set_doppler_factor(p_sound, doppler_factor)
+}
+
+// MA_API float ma_sound_get_doppler_factor(const ma_sound* pSound);
+fn C.ma_sound_get_doppler_factor(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_doppler_factor(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_doppler_factor(p_sound)
+}
+
+// MA_API void ma_sound_set_directional_attenuation_factor(ma_sound* pSound, float directionalAttenuationFactor);
+fn C.ma_sound_set_directional_attenuation_factor(p_sound &C.ma_sound, directional_attenuation_factor f32)
+[inline]
+pub fn sound_set_directional_attenuation_factor(p_sound &C.ma_sound, directional_attenuation_factor f32) {
+	C.ma_sound_set_directional_attenuation_factor(p_sound, directional_attenuation_factor)
+}
+
+// MA_API float ma_sound_get_directional_attenuation_factor(const ma_sound* pSound);
+fn C.ma_sound_get_directional_attenuation_factor(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_directional_attenuation_factor(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_directional_attenuation_factor(p_sound)
+}
+
+// MA_API void ma_sound_set_fade_in_pcm_frames(ma_sound* pSound, float volumeBeg, float volumeEnd, ma_uint64 fadeLengthInFrames);
+fn C.ma_sound_set_fade_in_pcm_frames(p_sound &C.ma_sound, volume_beg f32, volume_end f32, fade_length_in_frames u64)
+[inline]
+pub fn sound_set_fade_in_pcm_frames(p_sound &C.ma_sound, volume_beg f32, volume_end f32, fade_length_in_frames u64) {
+	C.ma_sound_set_fade_in_pcm_frames(p_sound, volume_beg, volume_end, fade_length_in_frames)
+}
+
+// MA_API void ma_sound_set_fade_in_milliseconds(ma_sound* pSound, float volumeBeg, float volumeEnd, ma_uint64 fadeLengthInMilliseconds);
+fn C.ma_sound_set_fade_in_milliseconds(p_sound &C.ma_sound, volume_beg f32, volume_end f32, fade_length_in_milliseconds u64)
+[inline]
+pub fn sound_set_fade_in_milliseconds(p_sound &C.ma_sound, volume_beg f32, volume_end f32, fade_length_in_milliseconds u64) {
+	C.ma_sound_set_fade_in_milliseconds(p_sound, volume_beg, volume_end, fade_length_in_milliseconds)
+}
+
+// MA_API float ma_sound_get_current_fade_volume(ma_sound* pSound);
+fn C.ma_sound_get_current_fade_volume(p_sound &C.ma_sound) f32
+[inline]
+pub fn sound_get_current_fade_volume(p_sound &C.ma_sound) f32 {
+	return C.ma_sound_get_current_fade_volume(p_sound)
+}
+
+// MA_API void ma_sound_set_start_time_in_pcm_frames(ma_sound* pSound, ma_uint64 absoluteGlobalTimeInFrames);
+fn C.ma_sound_set_start_time_in_pcm_frames(p_sound &C.ma_sound, absolute_global_time_in_frames u64)
+[inline]
+pub fn sound_set_start_time_in_pcm_frames(p_sound &C.ma_sound, absolute_global_time_in_frames u64) {
+	C.ma_sound_set_start_time_in_pcm_frames(p_sound, absolute_global_time_in_frames)
+}
+
+// MA_API void ma_sound_set_start_time_in_milliseconds(ma_sound* pSound, ma_uint64 absoluteGlobalTimeInMilliseconds);
+fn C.ma_sound_set_start_time_in_milliseconds(p_sound &C.ma_sound, absolute_global_time_in_milliseconds u64)
+[inline]
+pub fn sound_set_start_time_in_milliseconds(p_sound &C.ma_sound, absolute_global_time_in_milliseconds u64) {
+	C.ma_sound_set_start_time_in_milliseconds(p_sound, absolute_global_time_in_milliseconds)
+}
+
+// MA_API void ma_sound_set_stop_time_in_pcm_frames(ma_sound* pSound, ma_uint64 absoluteGlobalTimeInFrames);
+fn C.ma_sound_set_stop_time_in_pcm_frames(p_sound &C.ma_sound, absolute_global_time_in_frames u64)
+[inline]
+pub fn sound_set_stop_time_in_pcm_frames(p_sound &C.ma_sound, absolute_global_time_in_frames u64) {
+	C.ma_sound_set_stop_time_in_pcm_frames(p_sound, absolute_global_time_in_frames)
+}
+
+// MA_API void ma_sound_set_stop_time_in_milliseconds(ma_sound* pSound, ma_uint64 absoluteGlobalTimeInMilliseconds);
+fn C.ma_sound_set_stop_time_in_milliseconds(p_sound &C.ma_sound, absolute_global_time_in_milliseconds u64)
+[inline]
+pub fn sound_set_stop_time_in_milliseconds(p_sound &C.ma_sound, absolute_global_time_in_milliseconds u64) {
+	C.ma_sound_set_stop_time_in_milliseconds(p_sound, absolute_global_time_in_milliseconds)
+}
+
+// MA_API ma_bool32 ma_sound_is_playing(const ma_sound* pSound);
+fn C.ma_sound_is_playing(p_sound &C.ma_sound) bool
+[inline]
+pub fn sound_is_playing(p_sound &C.ma_sound) bool {
+	return C.ma_sound_is_playing(p_sound)
+}
+
+// MA_API ma_uint64 ma_sound_get_time_in_pcm_frames(const ma_sound* pSound);
+fn C.ma_sound_get_time_in_pcm_frames(p_sound &C.ma_sound) u64
+[inline]
+pub fn sound_get_time_in_pcm_frames(p_sound &C.ma_sound) u64 {
+	return C.ma_sound_get_time_in_pcm_frames(p_sound)
+}
+
+// MA_API void ma_sound_set_looping(ma_sound* pSound, ma_bool32 isLooping);
+fn C.ma_sound_set_looping(p_sound &C.ma_sound, is_looping bool)
+[inline]
+pub fn sound_set_looping(p_sound &C.ma_sound, is_looping bool) {
+	C.ma_sound_set_looping(p_sound, is_looping)
+}
+
+// MA_API ma_bool32 ma_sound_is_looping(const ma_sound* pSound);
+fn C.ma_sound_is_looping(p_sound &C.ma_sound) bool
+[inline]
+pub fn sound_is_looping(p_sound &C.ma_sound) bool {
+	return C.ma_sound_is_looping(p_sound)
+}
+
+// MA_API ma_bool32 ma_sound_at_end(const ma_sound* pSound);
+fn C.ma_sound_at_end(p_sound &C.ma_sound) bool
+[inline]
+pub fn sound_at_end(p_sound &C.ma_sound) bool {
+	return C.ma_sound_at_end(p_sound)
+}
+
+// MA_API ma_result ma_sound_seek_to_pcm_frame(ma_sound* pSound, ma_uint64 frameIndex); /* Just a wrapper around ma_data_source_seek_to_pcm_frame(). */
+fn C.ma_sound_seek_to_pcm_frame(p_sound &C.ma_sound, frame_index u64) Result
+[inline]
+pub fn sound_seek_to_pcm_frame(p_sound &C.ma_sound, frame_index u64) Result {
+	return C.ma_sound_seek_to_pcm_frame(p_sound, frame_index)
+}
+
+// MA_API ma_result ma_sound_get_data_format(ma_sound* pSound, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap);
+fn C.ma_sound_get_data_format(p_sound &C.ma_sound, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result
+[inline]
+pub fn sound_get_data_format(p_sound &C.ma_sound, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &C.ma_channel, channel_map_cap usize) Result {
+	return C.ma_sound_get_data_format(p_sound, p_format, p_channels, p_sample_rate, p_channel_map,
+		channel_map_cap)
+}
+
+// MA_API ma_result ma_sound_get_cursor_in_pcm_frames(ma_sound* pSound, ma_uint64* pCursor);
+fn C.ma_sound_get_cursor_in_pcm_frames(p_sound &C.ma_sound, p_cursor &u64) Result
+[inline]
+pub fn sound_get_cursor_in_pcm_frames(p_sound &C.ma_sound, p_cursor &u64) Result {
+	return C.ma_sound_get_cursor_in_pcm_frames(p_sound, p_cursor)
+}
+
+// MA_API ma_result ma_sound_get_length_in_pcm_frames(ma_sound* pSound, ma_uint64* pLength);
+fn C.ma_sound_get_length_in_pcm_frames(p_sound &C.ma_sound, p_length &u64) Result
+[inline]
+pub fn sound_get_length_in_pcm_frames(p_sound &C.ma_sound, p_length &u64) Result {
+	return C.ma_sound_get_length_in_pcm_frames(p_sound, p_length)
+}
+
+// MA_API ma_result ma_sound_get_cursor_in_seconds(ma_sound* pSound, float* pCursor);
+fn C.ma_sound_get_cursor_in_seconds(p_sound &C.ma_sound, p_cursor &f32) Result
+[inline]
+pub fn sound_get_cursor_in_seconds(p_sound &C.ma_sound, p_cursor &f32) Result {
+	return C.ma_sound_get_cursor_in_seconds(p_sound, p_cursor)
+}
+
+// MA_API ma_result ma_sound_get_length_in_seconds(ma_sound* pSound, float* pLength);
+fn C.ma_sound_get_length_in_seconds(p_sound &C.ma_sound, p_length &f32) Result
+[inline]
+pub fn sound_get_length_in_seconds(p_sound &C.ma_sound, p_length &f32) Result {
+	return C.ma_sound_get_length_in_seconds(p_sound, p_length)
+}
+
+// MA_API ma_result ma_sound_group_init(ma_engine* pEngine, ma_uint32 flags, ma_sound_group* pParentGroup, ma_sound_group* pGroup);
+fn C.ma_sound_group_init(p_engine &C.ma_engine, flags u32, p_parent_group &C.ma_sound_group, p_group &C.ma_sound_group) Result
+[inline]
+pub fn sound_group_init(p_engine &C.ma_engine, flags u32, p_parent_group &C.ma_sound_group, p_group &C.ma_sound_group) Result {
+	return C.ma_sound_group_init(p_engine, flags, p_parent_group, p_group)
+}
+
+// MA_API ma_result ma_sound_group_init_ex(ma_engine* pEngine, const ma_sound_group_config* pConfig, ma_sound_group* pGroup);
+fn C.ma_sound_group_init_ex(p_engine &C.ma_engine, p_config &C.ma_sound_group_config, p_group &C.ma_sound_group) Result
+[inline]
+pub fn sound_group_init_ex(p_engine &C.ma_engine, p_config &C.ma_sound_group_config, p_group &C.ma_sound_group) Result {
+	return C.ma_sound_group_init_ex(p_engine, p_config, p_group)
+}
+
+// MA_API void ma_sound_group_uninit(ma_sound_group* pGroup);
+fn C.ma_sound_group_uninit(p_group &C.ma_sound_group)
+[inline]
+pub fn sound_group_uninit(p_group &C.ma_sound_group) {
+	C.ma_sound_group_uninit(p_group)
+}
+
+// MA_API ma_engine* ma_sound_group_get_engine(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_engine(p_group &C.ma_sound_group) &C.ma_engine
+[inline]
+pub fn sound_group_get_engine(p_group &C.ma_sound_group) &C.ma_engine {
+	return C.ma_sound_group_get_engine(p_group)
+}
+
+// MA_API ma_result ma_sound_group_start(ma_sound_group* pGroup);
+fn C.ma_sound_group_start(p_group &C.ma_sound_group) Result
+[inline]
+pub fn sound_group_start(p_group &C.ma_sound_group) Result {
+	return C.ma_sound_group_start(p_group)
+}
+
+// MA_API ma_result ma_sound_group_stop(ma_sound_group* pGroup);
+fn C.ma_sound_group_stop(p_group &C.ma_sound_group) Result
+[inline]
+pub fn sound_group_stop(p_group &C.ma_sound_group) Result {
+	return C.ma_sound_group_stop(p_group)
+}
+
+// MA_API void ma_sound_group_set_volume(ma_sound_group* pGroup, float volume);
+fn C.ma_sound_group_set_volume(p_group &C.ma_sound_group, volume f32)
+[inline]
+pub fn sound_group_set_volume(p_group &C.ma_sound_group, volume f32) {
+	C.ma_sound_group_set_volume(p_group, volume)
+}
+
+// MA_API float ma_sound_group_get_volume(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_volume(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_volume(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_volume(p_group)
+}
+
+// MA_API void ma_sound_group_set_pan(ma_sound_group* pGroup, float pan);
+fn C.ma_sound_group_set_pan(p_group &C.ma_sound_group, pan f32)
+[inline]
+pub fn sound_group_set_pan(p_group &C.ma_sound_group, pan f32) {
+	C.ma_sound_group_set_pan(p_group, pan)
+}
+
+// MA_API float ma_sound_group_get_pan(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_pan(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_pan(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_pan(p_group)
+}
+
+// MA_API void ma_sound_group_set_pan_mode(ma_sound_group* pGroup, ma_pan_mode panMode);
+fn C.ma_sound_group_set_pan_mode(p_group &C.ma_sound_group, pan_mode C.ma_pan_mode)
+[inline]
+pub fn sound_group_set_pan_mode(p_group &C.ma_sound_group, pan_mode C.ma_pan_mode) {
+	C.ma_sound_group_set_pan_mode(p_group, pan_mode)
+}
+
+// MA_API ma_pan_mode ma_sound_group_get_pan_mode(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_pan_mode(p_group &C.ma_sound_group) C.ma_pan_mode
+[inline]
+pub fn sound_group_get_pan_mode(p_group &C.ma_sound_group) C.ma_pan_mode {
+	return C.ma_sound_group_get_pan_mode(p_group)
+}
+
+// MA_API void ma_sound_group_set_pitch(ma_sound_group* pGroup, float pitch);
+fn C.ma_sound_group_set_pitch(p_group &C.ma_sound_group, pitch f32)
+[inline]
+pub fn sound_group_set_pitch(p_group &C.ma_sound_group, pitch f32) {
+	C.ma_sound_group_set_pitch(p_group, pitch)
+}
+
+// MA_API float ma_sound_group_get_pitch(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_pitch(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_pitch(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_pitch(p_group)
+}
+
+// MA_API void ma_sound_group_set_spatialization_enabled(ma_sound_group* pGroup, ma_bool32 enabled);
+fn C.ma_sound_group_set_spatialization_enabled(p_group &C.ma_sound_group, enabled bool)
+[inline]
+pub fn sound_group_set_spatialization_enabled(p_group &C.ma_sound_group, enabled bool) {
+	C.ma_sound_group_set_spatialization_enabled(p_group, enabled)
+}
+
+// MA_API ma_bool32 ma_sound_group_is_spatialization_enabled(const ma_sound_group* pGroup);
+fn C.ma_sound_group_is_spatialization_enabled(p_group &C.ma_sound_group) bool
+[inline]
+pub fn sound_group_is_spatialization_enabled(p_group &C.ma_sound_group) bool {
+	return C.ma_sound_group_is_spatialization_enabled(p_group)
+}
+
+// MA_API void ma_sound_group_set_pinned_listener_index(ma_sound_group* pGroup, ma_uint32 listenerIndex);
+fn C.ma_sound_group_set_pinned_listener_index(p_group &C.ma_sound_group, listener_index u32)
+[inline]
+pub fn sound_group_set_pinned_listener_index(p_group &C.ma_sound_group, listener_index u32) {
+	C.ma_sound_group_set_pinned_listener_index(p_group, listener_index)
+}
+
+// MA_API ma_uint32 ma_sound_group_get_pinned_listener_index(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_pinned_listener_index(p_group &C.ma_sound_group) u32
+[inline]
+pub fn sound_group_get_pinned_listener_index(p_group &C.ma_sound_group) u32 {
+	return C.ma_sound_group_get_pinned_listener_index(p_group)
+}
+
+// MA_API ma_uint32 ma_sound_group_get_listener_index(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_listener_index(p_group &C.ma_sound_group) u32
+[inline]
+pub fn sound_group_get_listener_index(p_group &C.ma_sound_group) u32 {
+	return C.ma_sound_group_get_listener_index(p_group)
+}
+
+// MA_API ma_vec3f ma_sound_group_get_direction_to_listener(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_direction_to_listener(p_group &C.ma_sound_group) C.ma_vec3f
+[inline]
+pub fn sound_group_get_direction_to_listener(p_group &C.ma_sound_group) C.ma_vec3f {
+	return C.ma_sound_group_get_direction_to_listener(p_group)
+}
+
+// MA_API void ma_sound_group_set_position(ma_sound_group* pGroup, float x, float y, float z);
+fn C.ma_sound_group_set_position(p_group &C.ma_sound_group, x f32, y f32, z f32)
+[inline]
+pub fn sound_group_set_position(p_group &C.ma_sound_group, x f32, y f32, z f32) {
+	C.ma_sound_group_set_position(p_group, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_group_get_position(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_position(p_group &C.ma_sound_group) C.ma_vec3f
+[inline]
+pub fn sound_group_get_position(p_group &C.ma_sound_group) C.ma_vec3f {
+	return C.ma_sound_group_get_position(p_group)
+}
+
+// MA_API void ma_sound_group_set_direction(ma_sound_group* pGroup, float x, float y, float z);
+fn C.ma_sound_group_set_direction(p_group &C.ma_sound_group, x f32, y f32, z f32)
+[inline]
+pub fn sound_group_set_direction(p_group &C.ma_sound_group, x f32, y f32, z f32) {
+	C.ma_sound_group_set_direction(p_group, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_group_get_direction(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_direction(p_group &C.ma_sound_group) C.ma_vec3f
+[inline]
+pub fn sound_group_get_direction(p_group &C.ma_sound_group) C.ma_vec3f {
+	return C.ma_sound_group_get_direction(p_group)
+}
+
+// MA_API void ma_sound_group_set_velocity(ma_sound_group* pGroup, float x, float y, float z);
+fn C.ma_sound_group_set_velocity(p_group &C.ma_sound_group, x f32, y f32, z f32)
+[inline]
+pub fn sound_group_set_velocity(p_group &C.ma_sound_group, x f32, y f32, z f32) {
+	C.ma_sound_group_set_velocity(p_group, x, y, z)
+}
+
+// MA_API ma_vec3f ma_sound_group_get_velocity(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_velocity(p_group &C.ma_sound_group) C.ma_vec3f
+[inline]
+pub fn sound_group_get_velocity(p_group &C.ma_sound_group) C.ma_vec3f {
+	return C.ma_sound_group_get_velocity(p_group)
+}
+
+// MA_API void ma_sound_group_set_attenuation_model(ma_sound_group* pGroup, ma_attenuation_model attenuationModel);
+fn C.ma_sound_group_set_attenuation_model(p_group &C.ma_sound_group, attenuation_model C.ma_attenuation_model)
+[inline]
+pub fn sound_group_set_attenuation_model(p_group &C.ma_sound_group, attenuation_model C.ma_attenuation_model) {
+	C.ma_sound_group_set_attenuation_model(p_group, attenuation_model)
+}
+
+// MA_API ma_attenuation_model ma_sound_group_get_attenuation_model(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_attenuation_model(p_group &C.ma_sound_group) C.ma_attenuation_model
+[inline]
+pub fn sound_group_get_attenuation_model(p_group &C.ma_sound_group) C.ma_attenuation_model {
+	return C.ma_sound_group_get_attenuation_model(p_group)
+}
+
+// MA_API void ma_sound_group_set_positioning(ma_sound_group* pGroup, ma_positioning positioning);
+fn C.ma_sound_group_set_positioning(p_group &C.ma_sound_group, positioning C.ma_positioning)
+[inline]
+pub fn sound_group_set_positioning(p_group &C.ma_sound_group, positioning C.ma_positioning) {
+	C.ma_sound_group_set_positioning(p_group, positioning)
+}
+
+// MA_API ma_positioning ma_sound_group_get_positioning(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_positioning(p_group &C.ma_sound_group) C.ma_positioning
+[inline]
+pub fn sound_group_get_positioning(p_group &C.ma_sound_group) C.ma_positioning {
+	return C.ma_sound_group_get_positioning(p_group)
+}
+
+// MA_API void ma_sound_group_set_rolloff(ma_sound_group* pGroup, float rolloff);
+fn C.ma_sound_group_set_rolloff(p_group &C.ma_sound_group, rolloff f32)
+[inline]
+pub fn sound_group_set_rolloff(p_group &C.ma_sound_group, rolloff f32) {
+	C.ma_sound_group_set_rolloff(p_group, rolloff)
+}
+
+// MA_API float ma_sound_group_get_rolloff(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_rolloff(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_rolloff(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_rolloff(p_group)
+}
+
+// MA_API void ma_sound_group_set_min_gain(ma_sound_group* pGroup, float minGain);
+fn C.ma_sound_group_set_min_gain(p_group &C.ma_sound_group, min_gain f32)
+[inline]
+pub fn sound_group_set_min_gain(p_group &C.ma_sound_group, min_gain f32) {
+	C.ma_sound_group_set_min_gain(p_group, min_gain)
+}
+
+// MA_API float ma_sound_group_get_min_gain(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_min_gain(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_min_gain(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_min_gain(p_group)
+}
+
+// MA_API void ma_sound_group_set_max_gain(ma_sound_group* pGroup, float maxGain);
+fn C.ma_sound_group_set_max_gain(p_group &C.ma_sound_group, max_gain f32)
+[inline]
+pub fn sound_group_set_max_gain(p_group &C.ma_sound_group, max_gain f32) {
+	C.ma_sound_group_set_max_gain(p_group, max_gain)
+}
+
+// MA_API float ma_sound_group_get_max_gain(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_max_gain(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_max_gain(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_max_gain(p_group)
+}
+
+// MA_API void ma_sound_group_set_min_distance(ma_sound_group* pGroup, float minDistance);
+fn C.ma_sound_group_set_min_distance(p_group &C.ma_sound_group, min_distance f32)
+[inline]
+pub fn sound_group_set_min_distance(p_group &C.ma_sound_group, min_distance f32) {
+	C.ma_sound_group_set_min_distance(p_group, min_distance)
+}
+
+// MA_API float ma_sound_group_get_min_distance(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_min_distance(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_min_distance(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_min_distance(p_group)
+}
+
+// MA_API void ma_sound_group_set_max_distance(ma_sound_group* pGroup, float maxDistance);
+fn C.ma_sound_group_set_max_distance(p_group &C.ma_sound_group, max_distance f32)
+[inline]
+pub fn sound_group_set_max_distance(p_group &C.ma_sound_group, max_distance f32) {
+	C.ma_sound_group_set_max_distance(p_group, max_distance)
+}
+
+// MA_API float ma_sound_group_get_max_distance(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_max_distance(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_max_distance(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_max_distance(p_group)
+}
+
+// MA_API void ma_sound_group_set_cone(ma_sound_group* pGroup, float innerAngleInRadians, float outerAngleInRadians, float outerGain);
+fn C.ma_sound_group_set_cone(p_group &C.ma_sound_group, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32)
+[inline]
+pub fn sound_group_set_cone(p_group &C.ma_sound_group, inner_angle_in_radians f32, outer_angle_in_radians f32, outer_gain f32) {
+	C.ma_sound_group_set_cone(p_group, inner_angle_in_radians, outer_angle_in_radians,
+		outer_gain)
+}
+
+// MA_API void ma_sound_group_get_cone(const ma_sound_group* pGroup, float* pInnerAngleInRadians, float* pOuterAngleInRadians, float* pOuterGain);
+fn C.ma_sound_group_get_cone(p_group &C.ma_sound_group, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32)
+[inline]
+pub fn sound_group_get_cone(p_group &C.ma_sound_group, p_inner_angle_in_radians &f32, p_outer_angle_in_radians &f32, p_outer_gain &f32) {
+	C.ma_sound_group_get_cone(p_group, p_inner_angle_in_radians, p_outer_angle_in_radians,
+		p_outer_gain)
+}
+
+// MA_API void ma_sound_group_set_doppler_factor(ma_sound_group* pGroup, float dopplerFactor);
+fn C.ma_sound_group_set_doppler_factor(p_group &C.ma_sound_group, doppler_factor f32)
+[inline]
+pub fn sound_group_set_doppler_factor(p_group &C.ma_sound_group, doppler_factor f32) {
+	C.ma_sound_group_set_doppler_factor(p_group, doppler_factor)
+}
+
+// MA_API float ma_sound_group_get_doppler_factor(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_doppler_factor(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_doppler_factor(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_doppler_factor(p_group)
+}
+
+// MA_API void ma_sound_group_set_directional_attenuation_factor(ma_sound_group* pGroup, float directionalAttenuationFactor);
+fn C.ma_sound_group_set_directional_attenuation_factor(p_group &C.ma_sound_group, directional_attenuation_factor f32)
+[inline]
+pub fn sound_group_set_directional_attenuation_factor(p_group &C.ma_sound_group, directional_attenuation_factor f32) {
+	C.ma_sound_group_set_directional_attenuation_factor(p_group, directional_attenuation_factor)
+}
+
+// MA_API float ma_sound_group_get_directional_attenuation_factor(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_directional_attenuation_factor(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_directional_attenuation_factor(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_directional_attenuation_factor(p_group)
+}
+
+// MA_API void ma_sound_group_set_fade_in_pcm_frames(ma_sound_group* pGroup, float volumeBeg, float volumeEnd, ma_uint64 fadeLengthInFrames);
+fn C.ma_sound_group_set_fade_in_pcm_frames(p_group &C.ma_sound_group, volume_beg f32, volume_end f32, fade_length_in_frames u64)
+[inline]
+pub fn sound_group_set_fade_in_pcm_frames(p_group &C.ma_sound_group, volume_beg f32, volume_end f32, fade_length_in_frames u64) {
+	C.ma_sound_group_set_fade_in_pcm_frames(p_group, volume_beg, volume_end, fade_length_in_frames)
+}
+
+// MA_API void ma_sound_group_set_fade_in_milliseconds(ma_sound_group* pGroup, float volumeBeg, float volumeEnd, ma_uint64 fadeLengthInMilliseconds);
+fn C.ma_sound_group_set_fade_in_milliseconds(p_group &C.ma_sound_group, volume_beg f32, volume_end f32, fade_length_in_milliseconds u64)
+[inline]
+pub fn sound_group_set_fade_in_milliseconds(p_group &C.ma_sound_group, volume_beg f32, volume_end f32, fade_length_in_milliseconds u64) {
+	C.ma_sound_group_set_fade_in_milliseconds(p_group, volume_beg, volume_end, fade_length_in_milliseconds)
+}
+
+// MA_API float ma_sound_group_get_current_fade_volume(ma_sound_group* pGroup);
+fn C.ma_sound_group_get_current_fade_volume(p_group &C.ma_sound_group) f32
+[inline]
+pub fn sound_group_get_current_fade_volume(p_group &C.ma_sound_group) f32 {
+	return C.ma_sound_group_get_current_fade_volume(p_group)
+}
+
+// MA_API void ma_sound_group_set_start_time_in_pcm_frames(ma_sound_group* pGroup, ma_uint64 absoluteGlobalTimeInFrames);
+fn C.ma_sound_group_set_start_time_in_pcm_frames(p_group &C.ma_sound_group, absolute_global_time_in_frames u64)
+[inline]
+pub fn sound_group_set_start_time_in_pcm_frames(p_group &C.ma_sound_group, absolute_global_time_in_frames u64) {
+	C.ma_sound_group_set_start_time_in_pcm_frames(p_group, absolute_global_time_in_frames)
+}
+
+// MA_API void ma_sound_group_set_start_time_in_milliseconds(ma_sound_group* pGroup, ma_uint64 absoluteGlobalTimeInMilliseconds);
+fn C.ma_sound_group_set_start_time_in_milliseconds(p_group &C.ma_sound_group, absolute_global_time_in_milliseconds u64)
+[inline]
+pub fn sound_group_set_start_time_in_milliseconds(p_group &C.ma_sound_group, absolute_global_time_in_milliseconds u64) {
+	C.ma_sound_group_set_start_time_in_milliseconds(p_group, absolute_global_time_in_milliseconds)
+}
+
+// MA_API void ma_sound_group_set_stop_time_in_pcm_frames(ma_sound_group* pGroup, ma_uint64 absoluteGlobalTimeInFrames);
+fn C.ma_sound_group_set_stop_time_in_pcm_frames(p_group &C.ma_sound_group, absolute_global_time_in_frames u64)
+[inline]
+pub fn sound_group_set_stop_time_in_pcm_frames(p_group &C.ma_sound_group, absolute_global_time_in_frames u64) {
+	C.ma_sound_group_set_stop_time_in_pcm_frames(p_group, absolute_global_time_in_frames)
+}
+
+// MA_API void ma_sound_group_set_stop_time_in_milliseconds(ma_sound_group* pGroup, ma_uint64 absoluteGlobalTimeInMilliseconds);
+fn C.ma_sound_group_set_stop_time_in_milliseconds(p_group &C.ma_sound_group, absolute_global_time_in_milliseconds u64)
+[inline]
+pub fn sound_group_set_stop_time_in_milliseconds(p_group &C.ma_sound_group, absolute_global_time_in_milliseconds u64) {
+	C.ma_sound_group_set_stop_time_in_milliseconds(p_group, absolute_global_time_in_milliseconds)
+}
+
+// MA_API ma_bool32 ma_sound_group_is_playing(const ma_sound_group* pGroup);
+fn C.ma_sound_group_is_playing(p_group &C.ma_sound_group) bool
+[inline]
+pub fn sound_group_is_playing(p_group &C.ma_sound_group) bool {
+	return C.ma_sound_group_is_playing(p_group)
+}
+
+// MA_API ma_uint64 ma_sound_group_get_time_in_pcm_frames(const ma_sound_group* pGroup);
+fn C.ma_sound_group_get_time_in_pcm_frames(p_group &C.ma_sound_group) u64
+[inline]
+pub fn sound_group_get_time_in_pcm_frames(p_group &C.ma_sound_group) u64 {
+	return C.ma_sound_group_get_time_in_pcm_frames(p_group)
 }

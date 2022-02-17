@@ -7,7 +7,7 @@ fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame
 	if isnil(p_decoder) {
 		return
 	}
-	C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count)
+	C.ma_decoder_read_pcm_frames(p_decoder, p_output, frame_count, voidptr(0))
 }
 
 fn test_basics() {
