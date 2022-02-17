@@ -100,6 +100,7 @@ fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 //
 // AudioDevice
 //
+[heap]
 pub struct AudioDevice {
 mut:
 	context        &C.ma_context
@@ -121,10 +122,10 @@ pub fn (mut d AudioDevice) volume(volume f64) {
 fn (mut d AudioDevice) init_context() {
 	// Init audio context
 	context := &C.ma_context{
-		logCallback: 0
+		//logCallback: 0
 	}
 	d.context_config = C.ma_context_config_init()
-	d.context_config.logCallback = voidptr(log_callback)
+	//d.context_config.logCallback = voidptr(log_callback)
 	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
@@ -169,7 +170,7 @@ fn (mut d AudioDevice) init_device() {
 	}
 	d.device = device
 	$if debug {
-		println('INFO ' + @MOD + '::' + @FN + ' Initialized device ' + ptr_str(d.device))
+		println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Initialized device ' + ptr_str(d.device))
 	}
 	d.initialized = true
 	// println(d.device)
@@ -181,7 +182,7 @@ pub fn (mut d AudioDevice) start() {
 	}
 	if !d.is_started() {
 		$if debug {
-			println('INFO ' + @MOD + '::' + @FN + ' Starting device ' + ptr_str(d.device))
+			println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Starting device ' + ptr_str(d.device))
 		}
 		result := int(C.ma_device_start(d.device))
 		if result != C.MA_SUCCESS {
@@ -294,7 +295,7 @@ pub fn (mut d AudioDevice) free() {
 /*
 * Callbacks
 */
-fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u32 {
+fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCount u32, master_volume f64, local_volume f64) u64 {
 	// The way mixing works is that we just read into a temporary buffer, then take the contents of that buffer and mix it with the
 	// contents of the output buffer by simply adding the samples together. You could also clip the samples to -1..+1, but I'm not
 	// doing that in this example.
@@ -304,18 +305,18 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 	}
 	channel_count := u32(2)
 	temp := [4096]f32{}
-	temp_cap_in_frames := u32((4096 / sizeof(f32)) / channel_count)
-	mut total_frames_read := u32(0)
+	temp_cap_in_frames := u64((4096 / sizeof(f32)) / channel_count)
+	mut total_frames_read := u64(0)
 	for total_frames_read < frameCount {
-		mut i_sample := u32(0)
-		mut frames_read_this_iteration := u32(0)
+		mut i_sample := u64(0)
+		mut frames_read_this_iteration := u64(0)
 		total_frames_remaining := frameCount - total_frames_read
 		mut frames_to_read_this_iteration := temp_cap_in_frames
 		if frames_to_read_this_iteration > total_frames_remaining {
 			frames_to_read_this_iteration = total_frames_remaining
 		}
-		frames_read_this_iteration = u32(C.ma_decoder_read_pcm_frames(p_decoder, &temp,
-			frames_to_read_this_iteration))
+		//mut frames_read_this_iteration := u64(0)
+		C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration, &frames_read_this_iteration) // == C.ma_result
 		if frames_read_this_iteration == 0 {
 			break
 		}
@@ -508,7 +509,7 @@ fn (s Stream) audio_buffer() AudioBuffer {
 /*
 * AudioBuffer
 */
-
+[heap]
 struct AudioBuffer {
 mut:
 	// dsp                         C.ma_pcm_converter // PCM data converter
@@ -580,7 +581,15 @@ pub fn (ab AudioBuffer) length() f64 {
 }
 
 pub fn (ab AudioBuffer) pcm_frames() u64 {
-	return u64(C.ma_decoder_get_length_in_pcm_frames(ab.decoder))
+	mut length := u64(0)
+	result := int(C.ma_decoder_get_length_in_pcm_frames(ab.decoder, &length))
+	if result != C.MA_SUCCESS {
+		eprintln('ERROR ' + @MOD + '::' + @FN +
+			': failed to get length in PCM frame $ab.decoder (ma_decoder_get_length_in_pcm_frames ${c.translate_error_code(result)})')
+		// d.free() // TODO
+		exit(1)
+	}
+	return length
 }
 
 pub fn (ab AudioBuffer) sample_rate() u32 {

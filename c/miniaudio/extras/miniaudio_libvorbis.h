@@ -14,7 +14,9 @@ extern "C" {
 #endif
 
 #if !defined(MA_NO_LIBVORBIS)
+#ifndef OV_EXCLUDE_STATIC_CALLBACKS
 #define OV_EXCLUDE_STATIC_CALLBACKS
+#endif
 #include <vorbis/vorbisfile.h>
 #endif
 
@@ -57,9 +59,9 @@ static ma_result ma_libvorbis_ds_seek(ma_data_source* pDataSource, ma_uint64 fra
     return ma_libvorbis_seek_to_pcm_frame((ma_libvorbis*)pDataSource, frameIndex);
 }
 
-static ma_result ma_libvorbis_ds_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate)
+static ma_result ma_libvorbis_ds_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap)
 {
-    return ma_libvorbis_get_data_format((ma_libvorbis*)pDataSource, pFormat, pChannels, pSampleRate, NULL, 0);
+    return ma_libvorbis_get_data_format((ma_libvorbis*)pDataSource, pFormat, pChannels, pSampleRate, pChannelMap, channelMapCap);
 }
 
 static ma_result ma_libvorbis_ds_get_cursor(ma_data_source* pDataSource, ma_uint64* pCursor)
@@ -76,8 +78,6 @@ static ma_data_source_vtable g_ma_libvorbis_ds_vtable =
 {
     ma_libvorbis_ds_read,
     ma_libvorbis_ds_seek,
-    NULL,   /* onMap() */
-    NULL,   /* onUnmap() */
     ma_libvorbis_ds_get_data_format,
     ma_libvorbis_ds_get_cursor,
     ma_libvorbis_ds_get_length
@@ -91,6 +91,11 @@ static size_t ma_libvorbis_vf_callback__read(void* pBufferOut, size_t size, size
     ma_result result;
     size_t bytesToRead;
     size_t bytesRead;
+
+    /* For consistency with fread(). If `size` of `count` is 0, return 0 immediately without changing anything. */
+    if (size == 0 || count == 0) {
+        return 0;
+    }
 
     bytesToRead = size * count;
     result = pVorbis->onRead(pVorbis->pReadSeekTellUserData, pBufferOut, bytesToRead, &bytesRead);
@@ -265,6 +270,14 @@ MA_API void ma_libvorbis_uninit(ma_libvorbis* pVorbis, const ma_allocation_callb
 
 MA_API ma_result ma_libvorbis_read_pcm_frames(ma_libvorbis* pVorbis, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead)
 {
+    if (pFramesRead != NULL) {
+        *pFramesRead = 0;
+    }
+
+    if (frameCount == 0) {
+        return MA_INVALID_ARGS;
+    }
+
     if (pVorbis == NULL) {
         return MA_INVALID_ARGS;
     }
@@ -327,6 +340,10 @@ MA_API ma_result ma_libvorbis_read_pcm_frames(ma_libvorbis* pVorbis, void* pFram
 
         if (pFramesRead != NULL) {
             *pFramesRead = totalFramesRead;
+        }
+
+        if (result == MA_SUCCESS && totalFramesRead == 0) {
+            result = MA_AT_END;
         }
 
         return result;
@@ -418,7 +435,7 @@ MA_API ma_result ma_libvorbis_get_data_format(ma_libvorbis* pVorbis, ma_format* 
         }
 
         if (pChannelMap != NULL) {
-            ma_get_standard_channel_map(ma_standard_channel_map_vorbis, (ma_uint32)ma_min((size_t)pInfo->channels, channelMapCap), pChannelMap);
+            ma_channel_map_init_standard(ma_standard_channel_map_vorbis, pChannelMap, channelMapCap, pInfo->channels);
         }
 
         return MA_SUCCESS;

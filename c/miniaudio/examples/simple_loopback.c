@@ -21,7 +21,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
     ma_encoder* pEncoder = (ma_encoder*)pDevice->pUserData;
     MA_ASSERT(pEncoder != NULL);
 
-    ma_encoder_write_pcm_frames(pEncoder, pInput, frameCount);
+    ma_encoder_write_pcm_frames(pEncoder, pInput, frameCount, NULL);
 
     (void)pOutput;
 }
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    encoderConfig = ma_encoder_config_init(ma_resource_format_wav, ma_format_f32, 2, 44100);
+    encoderConfig = ma_encoder_config_init(ma_encoding_format_wav, ma_format_f32, 2, 44100);
 
     if (ma_encoder_init_file(argv[1], &encoderConfig, &encoder) != MA_SUCCESS) {
         printf("Failed to initialize output file.\n");

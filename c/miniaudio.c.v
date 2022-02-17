@@ -17,16 +17,16 @@ $if macos {
 }
 
 // Enables FLAC decoding.
-#flag -D  DR_FLAC_IMPLEMENTATION
-#include "extras/dr_flac.h"
+//#flag -D  DR_FLAC_IMPLEMENTATION
+// #include "extras/dr_flac.h"
 
 // Enables MP3 decoding.
-#flag -D  DR_MP3_IMPLEMENTATION
-#include "extras/dr_mp3.h"
+//#flag -D  DR_MP3_IMPLEMENTATION
+// #include "extras/dr_mp3.h"
 
 // Enables WAV decoding.
-#flag -D  DR_WAV_IMPLEMENTATION
-#include "extras/dr_wav.h"
+//#flag -D  DR_WAV_IMPLEMENTATION
+// #include "extras/dr_wav.h"
 
 $if debug {
 	#flag -D MA_DEBUG_OUTPUT

@@ -275,15 +275,15 @@ type Device = C.ma_device
 
 [typedef]
 struct C.ma_context {
-	logCallback voidptr // C.ma_log_proc
+	// logCallback voidptr // C.ma_log_proc
 }
 
 type Context = C.ma_context
 
 [typedef]
 struct C.ma_context_config {
-mut:
-	logCallback voidptr // C.ma_log_proc
+//mut:
+	// logCallback voidptr // C.ma_log_proc
 }
 
 type ContextConfig = C.ma_context_config
@@ -347,10 +347,11 @@ fn C.ma_decoder_init_file(filepath &char, decoder_config &C.ma_decoder_config, d
 // ma_result ma_decoder_init_memory(const void* pData, size_t dataSize, const ma_decoder_config* pConfig, ma_decoder* pDecoder);
 fn C.ma_decoder_init_memory(data voidptr, len u64, decoder_config &C.ma_decoder_config, decoder &C.ma_decoder) C.ma_result
 
-fn C.ma_decoder_get_length_in_pcm_frames(pDecoder &C.ma_decoder) i64
+fn C.ma_decoder_get_length_in_pcm_frames(pDecoder &C.ma_decoder, length &u64)  C.ma_result
 
 // ma_uint64 ma_decoder_read_pcm_frames(ma_decoder* pDecoder, void* pFramesOut, ma_uint64 frameCount);
-fn C.ma_decoder_read_pcm_frames(pDecoder &C.ma_decoder, pFramesOut voidptr, frameIndex u64) u64
+// fn C.ma_decoder_read_pcm_frames(pDecoder &C.ma_decoder, pFramesOut voidptr, frameIndex u64) u64
+fn C.ma_decoder_read_pcm_frames(pDecoder &C.ma_decoder, pFramesOut voidptr, frameCount u64, pFramesRead &u64) u64
 
 // ma_result ma_decoder_seek_to_pcm_frame(ma_decoder* pDecoder, ma_uint64 frameIndex);
 fn C.ma_decoder_seek_to_pcm_frame(pDecoder &C.ma_decoder, frameIndex u64) C.ma_result

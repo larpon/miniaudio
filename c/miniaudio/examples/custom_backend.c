@@ -295,7 +295,8 @@ static ma_result ma_context_get_device_info__sdl(ma_context* pContext, ma_device
 
     tempDeviceID = ((MA_PFN_SDL_OpenAudioDevice)pContextEx->sdl.SDL_OpenAudioDevice)(pDeviceName, (deviceType == ma_device_type_playback) ? 0 : 1, &desiredSpec, &obtainedSpec, MA_SDL_AUDIO_ALLOW_ANY_CHANGE);
     if (tempDeviceID == 0) {
-        return ma_context_post_error(pContext, NULL, MA_LOG_LEVEL_ERROR, "Failed to open SDL device.", MA_FAILED_TO_OPEN_BACKEND_DEVICE);
+        ma_log_postf(ma_context_get_log(pContext), MA_LOG_LEVEL_ERROR, "Failed to open SDL device.");
+        return MA_FAILED_TO_OPEN_BACKEND_DEVICE;
     }
 
     ((MA_PFN_SDL_CloseAudioDevice)pContextEx->sdl.SDL_CloseAudioDevice)(tempDeviceID);
@@ -402,7 +403,8 @@ static ma_result ma_device_init_internal__sdl(ma_device_ex* pDeviceEx, const ma_
 
     deviceID = ((MA_PFN_SDL_OpenAudioDevice)pContextEx->sdl.SDL_OpenAudioDevice)(pDeviceName, (pConfig->deviceType == ma_device_type_playback) ? 0 : 1, &desiredSpec, &obtainedSpec, MA_SDL_AUDIO_ALLOW_ANY_CHANGE);
     if (deviceID == 0) {
-        return ma_post_error((ma_device*)pDeviceEx, MA_LOG_LEVEL_ERROR, "Failed to open SDL2 device.", MA_FAILED_TO_OPEN_BACKEND_DEVICE);
+        ma_log_postf(ma_device_get_log((ma_device*)pDeviceEx), MA_LOG_LEVEL_ERROR, "Failed to open SDL2 device.");
+        return MA_FAILED_TO_OPEN_BACKEND_DEVICE;
     }
 
     if (pConfig->deviceType == ma_device_type_playback) {
@@ -415,7 +417,7 @@ static ma_result ma_device_init_internal__sdl(ma_device_ex* pDeviceEx, const ma_
     pDescriptor->format             = ma_format_from_sdl(obtainedSpec.format);
     pDescriptor->channels           = obtainedSpec.channels;
     pDescriptor->sampleRate         = (ma_uint32)obtainedSpec.freq;
-    ma_get_standard_channel_map(ma_standard_channel_map_default, pDescriptor->channels, pDescriptor->channelMap);
+    ma_channel_map_init_standard(ma_standard_channel_map_default, pDescriptor->channelMap, ma_countof(pDescriptor->channelMap), pDescriptor->channels);
     pDescriptor->periodSizeInFrames = obtainedSpec.samples;
     pDescriptor->periodCount        = 1;    /* SDL doesn't use the notion of period counts, so just set to 1. */
 
@@ -647,7 +649,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
         pSineWave = (ma_waveform*)pDevice->pUserData;
         MA_ASSERT(pSineWave != NULL);
 
-        ma_waveform_read_pcm_frames(pSineWave, pOutput, frameCount);
+        ma_waveform_read_pcm_frames(pSineWave, pOutput, frameCount, NULL);
     }
 
     if (pDevice->type == ma_device_type_duplex) {

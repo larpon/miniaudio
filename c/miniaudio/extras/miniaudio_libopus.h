@@ -56,9 +56,9 @@ static ma_result ma_libopus_ds_seek(ma_data_source* pDataSource, ma_uint64 frame
     return ma_libopus_seek_to_pcm_frame((ma_libopus*)pDataSource, frameIndex);
 }
 
-static ma_result ma_libopus_ds_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate)
+static ma_result ma_libopus_ds_get_data_format(ma_data_source* pDataSource, ma_format* pFormat, ma_uint32* pChannels, ma_uint32* pSampleRate, ma_channel* pChannelMap, size_t channelMapCap)
 {
-    return ma_libopus_get_data_format((ma_libopus*)pDataSource, pFormat, pChannels, pSampleRate, NULL, 0);
+    return ma_libopus_get_data_format((ma_libopus*)pDataSource, pFormat, pChannels, pSampleRate, pChannelMap, channelMapCap);
 }
 
 static ma_result ma_libopus_ds_get_cursor(ma_data_source* pDataSource, ma_uint64* pCursor)
@@ -75,8 +75,6 @@ static ma_data_source_vtable g_ma_libopus_ds_vtable =
 {
     ma_libopus_ds_read,
     ma_libopus_ds_seek,
-    NULL,   /* onMap() */
-    NULL,   /* onUnmap() */
     ma_libopus_ds_get_data_format,
     ma_libopus_ds_get_cursor,
     ma_libopus_ds_get_length
@@ -270,6 +268,14 @@ MA_API void ma_libopus_uninit(ma_libopus* pOpus, const ma_allocation_callbacks* 
 
 MA_API ma_result ma_libopus_read_pcm_frames(ma_libopus* pOpus, void* pFramesOut, ma_uint64 frameCount, ma_uint64* pFramesRead)
 {
+    if (pFramesRead != NULL) {
+        *pFramesRead = 0;
+    }
+
+    if (frameCount == 0) {
+        return MA_INVALID_ARGS;
+    }
+
     if (pOpus == NULL) {
         return MA_INVALID_ARGS;
     }
@@ -317,6 +323,10 @@ MA_API ma_result ma_libopus_read_pcm_frames(ma_libopus* pOpus, void* pFramesOut,
 
         if (pFramesRead != NULL) {
             *pFramesRead = totalFramesRead;
+        }
+
+        if (result == MA_SUCCESS && totalFramesRead == 0) {
+            result = MA_AT_END;
         }
 
         return result;
@@ -405,7 +415,7 @@ MA_API ma_result ma_libopus_get_data_format(ma_libopus* pOpus, ma_format* pForma
         }
 
         if (pChannelMap != NULL) {
-            ma_get_standard_channel_map(ma_standard_channel_map_vorbis, (ma_uint32)ma_min(channels, channelMapCap), pChannelMap);
+            ma_channel_map_init_standard(ma_standard_channel_map_vorbis, pChannelMap, channelMapCap, channels);
         }
 
         return MA_SUCCESS;
