@@ -1,5 +1,5 @@
-# v-miniaudio
-Vrap of the excellent [miniaudio](https://github.com/dr-soft/miniaudio) C audio library
+# miniaudio
+VVrap of the excellent [miniaudio](https://github.com/mackron/miniaudio) C audio library
 
 # Status
 The project is still highly work-in-progress and experimental, expect the API to change without warning.
