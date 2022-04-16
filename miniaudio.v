@@ -58,7 +58,7 @@ pub fn sound(filename string) &Sound {
 }
 
 // sound_from_memory creates a sound object from the provided byte array
-pub fn sound_from_memory(data []byte) &Sound {
+pub fn sound_from_memory(data []u8) &Sound {
 	decoder_config := C.ma_decoder_config_init(int(Format.f32), 2, 44100)
 	// Init decoder
 	decoder := &C.ma_decoder{}
