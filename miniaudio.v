@@ -440,46 +440,56 @@ pub fn (mut s Sound) pause() {
 }
 
 pub fn (s Sound) length() f64 {
-	if s.audio_buffer == 0 {
-		return f64(0)
+	unsafe{
+		if s.audio_buffer == 0 {
+			return f64(0)
+		}
+		return s.audio_buffer.length()
 	}
-	return s.audio_buffer.length()
 }
 
 pub fn (s Sound) pcm_frames() u64 {
-	if s.audio_buffer == 0 {
-		return u64(0)
+	unsafe{
+		if s.audio_buffer == 0 {
+			return u64(0)
+		}
+		return s.audio_buffer.pcm_frames()
 	}
-	return s.audio_buffer.pcm_frames()
 }
 
 pub fn (s Sound) sample_rate() u32 {
-	if s.audio_buffer == 0 {
-		return u32(0)
+	unsafe{
+		if s.audio_buffer == 0 {
+			return u32(0)
+		}
+		return s.audio_buffer.sample_rate()
 	}
-	return s.audio_buffer.sample_rate()
 }
 
 pub fn (mut s Sound) volume(volume f64) {
-	if s.audio_buffer == 0 {
-		return
+	unsafe{
+		if s.audio_buffer == 0 {
+			return
+		}
+		mut value := volume
+		if value < 0 {
+			value = 0.0
+		}
+		if value > 1 {
+			value = 1.0
+		}
+		// $if debug { println('Sound '+ptr_str(s)+' -> volume: '+value.str()) }
+		s.audio_buffer.set_volume(value)
 	}
-	mut value := volume
-	if value < 0 {
-		value = 0.0
-	}
-	if value > 1 {
-		value = 1.0
-	}
-	// $if debug { println('Sound '+ptr_str(s)+' -> volume: '+value.str()) }
-	s.audio_buffer.set_volume(value)
 }
 
 pub fn (mut s Sound) seek(ms f64) {
-	if s.audio_buffer == 0 {
-		return
+	unsafe{
+		if s.audio_buffer == 0 {
+			return
+		}
+		s.audio_buffer.seek(ms)
 	}
-	s.audio_buffer.seek(ms)
 }
 
 pub fn (mut s Sound) free() {
