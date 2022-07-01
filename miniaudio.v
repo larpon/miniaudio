@@ -426,8 +426,8 @@ pub fn sound_from(filename string) Sound {
 /*
 * Sound
 */
-struct Sound {
-mut:
+pub struct Sound {
+pub mut:
 	audio_buffer &AudioBuffer
 }
 
@@ -517,8 +517,8 @@ fn (s Stream) audio_buffer() AudioBuffer {
 * AudioBuffer
 */
 
-struct AudioBuffer {
-mut:
+pub struct AudioBuffer {
+pub mut:
 	// dsp                         C.ma_pcm_converter // PCM data converter
 	decoder &C.ma_decoder
 	volume  f64 // Audio buffer volume
