@@ -122,10 +122,10 @@ pub fn (mut d AudioDevice) volume(volume f64) {
 fn (mut d AudioDevice) init_context() {
 	// Init audio context
 	context := &C.ma_context{
-		//logCallback: 0
+		// logCallback: 0
 	}
 	d.context_config = C.ma_context_config_init()
-	//d.context_config.logCallback = voidptr(log_callback)
+	// d.context_config.logCallback = voidptr(log_callback)
 	result := int(C.ma_context_init(C.NULL, 0, &d.context_config, context))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
@@ -170,7 +170,8 @@ fn (mut d AudioDevice) init_device() {
 	}
 	d.device = device
 	$if debug {
-		println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Initialized device ' + ptr_str(d.device))
+		println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Initialized device ' +
+			ptr_str(d.device))
 	}
 	d.initialized = true
 	// println(d.device)
@@ -182,13 +183,14 @@ pub fn (mut d AudioDevice) start() {
 	}
 	if !d.is_started() {
 		$if debug {
-			println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Starting device ' + ptr_str(d.device))
+			println('INFO ' + @MOD + '::' + @FN + ' (' + ptr_str(d) + ') Starting device ' +
+				ptr_str(d.device))
 		}
 		result := int(C.ma_device_start(d.device))
 		if result != C.MA_SUCCESS {
 			eprintln('ERROR ' + @MOD + '::' + @FN +
 				' failed to start device playback (ma_device_start ${c.translate_error_code(result)})')
-			d.free()
+			unsafe { d.free() }
 			exit(1)
 		}
 		$if debug {
@@ -256,7 +258,7 @@ pub fn (mut d AudioDevice) stop() {
 		if result != C.MA_SUCCESS {
 			eprintln('ERROR ' + @MOD + '::' + @FN +
 				' failed to stop device (ma_device_stop ${c.translate_error_code(result)})')
-			d.free()
+			unsafe { d.free() }
 			exit(1)
 		}
 
@@ -279,7 +281,7 @@ pub fn (mut d AudioDevice) free() {
 	d.initialized = false
 
 	for _, mut buffer in d.buffers {
-		buffer.free()
+		unsafe { buffer.free() }
 	}
 
 	C.ma_device_uninit(d.device)
@@ -315,8 +317,9 @@ fn read_and_mix_pcm_frames_f32(p_decoder &C.ma_decoder, p_output &f32, frameCoun
 		if frames_to_read_this_iteration > total_frames_remaining {
 			frames_to_read_this_iteration = total_frames_remaining
 		}
-		//mut frames_read_this_iteration := u64(0)
-		C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration, &frames_read_this_iteration) // == C.ma_result
+		// mut frames_read_this_iteration := u64(0)
+		C.ma_decoder_read_pcm_frames(p_decoder, &temp, frames_to_read_this_iteration,
+			&frames_read_this_iteration) // == C.ma_result
 		if frames_read_this_iteration == 0 {
 			break
 		}
@@ -442,28 +445,28 @@ pub fn (mut s Sound) pause() {
 }
 
 pub fn (s Sound) length() f64 {
-	if s.audio_buffer == 0 {
+	if isnil(s.audio_buffer) {
 		return f64(0)
 	}
 	return s.audio_buffer.length()
 }
 
 pub fn (s Sound) pcm_frames() u64 {
-	if s.audio_buffer == 0 {
+	if isnil(s.audio_buffer) {
 		return u64(0)
 	}
 	return s.audio_buffer.pcm_frames()
 }
 
 pub fn (s Sound) sample_rate() u32 {
-	if s.audio_buffer == 0 {
+	if isnil(s.audio_buffer) {
 		return u32(0)
 	}
 	return s.audio_buffer.sample_rate()
 }
 
 pub fn (mut s Sound) volume(volume f64) {
-	if s.audio_buffer == 0 {
+	if isnil(s.audio_buffer) {
 		return
 	}
 	mut value := volume
@@ -478,14 +481,14 @@ pub fn (mut s Sound) volume(volume f64) {
 }
 
 pub fn (mut s Sound) seek(ms f64) {
-	if s.audio_buffer == 0 {
+	if isnil(s.audio_buffer) {
 		return
 	}
 	s.audio_buffer.seek(ms)
 }
 
 pub fn (mut s Sound) free() {
-	s.audio_buffer.free()
+	unsafe { s.audio_buffer.free() }
 }
 
 /*

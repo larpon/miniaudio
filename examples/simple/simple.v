@@ -36,11 +36,11 @@ fn main() {
 		s1.volume(vol)
 		time.sleep(16 * time.millisecond)
 	}
-	mut longest := int(math.max(s1.length(), s2.length()))
-	longest = int(math.max(longest, s3.length()))
+	mut longest := math.max(s1.length(), s2.length())
+	longest = math.max(longest, s3.length())
 	time.sleep(longest * time.millisecond)
-	d.free()
 	unsafe {
+		d.free()
 		free(d)
 	}
 }
