@@ -9,29 +9,43 @@ on:
       - "**.md"
 
 jobs:
-  ubuntu-18_04:
-    runs-on: ubuntu-18.04
+  ubuntu-tcc:
+    runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      VFLAGS: -cc tcc -no-retry-compilation
     steps:
+      # - name: Install dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install --quiet -y libsdl2-dev libsdl2-ttf-dev
+      #     sudo apt-get install --quiet -y libsdl2-mixer-dev libsdl2-image-dev
 
-    - name: Checkout V
-      uses: actions/checkout@v2
-      with:
-        repository: vlang/v
+      - name: Checkout V
+        uses: actions/checkout@v2
+        with:
+          repository: vlang/v
 
-    - name: Build local v
-      run: make -j4
+      - name: Build local v
+        run: make -j4 && sudo ./v symlink
 
-    - name: Checkout v-miniaudio
-      run: |
-        git clone --depth 1 https://github.com/Larpon/v-miniaudio miniaudio
-        mkdir -p $HOME/.vmodules
-        cd miniaudio
-        ln -s $(pwd) $HOME/.vmodules/miniaudio
-        cd ..
+      - name: Checkout miniaudio
+        uses: actions/checkout@v2
+        with:
+          path: miniaudio
 
-    - name: Test code formatting
-      run: cd miniaudio; ../v test-fmt; cd ..
+      - name: Link local miniaudio folder in ~/.vmodules/miniaudio
+        run: |
+          cd miniaudio
+          mkdir -p ~/.vmodules
+          ln -s $(pwd) ~/.vmodules/miniaudio
 
-    - name: Run tests
-      run: ./v -d ci test miniaudio
+      - name: Test code formatting
+        run: |
+          cd miniaudio
+          v test-fmt
+          v fmt -verify .
+
+      - name: Run tests
+        run: v -d ci test miniaudio
+
