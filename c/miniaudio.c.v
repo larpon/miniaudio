@@ -31,7 +31,6 @@ $if debug {
 
 $if miniaudio_use_vorbis ? {
 	// stb_vorbis implementation must come after the implementation of miniaudio.
- 	#insert @VMODROOT/undef_stb_vorbis.c
+	#insert @VMODROOT/undef_stb_vorbis.c
 	#include "extras/stb_vorbis.c"
 }
-

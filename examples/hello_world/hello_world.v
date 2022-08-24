@@ -10,13 +10,13 @@ fn main() {
 
 	engine := &ma.Engine{}
 	result := ma.engine_init(ma.null, engine)
-    if result != .success {
-        panic("Failed to initialize audio engine.")
-    }
+	if result != .success {
+		panic('Failed to initialize audio engine.')
+	}
 
-    ma.engine_play_sound(engine, wav_file.str, ma.null)
+	ma.engine_play_sound(engine, wav_file.str, ma.null)
 
 	time.sleep(1200 * time.millisecond)
 
-    ma.engine_uninit(engine)
+	ma.engine_uninit(engine)
 }
