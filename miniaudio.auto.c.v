@@ -56,16 +56,6 @@ pub enum LogLevel {
 	error = C.MA_LOG_LEVEL_ERROR // 1,
 }
 
-[typedef]
-struct C.ma_context {}
-
-pub type Context = C.ma_context
-
-[typedef]
-struct C.ma_device {}
-
-pub type Device = C.ma_device
-
 // ChannelPosition is C._ma_channel_position
 pub enum ChannelPosition {
 	channel_none = C.MA_CHANNEL_NONE // 0,
@@ -286,6 +276,7 @@ pub enum PerformanceProfile {
 
 [typedef]
 struct C.ma_allocation_callbacks {
+pub mut:
 	pUserData voidptr
 	onMalloc  fn (sz usize, p_user_data voidptr) voidptr // onMalloc)(size_t
 	onRealloc fn (p voidptr, sz usize, p_user_data voidptr) voidptr // onRealloc)(void*
@@ -295,6 +286,7 @@ pub type AllocationCallbacks = C.ma_allocation_callbacks
 
 [typedef]
 struct C.ma_lcg {
+pub mut:
 	state int
 }
 
@@ -314,6 +306,7 @@ pub enum ThreadPriority {
 
 [typedef]
 struct C.ma_event {
+pub mut:
 	value u32
 	@lock C.ma_pthread_mutex_t
 	cond  C.ma_pthread_cond_t
@@ -323,6 +316,7 @@ pub type Event = C.ma_event
 
 [typedef]
 struct C.ma_semaphore {
+pub mut:
 	value int
 	@lock C.ma_pthread_mutex_t
 	cond  C.ma_pthread_cond_t
@@ -384,6 +378,7 @@ pub type LogCallbackProc = fn (p_user_data voidptr, level u32, const_p_message &
 
 [typedef]
 struct C.ma_log_callback {
+pub mut:
 	onLog     C.ma_log_callback_proc
 	pUserData voidptr
 }
@@ -400,10 +395,11 @@ pub fn log_callback_init(on_log C.ma_log_callback_proc, p_user_data voidptr) Log
 
 [typedef]
 struct C.ma_log {
+pub mut:
 	// TODO 	callbacks [MA_MAX_LOG_CALLBACKS]LogCallback
 	callbackCount       u32
 	allocationCallbacks AllocationCallbacks // Need to store these persistently because ma_log_postv() might need to allocate a buffer on the heap.
-	// TODO 	MA_NO_THREADING C.#ifndef // For thread safety just to make it easier and safer for the logging implementation.
+	// TODO 	MA_NO_THREADING C.#ifndef  // For thread safety just to make it easier and safer for the logging implementation.
 }
 
 pub type Log = C.ma_log
@@ -463,6 +459,7 @@ MA_API ma_result ma_log_postf(ma_log* pLog, ma_uint32 level, const char* pFormat
 
 [typedef]
 union C.ma_biquad_coefficient {
+pub mut:
 	// TODO 	 f32
 	s32 int
 }
@@ -471,6 +468,7 @@ pub type BiquadCoefficient = C.ma_biquad_coefficient
 
 [typedef]
 struct C.ma_biquad_config {
+pub mut:
 	format   Format
 	channels u32
 	b0       f64
@@ -493,6 +491,7 @@ pub fn biquad_config_init(format Format, channels u32, b0 f64, b1 f64, b2 f64, a
 
 [typedef]
 struct C.ma_biquad {
+pub mut:
 	format    Format
 	channels  u32
 	b0        BiquadCoefficient
@@ -500,8 +499,8 @@ struct C.ma_biquad {
 	b2        BiquadCoefficient
 	a1        BiquadCoefficient
 	a2        BiquadCoefficient
-	pR1       &BiquadCoefficient
-	pR2       &BiquadCoefficient // Memory management.
+	pR1       &BiquadCoefficient = unsafe { nil }
+	pR2       &BiquadCoefficient = unsafe { nil } // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -574,6 +573,7 @@ pub fn biquad_get_latency(const_p_bq &Biquad) u32 {
 
 [typedef]
 struct C.ma_lpf1_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -585,6 +585,7 @@ pub type Lpf1Config = C.ma_lpf1_config
 
 [typedef]
 struct C.ma_lpf2_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -612,10 +613,11 @@ pub fn lpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 
 [typedef]
 struct C.ma_lpf1 {
+pub mut:
 	format    Format
 	channels  u32
 	a         BiquadCoefficient
-	pR1       &BiquadCoefficient // Memory management.
+	pR1       &BiquadCoefficient = unsafe { nil } // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -688,6 +690,7 @@ pub fn lpf1_get_latency(const_p_lpf &Lpf1) u32 {
 
 [typedef]
 struct C.ma_lpf2 {
+pub mut:
 	bq Biquad // The second order low-pass filter is implemented as a biquad filter.
 }
 
@@ -759,6 +762,7 @@ pub fn lpf2_get_latency(const_p_lpf &Lpf2) u32 {
 
 [typedef]
 struct C.ma_lpf_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -778,13 +782,14 @@ pub fn lpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 
 [typedef]
 struct C.ma_lpf {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
 	lpf1Count  u32
 	lpf2Count  u32
-	pLPF1      &Lpf1
-	pLPF2      &Lpf2 // Memory management.
+	pLPF1      &Lpf1 = unsafe { nil }
+	pLPF2      &Lpf2 = unsafe { nil } // Memory management.
 	_pHeap     voidptr
 	_ownsHeap  u32
 }
@@ -857,6 +862,7 @@ pub fn lpf_get_latency(const_p_lpf &Lpf) u32 {
 
 [typedef]
 struct C.ma_hpf1_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -868,6 +874,7 @@ pub type Hpf1Config = C.ma_hpf1_config
 
 [typedef]
 struct C.ma_hpf2_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -895,10 +902,11 @@ pub fn hpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 
 [typedef]
 struct C.ma_hpf1 {
+pub mut:
 	format    Format
 	channels  u32
 	a         BiquadCoefficient
-	pR1       &BiquadCoefficient // Memory management.
+	pR1       &BiquadCoefficient = unsafe { nil } // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -963,6 +971,7 @@ pub fn hpf1_get_latency(const_p_hpf &Hpf1) u32 {
 
 [typedef]
 struct C.ma_hpf2 {
+pub mut:
 	bq Biquad // The second order high-pass filter is implemented as a biquad filter.
 }
 
@@ -1026,6 +1035,7 @@ pub fn hpf2_get_latency(const_p_hpf &Hpf2) u32 {
 
 [typedef]
 struct C.ma_hpf_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -1045,13 +1055,14 @@ pub fn hpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 
 [typedef]
 struct C.ma_hpf {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
 	hpf1Count  u32
 	hpf2Count  u32
-	pHPF1      &Hpf1
-	pHPF2      &Hpf2 // Memory management.
+	pHPF1      &Hpf1 = unsafe { nil }
+	pHPF2      &Hpf2 = unsafe { nil } // Memory management.
 	_pHeap     voidptr
 	_ownsHeap  u32
 }
@@ -1116,6 +1127,7 @@ pub fn hpf_get_latency(const_p_hpf &Hpf) u32 {
 
 [typedef]
 struct C.ma_bpf2_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -1135,6 +1147,7 @@ pub fn bpf2_config_init(format Format, channels u32, sample_rate u32, cutoff_fre
 
 [typedef]
 struct C.ma_bpf2 {
+pub mut:
 	bq Biquad // The second order band-pass filter is implemented as a biquad filter.
 }
 
@@ -1198,6 +1211,7 @@ pub fn bpf2_get_latency(const_p_bpf &Bpf2) u32 {
 
 [typedef]
 struct C.ma_bpf_config {
+pub mut:
 	format          Format
 	channels        u32
 	sampleRate      u32
@@ -1217,10 +1231,11 @@ pub fn bpf_config_init(format Format, channels u32, sample_rate u32, cutoff_freq
 
 [typedef]
 struct C.ma_bpf {
+pub mut:
 	format    Format
 	channels  u32
 	bpf2Count u32
-	pBPF2     &Bpf2 // Memory management.
+	pBPF2     &Bpf2 = unsafe { nil } // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -1285,6 +1300,7 @@ pub fn bpf_get_latency(const_p_bpf &Bpf) u32 {
 
 [typedef]
 struct C.ma_notch2_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1296,6 +1312,7 @@ pub type Notch2Config = C.ma_notch2_config
 
 [typedef]
 struct C.ma_notch_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1315,6 +1332,7 @@ pub fn notch2_config_init(format Format, channels u32, sample_rate u32, q f64, f
 
 [typedef]
 struct C.ma_notch2 {
+pub mut:
 	bq Biquad
 }
 
@@ -1378,6 +1396,7 @@ pub fn notch2_get_latency(const_p_filter &Notch2) u32 {
 
 [typedef]
 struct C.ma_peak2_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1390,6 +1409,7 @@ pub type Peak2Config = C.ma_peak2_config
 
 [typedef]
 struct C.ma_peak_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1410,6 +1430,7 @@ pub fn peak2_config_init(format Format, channels u32, sample_rate u32, gain_db f
 
 [typedef]
 struct C.ma_peak2 {
+pub mut:
 	bq Biquad
 }
 
@@ -1473,6 +1494,7 @@ pub fn peak2_get_latency(const_p_filter &Peak2) u32 {
 
 [typedef]
 struct C.ma_loshelf2_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1485,6 +1507,7 @@ pub type Loshelf2Config = C.ma_loshelf2_config
 
 [typedef]
 struct C.ma_loshelf_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1506,6 +1529,7 @@ pub fn loshelf2_config_init(format Format, channels u32, sample_rate u32, gain_d
 
 [typedef]
 struct C.ma_loshelf2 {
+pub mut:
 	bq Biquad
 }
 
@@ -1570,6 +1594,7 @@ pub fn loshelf2_get_latency(const_p_filter &Loshelf2) u32 {
 
 [typedef]
 struct C.ma_hishelf2_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1582,6 +1607,7 @@ pub type Hishelf2Config = C.ma_hishelf2_config
 
 [typedef]
 struct C.ma_hishelf_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1603,6 +1629,7 @@ pub fn hishelf2_config_init(format Format, channels u32, sample_rate u32, gain_d
 
 [typedef]
 struct C.ma_hishelf2 {
+pub mut:
 	bq Biquad
 }
 
@@ -1667,6 +1694,7 @@ pub fn hishelf2_get_latency(const_p_filter &Hishelf2) u32 {
 
 [typedef]
 struct C.ma_delay_config {
+pub mut:
 	channels      u32
 	sampleRate    u32
 	delayInFrames u32
@@ -1689,10 +1717,11 @@ pub fn delay_config_init(channels u32, sample_rate u32, delay_in_frames u32, dec
 
 [typedef]
 struct C.ma_delay {
+pub mut:
 	config             DelayConfig
 	cursor             u32 // Feedback is written to this cursor. Always equal or in front of the read cursor.
 	bufferSizeInFrames u32 // The maximum of config.startDelayInFrames and config.feedbackDelayInFrames.
-	pBuffer            &f32
+	pBuffer            &f32 = unsafe { nil }
 }
 
 pub type Delay = C.ma_delay
@@ -1771,6 +1800,7 @@ pub fn delay_get_decay(const_p_delay &Delay) f32 {
 
 [typedef]
 struct C.ma_gainer_config {
+pub mut:
 	channels           u32
 	smoothTimeInFrames u32
 }
@@ -1787,10 +1817,11 @@ pub fn gainer_config_init(channels u32, smooth_time_in_frames u32) GainerConfig 
 
 [typedef]
 struct C.ma_gainer {
+pub mut:
 	config    GainerConfig
 	t         u32
-	pOldGains &f32
-	pNewGains &f32 // Memory management.
+	pOldGains &f32 = unsafe { nil }
+	pNewGains &f32 = unsafe { nil } // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -1861,6 +1892,7 @@ pub enum PanMode {
 
 [typedef]
 struct C.ma_panner_config {
+pub mut:
 	format   Format
 	channels u32
 	mode     PanMode
@@ -1879,6 +1911,7 @@ pub fn panner_config_init(format Format, channels u32) PannerConfig {
 
 [typedef]
 struct C.ma_panner {
+pub mut:
 	format   Format
 	channels u32
 	mode     PanMode
@@ -1937,6 +1970,7 @@ pub fn panner_get_pan(const_p_panner &Panner) f32 {
 
 [typedef]
 struct C.ma_fader_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -1954,6 +1988,7 @@ pub fn fader_config_init(format Format, channels u32, sample_rate u32) FaderConf
 
 [typedef]
 struct C.ma_fader {
+pub mut:
 	config         FaderConfig
 	volumeBeg      f32 // If volumeBeg and volumeEnd is equal to 1, no fading happens (ma_fader_process_pcm_frames() will run as a passthrough).
 	volumeEnd      f32
@@ -2005,6 +2040,7 @@ pub fn fader_get_current_volume(p_fader &Fader) f32 {
 
 [typedef]
 struct C.ma_vec3f {
+pub mut:
 	x f32
 	y f32
 	z f32
@@ -2034,8 +2070,9 @@ pub enum Handedness {
 
 [typedef]
 struct C.ma_spatializer_listener_config {
+pub mut:
 	channelsOut             u32
-	pChannelMapOut          &u8
+	pChannelMapOut          &u8 = unsafe { nil }
 	handedness              Handedness // Defaults to right. Forward is -1 on the Z axis. In a left handed system, forward is +1 on the Z axis.
 	coneInnerAngleInRadians f32
 	coneOuterAngleInRadians f32
@@ -2056,6 +2093,7 @@ pub fn spatializer_listener_config_init(channels_out u32) SpatializerListenerCon
 
 [typedef]
 struct C.ma_spatializer_listener {
+pub mut:
 	config    SpatializerListenerConfig
 	position  Vec3f // The absolute position of the listener.
 	direction Vec3f // The direction the listener is facing. The world up vector is config.worldUp.
@@ -2224,9 +2262,10 @@ pub fn spatializer_listener_is_enabled(const_p_listener &SpatializerListener) u3
 
 [typedef]
 struct C.ma_spatializer_config {
+pub mut:
 	channelsIn                   u32
 	channelsOut                  u32
-	pChannelMapIn                &u8
+	pChannelMapIn                &u8 = unsafe { nil }
 	attenuationModel             AttenuationModel
 	positioning                  Positioning
 	handedness                   Handedness // Defaults to right. Forward is -1 on the Z axis. In a left handed system, forward is +1 on the Z axis.
@@ -2255,9 +2294,10 @@ pub fn spatializer_config_init(channels_in u32, channels_out u32) SpatializerCon
 
 [typedef]
 struct C.ma_spatializer {
+pub mut:
 	channelsIn                   u32
 	channelsOut                  u32
-	pChannelMapIn                &u8
+	pChannelMapIn                &u8 = unsafe { nil }
 	attenuationModel             AttenuationModel
 	positioning                  Positioning
 	handedness                   Handedness // Defaults to right. Forward is -1 on the Z axis. In a left handed system, forward is +1 on the Z axis.
@@ -2277,7 +2317,7 @@ struct C.ma_spatializer {
 	velocity                     Vec3f  // For doppler effect.
 	dopplerPitch                 f32    // Will be updated by ma_spatializer_process_pcm_frames() and can be used by higher level functions to apply a pitch shift for doppler effect.
 	gainer                       Gainer // For smooth gain transitions.
-	pNewChannelGainsOut          &f32   // An offset of _pHeap. Used by ma_spatializer_process_pcm_frames() to store new channel gains. The number of elements in this array is equal to config.channelsOut.
+	pNewChannelGainsOut          &f32 = unsafe { nil } // An offset of _pHeap. Used by ma_spatializer_process_pcm_frames() to store new channel gains. The number of elements in this array is equal to config.channelsOut.
 	_pHeap                       voidptr
 	_ownsHeap                    u32
 }
@@ -2562,12 +2602,13 @@ pub fn spatializer_get_relative_position_and_direction(const_p_spatializer &Spat
 
 [typedef]
 struct C.ma_linear_resampler_config {
+pub mut:
 	format        Format
 	channels      u32
 	sampleRateIn  u32
 	sampleRateOut u32
 	lpfOrder      u32 // The low-pass filter order. Setting this to 0 will disable low-pass filtering.
-	// TODO 	 f64 // 0..1. Defaults to 1. 1 = Half the sampling frequency (Nyquist Frequency), 0.5 = Quarter the sampling frequency (half Nyquest Frequency), etc.
+	// TODO 	 f64  // 0..1. Defaults to 1. 1 = Half the sampling frequency (Nyquist Frequency), 0.5 = Quarter the sampling frequency (half Nyquest Frequency), etc.
 }
 
 pub type LinearResamplerConfig = C.ma_linear_resampler_config
@@ -2582,15 +2623,16 @@ pub fn linear_resampler_config_init(format Format, channels u32, sample_rate_in 
 
 [typedef]
 struct C.ma_linear_resampler {
+pub mut:
 	config        LinearResamplerConfig
 	inAdvanceInt  u32
 	inAdvanceFrac u32
 	inTimeInt     u32
 	inTimeFrac    u32
 	// TODO 	 C.union
-	s16 &i16
-	// TODO 	x0 C.} // The previous input frame.
-	// TODO 	x1 C.} // The next input frame.
+	s16 &i16 = unsafe { nil }
+	// TODO 	x0 C.}  // The previous input frame.
+	// TODO 	x1 C.}  // The next input frame.
 	lpf       Lpf // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
@@ -2698,12 +2740,8 @@ pub fn linear_resampler_reset(p_resampler &LinearResampler) Result {
 }
 
 [typedef]
-struct C.ma_resampler_config {}
-
-pub type ResamplerConfig = C.ma_resampler_config
-
-[typedef]
 struct C.ma_resampling_backend_vtable {
+pub mut:
 	onGetHeapSize                 fn (p_user_data voidptr, const_p_config &ResamplerConfig, p_heap_size_in_bytes &usize) Result        // onGetHeapSize
 	onInit                        fn (p_user_data voidptr, const_p_config &ResamplerConfig, p_heap voidptr, pp_backend voidptr) Result // onInit
 	onProcess                     fn (p_user_data voidptr, p_backend voidptr, const_p_frames_in voidptr, p_frame_count_in &u64, p_frames_out voidptr, p_frame_count_out &u64) Result // onProcess
@@ -2723,6 +2761,22 @@ pub enum ResampleAlgorithm {
 	custom = C.ma_resample_algorithm_custom
 }
 
+[typedef]
+struct C.ma_resampler_config {
+pub mut:
+	format           Format // Must be either ma_format_f32 or ma_format_s16.
+	channels         u32
+	sampleRateIn     u32
+	sampleRateOut    u32
+	algorithm        ResampleAlgorithm // When set to ma_resample_algorithm_custom, pBackendVTable will be used.
+	pBackendVTable   &ResamplingBackendVtable = unsafe { nil }
+	pBackendUserData voidptr
+	// TODO 	 C.struct
+	// TODO 	linear C.}
+}
+
+pub type ResamplerConfig = C.ma_resampler_config
+
 // C: `MA_API ma_resampler_config ma_resampler_config_init(ma_format format, ma_uint32 channels, ma_uint32 sampleRateIn, ma_uint32 sampleRateOut, ma_resample_algorithm algorithm)`
 fn C.ma_resampler_config_init(format Format, channels u32, sample_rate_in u32, sample_rate_out u32, algorithm ResampleAlgorithm) ResamplerConfig
 
@@ -2734,15 +2788,16 @@ pub fn resampler_config_init(format Format, channels u32, sample_rate_in u32, sa
 
 [typedef]
 struct C.ma_resampler {
+pub mut:
 	pBackend         voidptr
-	pBackendVTable   &ResamplingBackendVtable
+	pBackendVTable   &ResamplingBackendVtable = unsafe { nil }
 	pBackendUserData voidptr
 	format           Format
 	channels         u32
 	sampleRateIn     u32
 	sampleRateOut    u32
 	// TODO 	 C.union
-	// TODO 	state C.} // State for stock resamplers so we can avoid a malloc. For stock resamplers, pBackend will point here.
+	// TODO 	state C.}  // State for stock resamplers so we can avoid a malloc. For stock resamplers, pBackend will point here.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -2894,12 +2949,13 @@ pub enum MonoExpansionMode {
 
 [typedef]
 struct C.ma_channel_converter_config {
+pub mut:
 	format      Format
 	channelsIn  u32
 	channelsOut u32
-	// TODO 	ma_channel* C. // pChannelMapIn
+	// TODO 	ma_channel* C.  // pChannelMapIn
 	mixingMode ChannelMixMode
-	ppWeights  &&f32 // [in][out]. Only used when mixingMode is set to ma_channel_mix_mode_custom_weights.
+	ppWeights  &&f32 = unsafe { nil } // [in][out]. Only used when mixingMode is set to ma_channel_mix_mode_custom_weights.
 }
 
 pub type ChannelConverterConfig = C.ma_channel_converter_config
@@ -2915,17 +2971,18 @@ pub fn channel_converter_config_init(format Format, channels_in u32, const_p_cha
 
 [typedef]
 struct C.ma_channel_converter {
+pub mut:
 	format         Format
 	channelsIn     u32
 	channelsOut    u32
 	mixingMode     ChannelMixMode
 	conversionPath ChannelConversionPath
-	pChannelMapIn  &u8
-	pChannelMapOut &u8
-	pShuffleTable  &u8 // Indexed by output channel index.
+	pChannelMapIn  &u8 = unsafe { nil }
+	pChannelMapOut &u8 = unsafe { nil }
+	pShuffleTable  &u8 = unsafe { nil } // Indexed by output channel index.
 	// TODO 	 C.union
-	s16 &&int
-	// TODO 	weights C.} // [in][out]
+	s16 &&int = unsafe { nil }
+	// TODO 	weights C.}  // [in][out]
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -2993,17 +3050,18 @@ pub fn channel_converter_get_output_channel_map(const_p_converter &ChannelConver
 
 [typedef]
 struct C.ma_data_converter_config {
+pub mut:
 	formatIn               Format
 	formatOut              Format
 	channelsIn             u32
 	channelsOut            u32
 	sampleRateIn           u32
 	sampleRateOut          u32
-	pChannelMapIn          &u8
-	pChannelMapOut         &u8
+	pChannelMapIn          &u8 = unsafe { nil }
+	pChannelMapOut         &u8 = unsafe { nil }
 	ditherMode             DitherMode
 	channelMixMode         ChannelMixMode
-	ppChannelWeights       &&f32 // [in][out]. Only used when mixingMode is set to ma_channel_mix_mode_custom_weights.
+	ppChannelWeights       &&f32 = unsafe { nil } // [in][out]. Only used when mixingMode is set to ma_channel_mix_mode_custom_weights.
 	allowDynamicSampleRate u32
 	resampling             ResamplerConfig
 }
@@ -3039,6 +3097,7 @@ pub enum DataConverterExecutionPath {
 
 [typedef]
 struct C.ma_data_converter {
+pub mut:
 	formatIn                Format
 	formatOut               Format
 	channelsIn              u32
@@ -3501,6 +3560,7 @@ pub fn convert_frames_ex(p_out voidptr, frame_count_out u64, const_p_in voidptr,
 
 [typedef]
 struct C.ma_rb {
+pub mut:
 	pBuffer                voidptr
 	subbufferSizeInBytes   u32
 	subbufferCount         u32
@@ -3654,6 +3714,7 @@ pub fn rb_get_subbuffer_ptr(p_rb &Rb, subbuffer_index usize, p_buffer voidptr) v
 
 [typedef]
 struct C.ma_pcm_rb {
+pub mut:
 	rb       Rb
 	format   Format
 	channels u32
@@ -3802,6 +3863,7 @@ pub fn pcm_rb_get_subbuffer_ptr(p_rb &PcmRb, subbuffer_index u32, p_buffer voidp
 
 [typedef]
 struct C.ma_duplex_rb {
+pub mut:
 	rb PcmRb
 }
 
@@ -4057,6 +4119,7 @@ pub fn fence_wait(p_fence &Fence) Result {
 
 [typedef]
 struct C.ma_async_notification_callbacks {
+pub mut:
 	onSignal fn (p_notification voidptr) // onSignal)(ma_async_notification*
 }
 
@@ -4072,6 +4135,7 @@ pub fn async_notification_signal(p_notification voidptr) Result {
 
 [typedef]
 struct C.ma_async_notification_poll {
+pub mut:
 	cb        AsyncNotificationCallbacks
 	signalled u32
 }
@@ -4096,6 +4160,7 @@ pub fn async_notification_poll_is_signalled(const_p_notification_poll &AsyncNoti
 
 [typedef]
 struct C.ma_async_notification_event {
+pub mut:
 	cb AsyncNotificationCallbacks
 	// TODO 	MA_NO_THREADING C.#ifndef
 }
@@ -4136,6 +4201,7 @@ pub fn async_notification_event_signal(p_notification_event &AsyncNotificationEv
 
 [typedef]
 struct C.ma_slot_allocator_config {
+pub mut:
 	capacity u32 // The number of slots to make available.
 }
 
@@ -4158,8 +4224,9 @@ pub type SlotAllocatorGroup = C.ma_slot_allocator_group
 
 [typedef]
 struct C.ma_slot_allocator {
-	pGroups   &SlotAllocatorGroup // Slots are grouped in chunks of 32.
-	pSlots    &u32 // 32 bits for reference counting for ABA mitigation.
+pub mut:
+	pGroups   &SlotAllocatorGroup = unsafe { nil } // Slots are grouped in chunks of 32.
+	pSlots    &u32 = unsafe { nil } // 32 bits for reference counting for ABA mitigation.
 	count     u32  // Allocation count.
 	capacity  u32  // Memory management.
 	_ownsHeap u32
@@ -4216,11 +4283,6 @@ pub fn slot_allocator_free(p_allocator &SlotAllocator, slot u64) Result {
 	return C.ma_slot_allocator_free(p_allocator, slot)
 }
 
-[typedef]
-struct C.ma_job {}
-
-pub type Job = C.ma_job
-
 // JobProc callbacks for processing a job. Each job type will have their own processing callback which will be
 // called by ma_job_process().
 // C: typedef ma_result (* ma_job_proc)(ma_job* pJob);
@@ -4247,6 +4309,60 @@ pub enum JobType {
 	count = C.MA_JOB_TYPE_COUNT
 }
 
+[typedef]
+struct C.ma_job {
+pub mut:
+	// TODO 	 C.union  // Job type.
+	slot     u16 // Index into a ma_slot_allocator.
+	refcount u32
+	// TODO 	breakup C.}
+	allocation u64
+	// TODO 	toc C.}  // 8 bytes. We encode the job code into the slot allocation data to save space.
+	// TODO MA_ATOMIC(8, ma_uint64) next
+	order u32 // Execution order. Used to create a data dependency and ensure a job is executed in order. Usage is contextual depending on the job type.
+	data0 C.ma_uintptr
+	data1 C.ma_uintptr
+	// TODO 	custom C.}  // Resource Manager
+	pResourceManager  voidptr // ma_resource_manager_data_buffer_node*
+	pDataBufferNode   voidptr
+	pFilePath         &char = unsafe { nil }
+	pFilePathW        &u16  = unsafe { nil }
+	flags             u32     // Resource manager data source flags that were used when initializing the data buffer.
+	pInitNotification voidptr // Signalled when the data buffer has been initialized and the format/channels/rate can be retrieved.
+	pDoneNotification voidptr // Signalled when the data buffer has been fully decoded. Will be passed through to MA_JOB_TYPE_RESOURCE_MANAGER_PAGE_DATA_BUFFER_NODE when decoding.
+	pInitFence        &Fence = unsafe { nil } // Released when initialization of the decoder is complete.
+	pDoneFence        &Fence = unsafe { nil } // Released if initialization of the decoder fails. Passed through to PAGE_DATA_BUFFER_NODE untouched if init is successful.
+	// TODO 	loadDataBufferNode C.}
+	// TODO 	freeDataBufferNode C.}
+	pDecoder voidptr
+	// TODO 	pageDataBufferNode C.}
+	pDataBuffer             voidptr
+	rangeBegInPCMFrames     u64
+	rangeEndInPCMFrames     u64
+	loopPointBegInPCMFrames u64
+	loopPointEndInPCMFrames u64
+	isLooping               u32
+	// TODO 	loadDataBuffer C.}
+	// TODO 	freeDataBuffer C.}
+	pDataStream      voidptr
+	initialSeekPoint u64
+	// TODO 	loadDataStream C.}
+	// TODO 	freeDataStream C.}
+	pageIndex u32 // The index of the page to decode into.
+	// TODO 	pageDataStream C.}
+	frameIndex u64
+	// TODO 	seekDataStream C.}
+	// TODO 	resourceManager C.}  // Device.
+	pDevice    voidptr // ma_device_type
+	deviceType u32
+	// TODO 	reroute C.}
+	// TODO 	aaudio C.}
+	// TODO 	device C.}
+	// TODO 	data C.}
+}
+
+pub type Job = C.ma_job
+
 // C: `MA_API ma_job ma_job_init(ma_uint16 code)`
 fn C.ma_job_init(code u16) Job
 
@@ -4270,6 +4386,7 @@ pub enum JobQueueFlags {
 
 [typedef]
 struct C.ma_job_queue_config {
+pub mut:
 	flags    u32
 	capacity u32 // The maximum number of jobs that can fit in the queue at a time.
 }
@@ -4286,13 +4403,14 @@ pub fn job_queue_config_init(flags u32, capacity u32) JobQueueConfig {
 
 [typedef]
 struct C.ma_job_queue {
+pub mut:
 	flags    u32 // Flags passed in at initialization time.
 	capacity u32 // The maximum number of jobs that can fit in the queue at a time. Set by the config.
 	// TODO MA_ATOMIC(8, ma_uint64) head
 	// TODO MA_ATOMIC(8, ma_uint64) tail
-	// TODO 	MA_NO_THREADING C.#ifndef // Only used when MA_JOB_QUEUE_FLAG_NON_BLOCKING is unset.
+	// TODO 	MA_NO_THREADING C.#ifndef  // Only used when MA_JOB_QUEUE_FLAG_NON_BLOCKING is unset.
 	// TODO 	 C.#endif
-	pJobs &Job
+	pJobs &Job = unsafe { nil }
 	// TODO 	MA_USE_EXPERIMENTAL_LOCK_FREE_JOB_QUEUE C.#ifndef
 	_pHeap    voidptr
 	_ownsHeap u32
@@ -4369,9 +4487,10 @@ pub enum DeviceState {
 TODO
 [typedef]
 struct C.ma_IMMNotificationClient {
+pub mut:
 	lpVtbl voidptr
 	counter u32
-	pDevice &Device
+	pDevice &Device = unsafe { nil }
 }
 pub type IMMNotificationClient = C.ma_IMMNotificationClient
 */
@@ -4401,6 +4520,7 @@ TODO Function: #define MA_BACKEND_COUNT (ma_backend_null+1)
 
 [typedef]
 struct C.ma_device_job_thread_config {
+pub mut:
 	noThread         u32 // Set this to true if you want to process jobs yourself.
 	jobQueueCapacity u32
 	jobQueueFlags    u32
@@ -4418,6 +4538,7 @@ pub fn device_job_thread_config_init() DeviceJobThreadConfig {
 
 [typedef]
 struct C.ma_device_job_thread {
+pub mut:
 	thread     C.ma_thread
 	jobQueue   JobQueue
 	_hasThread u32
@@ -4468,7 +4589,8 @@ pub enum DeviceNotificationType {
 
 [typedef]
 struct C.ma_device_notification {
-	pDevice &Device
+pub mut:
+	pDevice &Device = unsafe { nil }
 	@type   DeviceNotificationType
 	// TODO 	 C.union
 	// TODO 	started C.}
@@ -4685,6 +4807,7 @@ pub enum AaudioInputPreset {
 
 [typedef]
 union C.ma_timer {
+pub mut:
 	counter  i64
 	counterD f64
 }
@@ -4693,42 +4816,28 @@ pub type Timer = C.ma_timer
 
 [typedef]
 union C.ma_device_id {
-	// TODO 	wasapi [64]u16 // WASAPI uses a wchar_t string for identification.
-	// TODO 	dsound [16]u8 // DirectSound uses a GUID for identification.
+pub mut:
+	// TODO 	wasapi [64]u16  // WASAPI uses a wchar_t string for identification.
+	// TODO 	dsound [16]u8  // DirectSound uses a GUID for identification.
 	winmm u32 // When creating a device, WinMM expects a Win32 UINT_PTR for device identification. In practice it's actually just a UINT.
-	// TODO 	alsa [256]char // ALSA uses a name string for identification.
-	// TODO 	pulse [256]char // PulseAudio uses a name string for identification.
+	// TODO 	alsa [256]char  // ALSA uses a name string for identification.
+	// TODO 	pulse [256]char  // PulseAudio uses a name string for identification.
 	jack int // JACK always uses default devices.
-	// TODO 	coreaudio [256]char // Core Audio uses a string for identification.
-	// TODO 	sndio [256]char // "snd/0", etc.
-	// TODO 	audio4 [256]char // "/dev/audio", etc.
-	// TODO 	oss [64]char // "dev/dsp0", etc. "dev/dsp" for the default device.
+	// TODO 	coreaudio [256]char  // Core Audio uses a string for identification.
+	// TODO 	sndio [256]char  // "snd/0", etc.
+	// TODO 	audio4 [256]char  // "/dev/audio", etc.
+	// TODO 	oss [64]char  // "dev/dsp0", etc. "dev/dsp" for the default device.
 	aaudio int // AAudio uses a 32-bit integer for identification.
 	opensl u32 // OpenSL|ES uses a 32-bit unsigned integer for identification.
-	// TODO 	webaudio [32]char // Web Audio always uses default devices for now, but if this changes it'll be a GUID.
+	// TODO 	webaudio [32]char  // Web Audio always uses default devices for now, but if this changes it'll be a GUID.
 	// TODO 	 C.union
 	// TODO 	s [256]char
 	p voidptr
-	// TODO 	custom C.} // The custom backend could be anything. Give them a few options.
+	// TODO 	custom C.}  // The custom backend could be anything. Give them a few options.
 	nullbackend int // The null backend uses an integer for device IDs.
 }
 
 pub type DeviceId = C.ma_device_id
-
-[typedef]
-struct C.ma_context_config {}
-
-pub type ContextConfig = C.ma_context_config
-
-[typedef]
-struct C.ma_device_config {}
-
-pub type DeviceConfig = C.ma_device_config
-
-[typedef]
-struct C.ma_backend_callbacks {}
-
-pub type BackendCallbacks = C.ma_backend_callbacks
 
 /*
 TODO Function: #define MA_DATA_FORMAT_FLAG_EXCLUSIVE_MODE (1U << 1)
@@ -4738,11 +4847,12 @@ pub const max_device_name_length = 255
 
 [typedef]
 struct C.ma_device_info {
+pub mut:
 	id DeviceId
-	// TODO 	name [MA_MAX_DEVICE_NAME_LENGTHchar // + +1 for null terminator.
+	// TODO 	name [MA_MAX_DEVICE_NAME_LENGTHchar  // + +1 for null terminator.
 	isDefault             u32
 	nativeDataFormatCount u32
-	// TODO 	 C.struct // Sample format. If set to ma_format_unknown, all sample formats are supported.
+	// TODO 	 C.struct  // Sample format. If set to ma_format_unknown, all sample formats are supported.
 	channels   u32 // If set to 0, all channels are supported.
 	sampleRate u32 // If set to 0, all sample rates are supported.
 	flags      u32 // A combination of MA_DATA_FORMAT_FLAG_* flags.
@@ -4750,6 +4860,66 @@ struct C.ma_device_info {
 }
 
 pub type DeviceInfo = C.ma_device_info
+
+struct C.playback {
+pub mut:
+	pDeviceID      &C.ma_device_id
+	format         Format
+	channels       u32
+	pChannelMap    &C.ma_channel
+	channelMixMode C.ma_channel_mix_mode
+	shareMode      C.ma_share_mode
+}
+
+pub type Playback = C.playback
+
+[typedef]
+struct C.ma_device_config {
+pub mut:
+	deviceType                DeviceType
+	sampleRate                u32
+	periodSizeInFrames        u32
+	periodSizeInMilliseconds  u32
+	periods                   u32
+	performanceProfile        PerformanceProfile
+	noPreSilencedOutputBuffer u8 // When set to true, the contents of the output buffer passed into the data callback will be left undefined rather than initialized to silence.
+	noClip                    u8 // When set to true, the contents of the output buffer passed into the data callback will be clipped after returning. Only applies when the playback sample format is f32.
+	noDisableDenormals        u8 // Do not disable denormals when firing the data callback.
+	noFixedSizedCallback      u8 // Disables strict fixed-sized data callbacks. Setting this to true will result in the period size being treated only as a hint to the backend. This is an optimization for those who don't need fixed sized callbacks.
+	dataCallback              C.ma_device_data_proc
+	notificationCallback      C.ma_device_notification_proc
+	stopCallback              C.ma_stop_proc
+	pUserData                 voidptr
+	resampling                ResamplerConfig
+	// TODO 	 C.struct
+	format         Format
+	channels       u32
+	pChannelMap    &u8 = unsafe { nil }
+	channelMixMode ChannelMixMode
+	shareMode      ShareMode
+	// TODO 	playback C.}
+	playback Playback
+	// TODO 	capture C.}
+	noDefaultQualitySRC  u8 // When set to true, disables the use of AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY.
+	noAutoStreamRouting  u8 // Disables automatic stream routing.
+	noHardwareOffloading u8 // Disables WASAPI's hardware offloading feature.
+	// TODO 	wasapi C.}
+	noAutoFormat   u32 // Opens the ALSA device with SND_PCM_NO_AUTO_FORMAT.
+	noAutoChannels u32 // Opens the ALSA device with SND_PCM_NO_AUTO_CHANNELS.
+	noAutoResample u32 // Opens the ALSA device with SND_PCM_NO_AUTO_RESAMPLE.
+	// TODO 	alsa C.}
+	// TODO 	char* C.  // pStreamNameCapture
+	// TODO 	pulse C.}
+	// TODO 	coreaudio C.}
+	recordingPreset OpenslRecordingPreset
+	// TODO 	opensl C.}
+	contentType             AaudioContentType
+	inputPreset             AaudioInputPreset
+	noAutoStartAfterReroute u32
+	// TODO 	aaudio C.}
+}
+
+pub type DeviceConfig = C.ma_device_config
 
 // EnumDevicesCallbackProc thes callback for handling device enumeration. This is fired from `ma_context_enumerated_devices()`.
 //
@@ -4774,7 +4944,8 @@ pub type EnumDevicesCallbackProc = fn (p_context &Context, device_type DeviceTyp
 
 [typedef]
 struct C.ma_device_descriptor {
-	// TODO 	ma_device_id* C. // pDeviceID
+pub mut:
+	// TODO 	ma_device_id* C.  // pDeviceID
 	shareMode  ShareMode
 	format     Format
 	channels   u32
@@ -4788,14 +4959,59 @@ struct C.ma_device_descriptor {
 pub type DeviceDescriptor = C.ma_device_descriptor
 
 [typedef]
+struct C.ma_backend_callbacks {
+pub mut:
+	onContextInit             fn (p_context &Context, const_p_config &ContextConfig, p_callbacks &BackendCallbacks) Result // onContextInit)(ma_context*
+	onContextUninit           fn (p_context &Context) Result // onContextUninit)(ma_context*
+	onContextEnumerateDevices fn (p_context &Context, callback C.ma_enum_devices_callback_proc, p_user_data voidptr) Result // onContextEnumerateDevices)(ma_context*
+	onContextGetDeviceInfo    fn (p_context &Context, device_type DeviceType, const_p_device_id &DeviceId, p_device_info &DeviceInfo) Result // onContextGetDeviceInfo)(ma_context*
+	onDeviceInit              fn (p_device &Device, const_p_config &DeviceConfig, p_descriptor_playback &DeviceDescriptor, p_descriptor_capture &DeviceDescriptor) Result // onDeviceInit)(ma_device*
+	onDeviceUninit            fn (p_device &Device) Result // onDeviceUninit)(ma_device*
+	onDeviceStart             fn (p_device &Device) Result // onDeviceStart)(ma_device*
+	onDeviceStop              fn (p_device &Device) Result // onDeviceStop)(ma_device*
+	onDeviceRead              fn (p_device &Device, p_frames voidptr, frame_count u32, p_frames_read &u32) Result // onDeviceRead)(ma_device*
+	onDeviceWrite             fn (p_device &Device, const_p_frames voidptr, frame_count u32, p_frames_written &u32) Result // onDeviceWrite)(ma_device*
+	onDeviceDataLoop          fn (p_device &Device) Result // onDeviceDataLoop)(ma_device*
+	onDeviceDataLoopWakeup    fn (p_device &Device) Result // onDeviceDataLoopWakeup)(ma_device*
+	onDeviceGetInfo           fn (p_device &Device, @type DeviceType, p_device_info &DeviceInfo) Result // onDeviceGetInfo)(ma_device*
+}
+
+pub type BackendCallbacks = C.ma_backend_callbacks
+
+[typedef]
+struct C.ma_context_config {
+pub mut:
+	pLog                &Log = unsafe { nil }
+	threadPriority      ThreadPriority
+	threadStackSize     usize
+	pUserData           voidptr
+	allocationCallbacks AllocationCallbacks
+	// TODO 	 C.struct
+	// TODO 	alsa C.}
+	// TODO 	char* C.  // pServerName
+	tryAutoSpawn u32 // Enables autospawning of the PulseAudio daemon if necessary.
+	// TODO 	pulse C.}
+	sessionCategoryOptions   u32
+	noAudioSessionActivate   u32 // iOS only. When set to true, does not perform an explicit [[AVAudioSession sharedInstace] setActive:true] on initialization.
+	noAudioSessionDeactivate u32 // iOS only. When set to true, does not perform an explicit [[AVAudioSession sharedInstace] setActive:false] on uninitialization.
+	// TODO 	coreaudio C.}
+	tryStartServer u32
+	// TODO 	jack C.}
+	custom BackendCallbacks
+}
+
+pub type ContextConfig = C.ma_context_config
+
+[typedef]
 struct C.ma_context_command__wasapi {
+pub mut:
 	code   int
-	pEvent &Event // This will be signalled when the event is complete.
+	pEvent &Event = unsafe { nil } // This will be signalled when the event is complete.
 	// TODO 	 C.union
 	// TODO 	quit C.}
 	pAudioClient         voidptr
 	ppAudioClientService voidptr
-	pResult              &Result // The result from creating the audio client service.
+	pResult              &Result = unsafe { nil } // The result from creating the audio client service.
 	// TODO 	createAudioClient C.}
 	deviceType DeviceType
 	// TODO 	releaseAudioClient C.}
@@ -4803,6 +5019,513 @@ struct C.ma_context_command__wasapi {
 }
 
 pub type ContextCommandWasapi = C.ma_context_command__wasapi
+
+[typedef]
+struct C.ma_context {
+pub mut:
+	callbacks               BackendCallbacks
+	backend                 Backend // DirectSound, ALSA, etc.
+	pLog                    &Log = unsafe { nil }
+	log                     Log // Only used if the log is owned by the context. The pLog member will be set to &log in this case.
+	threadPriority          ThreadPriority
+	threadStackSize         usize
+	pUserData               voidptr
+	allocationCallbacks     AllocationCallbacks
+	deviceEnumLock          C.ma_mutex // Used to make ma_context_get_devices() thread safe.
+	deviceInfoLock          C.ma_mutex // Used to make ma_context_get_device_info() thread safe.
+	deviceInfoCapacity      u32        // Total capacity of pDeviceInfos.
+	playbackDeviceInfoCount u32
+	captureDeviceInfoCount  u32
+	pDeviceInfos            &DeviceInfo = unsafe { nil } // Playback devices first, then capture.
+	// TODO 	 C.union
+	commandLock  C.ma_mutex
+	commandSem   Semaphore
+	commandIndex u32
+	commandCount u32
+	// TODO 	commands [4]ContextCommandWasapi
+	// TODO 	wasapi C.}
+	// TODO 	#ifdef C.#endif  // MA_SUPPORT_DSOUND
+	DirectSoundCreate            C.ma_proc
+	DirectSoundEnumerateA        C.ma_proc
+	DirectSoundCaptureCreate     C.ma_proc
+	DirectSoundCaptureEnumerateA C.ma_proc
+	// TODO 	dsound C.}
+	waveOutGetNumDevs      C.ma_proc
+	waveOutGetDevCapsA     C.ma_proc
+	waveOutOpen            C.ma_proc
+	waveOutClose           C.ma_proc
+	waveOutPrepareHeader   C.ma_proc
+	waveOutUnprepareHeader C.ma_proc
+	waveOutWrite           C.ma_proc
+	waveOutReset           C.ma_proc
+	waveInGetNumDevs       C.ma_proc
+	waveInGetDevCapsA      C.ma_proc
+	waveInOpen             C.ma_proc
+	waveInClose            C.ma_proc
+	waveInPrepareHeader    C.ma_proc
+	waveInUnprepareHeader  C.ma_proc
+	waveInAddBuffer        C.ma_proc
+	waveInStart            C.ma_proc
+	waveInReset            C.ma_proc
+	// TODO 	winmm C.}
+	snd_pcm_open                           C.ma_proc
+	snd_pcm_close                          C.ma_proc
+	snd_pcm_hw_params_sizeof               C.ma_proc
+	snd_pcm_hw_params_any                  C.ma_proc
+	snd_pcm_hw_params_set_format           C.ma_proc
+	snd_pcm_hw_params_set_format_first     C.ma_proc
+	snd_pcm_hw_params_get_format_mask      C.ma_proc
+	snd_pcm_hw_params_set_channels         C.ma_proc
+	snd_pcm_hw_params_set_channels_near    C.ma_proc
+	snd_pcm_hw_params_set_channels_minmax  C.ma_proc
+	snd_pcm_hw_params_set_rate_resample    C.ma_proc
+	snd_pcm_hw_params_set_rate             C.ma_proc
+	snd_pcm_hw_params_set_rate_near        C.ma_proc
+	snd_pcm_hw_params_set_buffer_size_near C.ma_proc
+	snd_pcm_hw_params_set_periods_near     C.ma_proc
+	snd_pcm_hw_params_set_access           C.ma_proc
+	snd_pcm_hw_params_get_format           C.ma_proc
+	snd_pcm_hw_params_get_channels         C.ma_proc
+	snd_pcm_hw_params_get_channels_min     C.ma_proc
+	snd_pcm_hw_params_get_channels_max     C.ma_proc
+	snd_pcm_hw_params_get_rate             C.ma_proc
+	snd_pcm_hw_params_get_rate_min         C.ma_proc
+	snd_pcm_hw_params_get_rate_max         C.ma_proc
+	snd_pcm_hw_params_get_buffer_size      C.ma_proc
+	snd_pcm_hw_params_get_periods          C.ma_proc
+	snd_pcm_hw_params_get_access           C.ma_proc
+	snd_pcm_hw_params_test_format          C.ma_proc
+	snd_pcm_hw_params_test_channels        C.ma_proc
+	snd_pcm_hw_params_test_rate            C.ma_proc
+	snd_pcm_hw_params                      C.ma_proc
+	snd_pcm_sw_params_sizeof               C.ma_proc
+	snd_pcm_sw_params_current              C.ma_proc
+	snd_pcm_sw_params_get_boundary         C.ma_proc
+	snd_pcm_sw_params_set_avail_min        C.ma_proc
+	snd_pcm_sw_params_set_start_threshold  C.ma_proc
+	snd_pcm_sw_params_set_stop_threshold   C.ma_proc
+	snd_pcm_sw_params                      C.ma_proc
+	snd_pcm_format_mask_sizeof             C.ma_proc
+	snd_pcm_format_mask_test               C.ma_proc
+	snd_pcm_get_chmap                      C.ma_proc
+	snd_pcm_state                          C.ma_proc
+	snd_pcm_prepare                        C.ma_proc
+	snd_pcm_start                          C.ma_proc
+	snd_pcm_drop                           C.ma_proc
+	snd_pcm_drain                          C.ma_proc
+	snd_pcm_reset                          C.ma_proc
+	snd_device_name_hint                   C.ma_proc
+	snd_device_name_get_hint               C.ma_proc
+	snd_card_get_index                     C.ma_proc
+	snd_device_name_free_hint              C.ma_proc
+	snd_pcm_mmap_begin                     C.ma_proc
+	snd_pcm_mmap_commit                    C.ma_proc
+	snd_pcm_recover                        C.ma_proc
+	snd_pcm_readi                          C.ma_proc
+	snd_pcm_writei                         C.ma_proc
+	snd_pcm_avail                          C.ma_proc
+	snd_pcm_avail_update                   C.ma_proc
+	snd_pcm_wait                           C.ma_proc
+	snd_pcm_nonblock                       C.ma_proc
+	snd_pcm_info                           C.ma_proc
+	snd_pcm_info_sizeof                    C.ma_proc
+	snd_pcm_info_get_name                  C.ma_proc
+	snd_pcm_poll_descriptors               C.ma_proc
+	snd_pcm_poll_descriptors_count         C.ma_proc
+	snd_pcm_poll_descriptors_revents       C.ma_proc
+	snd_config_update_free_global          C.ma_proc
+	internalDeviceEnumLock                 C.ma_mutex
+	useVerboseDeviceEnumeration            u32
+	// TODO 	alsa C.}
+	pa_mainloop_new                    C.ma_proc
+	pa_mainloop_free                   C.ma_proc
+	pa_mainloop_quit                   C.ma_proc
+	pa_mainloop_get_api                C.ma_proc
+	pa_mainloop_iterate                C.ma_proc
+	pa_mainloop_wakeup                 C.ma_proc
+	pa_threaded_mainloop_new           C.ma_proc
+	pa_threaded_mainloop_free          C.ma_proc
+	pa_threaded_mainloop_start         C.ma_proc
+	pa_threaded_mainloop_stop          C.ma_proc
+	pa_threaded_mainloop_lock          C.ma_proc
+	pa_threaded_mainloop_unlock        C.ma_proc
+	pa_threaded_mainloop_wait          C.ma_proc
+	pa_threaded_mainloop_signal        C.ma_proc
+	pa_threaded_mainloop_accept        C.ma_proc
+	pa_threaded_mainloop_get_retval    C.ma_proc
+	pa_threaded_mainloop_get_api       C.ma_proc
+	pa_threaded_mainloop_in_thread     C.ma_proc
+	pa_threaded_mainloop_set_name      C.ma_proc
+	pa_context_new                     C.ma_proc
+	pa_context_unref                   C.ma_proc
+	pa_context_connect                 C.ma_proc
+	pa_context_disconnect              C.ma_proc
+	pa_context_set_state_callback      C.ma_proc
+	pa_context_get_state               C.ma_proc
+	pa_context_get_sink_info_list      C.ma_proc
+	pa_context_get_source_info_list    C.ma_proc
+	pa_context_get_sink_info_by_name   C.ma_proc
+	pa_context_get_source_info_by_name C.ma_proc
+	pa_operation_unref                 C.ma_proc
+	pa_operation_get_state             C.ma_proc
+	pa_channel_map_init_extend         C.ma_proc
+	pa_channel_map_valid               C.ma_proc
+	pa_channel_map_compatible          C.ma_proc
+	pa_stream_new                      C.ma_proc
+	pa_stream_unref                    C.ma_proc
+	pa_stream_connect_playback         C.ma_proc
+	pa_stream_connect_record           C.ma_proc
+	pa_stream_disconnect               C.ma_proc
+	pa_stream_get_state                C.ma_proc
+	pa_stream_get_sample_spec          C.ma_proc
+	pa_stream_get_channel_map          C.ma_proc
+	pa_stream_get_buffer_attr          C.ma_proc
+	pa_stream_set_buffer_attr          C.ma_proc
+	pa_stream_get_device_name          C.ma_proc
+	pa_stream_set_write_callback       C.ma_proc
+	pa_stream_set_read_callback        C.ma_proc
+	pa_stream_set_suspended_callback   C.ma_proc
+	pa_stream_set_moved_callback       C.ma_proc
+	pa_stream_is_suspended             C.ma_proc
+	pa_stream_flush                    C.ma_proc
+	pa_stream_drain                    C.ma_proc
+	pa_stream_is_corked                C.ma_proc
+	pa_stream_cork                     C.ma_proc
+	pa_stream_trigger                  C.ma_proc
+	pa_stream_begin_write              C.ma_proc
+	pa_stream_write                    C.ma_proc
+	pa_stream_peek                     C.ma_proc
+	pa_stream_drop                     C.ma_proc
+	pa_stream_writable_size            C.ma_proc
+	pa_stream_readable_size            C.ma_proc   // pa_mainloop*
+	pMainLoop                          C.ma_ptr  // pa_context*
+	pPulseContext                      C.ma_ptr
+	pApplicationName                   &char = unsafe { nil } // Set when the context is initialized. Used by devices for their local pa_context objects.
+	pServerName                        &char = unsafe { nil } // Set when the context is initialized. Used by devices for their local pa_context objects.
+	// TODO 	pulse C.}
+	jack_client_open              C.ma_proc
+	jack_client_close             C.ma_proc
+	jack_client_name_size         C.ma_proc
+	jack_set_process_callback     C.ma_proc
+	jack_set_buffer_size_callback C.ma_proc
+	jack_on_shutdown              C.ma_proc
+	jack_get_sample_rate          C.ma_proc
+	jack_get_buffer_size          C.ma_proc
+	jack_get_ports                C.ma_proc
+	jack_activate                 C.ma_proc
+	jack_deactivate               C.ma_proc
+	jack_connect                  C.ma_proc
+	jack_port_register            C.ma_proc
+	jack_port_name                C.ma_proc
+	jack_port_get_buffer          C.ma_proc
+	jack_free                     C.ma_proc
+	pClientName                   &char = unsafe { nil }
+	tryStartServer                u32
+	// TODO 	jack C.}
+	CFStringGetCString                C.ma_proc
+	CFRelease                         C.ma_proc
+	hCoreAudio                        C.ma_handle
+	AudioObjectGetPropertyData        C.ma_proc
+	AudioObjectGetPropertyDataSize    C.ma_proc
+	AudioObjectSetPropertyData        C.ma_proc
+	AudioObjectAddPropertyListener    C.ma_proc
+	AudioObjectRemovePropertyListener C.ma_proc
+	hAudioUnit                        C.ma_handle // Could possibly be set to AudioToolbox on later versions of macOS.
+	AudioComponentFindNext            C.ma_proc
+	AudioComponentInstanceDispose     C.ma_proc
+	AudioComponentInstanceNew         C.ma_proc
+	AudioOutputUnitStart              C.ma_proc
+	AudioOutputUnitStop               C.ma_proc
+	AudioUnitAddPropertyListener      C.ma_proc
+	AudioUnitGetPropertyInfo          C.ma_proc
+	AudioUnitGetProperty              C.ma_proc
+	AudioUnitSetProperty              C.ma_proc
+	AudioUnitInitialize               C.ma_proc
+	AudioUnitRender                   C.ma_proc   // AudioComponent
+	component                         C.ma_ptr
+	noAudioSessionDeactivate          u32       // For tracking whether or not the iOS audio session should be explicitly deactivated. Set from the config in ma_context_init__coreaudio().
+	// TODO 	coreaudio C.}
+	sio_open    C.ma_proc
+	sio_close   C.ma_proc
+	sio_setpar  C.ma_proc
+	sio_getpar  C.ma_proc
+	sio_getcap  C.ma_proc
+	sio_start   C.ma_proc
+	sio_stop    C.ma_proc
+	sio_read    C.ma_proc
+	sio_write   C.ma_proc
+	sio_onmove  C.ma_proc
+	sio_nfds    C.ma_proc
+	sio_pollfd  C.ma_proc
+	sio_revents C.ma_proc
+	sio_eof     C.ma_proc
+	sio_setvol  C.ma_proc
+	sio_onvol   C.ma_proc
+	sio_initpar C.ma_proc
+	// TODO 	sndio C.}
+	// TODO 	audio4 C.}
+	versionMinor int
+	// TODO 	oss C.}
+	AAudio_createStreamBuilder                    C.ma_proc
+	AAudioStreamBuilder_delete                    C.ma_proc
+	AAudioStreamBuilder_setDeviceId               C.ma_proc
+	AAudioStreamBuilder_setDirection              C.ma_proc
+	AAudioStreamBuilder_setSharingMode            C.ma_proc
+	AAudioStreamBuilder_setFormat                 C.ma_proc
+	AAudioStreamBuilder_setChannelCount           C.ma_proc
+	AAudioStreamBuilder_setSampleRate             C.ma_proc
+	AAudioStreamBuilder_setBufferCapacityInFrames C.ma_proc
+	AAudioStreamBuilder_setFramesPerDataCallback  C.ma_proc
+	AAudioStreamBuilder_setDataCallback           C.ma_proc
+	AAudioStreamBuilder_setErrorCallback          C.ma_proc
+	AAudioStreamBuilder_setPerformanceMode        C.ma_proc
+	AAudioStreamBuilder_setUsage                  C.ma_proc
+	AAudioStreamBuilder_setContentType            C.ma_proc
+	AAudioStreamBuilder_setInputPreset            C.ma_proc
+	AAudioStreamBuilder_openStream                C.ma_proc
+	AAudioStream_close                            C.ma_proc
+	AAudioStream_getState                         C.ma_proc
+	AAudioStream_waitForStateChange               C.ma_proc
+	AAudioStream_getFormat                        C.ma_proc
+	AAudioStream_getChannelCount                  C.ma_proc
+	AAudioStream_getSampleRate                    C.ma_proc
+	AAudioStream_getBufferCapacityInFrames        C.ma_proc
+	AAudioStream_getFramesPerDataCallback         C.ma_proc
+	AAudioStream_getFramesPerBurst                C.ma_proc
+	AAudioStream_requestStart                     C.ma_proc
+	AAudioStream_requestStop                      C.ma_proc
+	jobThread                                     DeviceJobThread // For processing operations outside of the error callback, specifically device disconnections and rerouting.
+	// TODO 	aaudio C.}
+	SL_IID_ENGINE                    C.ma_handle
+	SL_IID_AUDIOIODEVICECAPABILITIES C.ma_handle
+	SL_IID_ANDROIDSIMPLEBUFFERQUEUE  C.ma_handle
+	SL_IID_RECORD                    C.ma_handle
+	SL_IID_PLAY                      C.ma_handle
+	SL_IID_OUTPUTMIX                 C.ma_handle
+	SL_IID_ANDROIDCONFIGURATION      C.ma_handle
+	// TODO 	opensl C.}
+	// TODO 	webaudio C.}
+	// TODO 	null_backend C.}
+	hOle32DLL           C.ma_handle
+	CoInitializeEx      C.ma_proc
+	CoUninitialize      C.ma_proc
+	CoCreateInstance    C.ma_proc
+	CoTaskMemFree       C.ma_proc
+	PropVariantClear    C.ma_proc
+	StringFromGUID2     C.ma_proc       // HMODULE
+	hUser32DLL          C.ma_handle
+	GetForegroundWindow C.ma_proc
+	GetDesktopWindow    C.ma_proc // HMODULE
+	hAdvapi32DLL        C.ma_handle
+	RegOpenKeyExA       C.ma_proc
+	RegCloseKey         C.ma_proc
+	RegQueryValueExA    C.ma_proc
+	// TODO 	win32 C.}
+	pthread_create              C.ma_proc
+	pthread_join                C.ma_proc
+	pthread_mutex_init          C.ma_proc
+	pthread_mutex_destroy       C.ma_proc
+	pthread_mutex_lock          C.ma_proc
+	pthread_mutex_unlock        C.ma_proc
+	pthread_cond_init           C.ma_proc
+	pthread_cond_destroy        C.ma_proc
+	pthread_cond_wait           C.ma_proc
+	pthread_cond_signal         C.ma_proc
+	pthread_attr_init           C.ma_proc
+	pthread_attr_destroy        C.ma_proc
+	pthread_attr_setschedpolicy C.ma_proc
+	pthread_attr_getschedparam  C.ma_proc
+	pthread_attr_setschedparam  C.ma_proc
+	// TODO 	posix C.}
+}
+
+pub type Context = C.ma_context
+
+[typedef]
+struct C.ma_device {
+pub mut:
+	pContext   &Context = unsafe { nil }
+	@type      DeviceType
+	sampleRate u32
+	// TODO MA_ATOMIC(4, ma_device_state) state
+	onData                    C.ma_device_data_proc // Set once at initialization time and should not be changed after.
+	onNotification            C.ma_device_notification_proc // Set once at initialization time and should not be changed after.
+	onStop                    C.ma_stop_proc // DEPRECATED. Use the notification callback instead. Set once at initialization time and should not be changed after.
+	pUserData                 voidptr        // Application defined data.
+	startStopLock             C.ma_mutex
+	wakeupEvent               Event
+	startEvent                Event
+	stopEvent                 Event
+	thread                    C.ma_thread
+	workResult                Result // This is set by the worker thread after it's finished doing a job.
+	isOwnerOfContext          u8     // When set to true, uninitializing the device will also uninitialize the context. Set to true when NULL is passed into ma_device_init().
+	noPreSilencedOutputBuffer u8
+	noClip                    u8
+	noDisableDenormals        u8
+	noFixedSizedCallback      u8
+	/*
+	// TODO MA_ATOMIC(4, float) masterVolumeFactor
+	duplexRB DuplexRb // Intermediary buffer for duplex device on asynchronous backends.
+	// TODO 	 C.struct
+	//pBackendVTable   &ResamplingBackendVtable = unsafe { nil }
+	pBackendUserData voidptr
+	// TODO 	linear C.}
+	// TODO 	resampling C.}
+	id DeviceId // If using an explicit device, will be set to a copy of the ID used for initialization. Otherwise cleared to 0.
+	// TODO 	name [MA_MAX_DEVICE_NAME_LENGTHchar  // + Maybe temporary. Likely to be replaced with a query API.
+	shareMode ShareMode // Set to whatever was passed in when the device was initialized.
+	format    Format
+	channels  u32
+	// TODO 	channelMap [MA_MAX_CHANNELS]u8
+	internalFormat     Format
+	internalChannels   u32
+	internalSampleRate u32
+	// TODO 	internalChannelMap [MA_MAX_CHANNELS]u8
+	internalPeriodSizeInFrames u32
+	internalPeriods            u32
+	channelMixMode             ChannelMixMode
+	converter                  DataConverter
+	pIntermediaryBuffer        voidptr // For implementing fixed sized buffer callbacks. Will be null if using variable sized callbacks.
+	intermediaryBufferCap      u32
+	intermediaryBufferLen      u32     // How many valid frames are sitting in the intermediary buffer.
+	pInputCache                voidptr // In external format. Can be null.
+	inputCacheCap              u64
+	inputCacheConsumed         u64
+	inputCacheRemaining        u64
+	// TODO 	playback C.}
+	// TODO 	name [MA_MAX_DEVICE_NAME_LENGTHchar  // + Maybe temporary. Likely to be replaced with a query API.
+	// TODO 	channelMap [MA_MAX_CHANNELS]u8
+	// TODO 	internalChannelMap [MA_MAX_CHANNELS]u8
+	// TODO 	capture C.}
+	pAudioClientPlayback C.ma_ptr // IAudioClient*
+	pAudioClientCapture  C.ma_ptr // IAudioRenderClient*
+	pRenderClient        C.ma_ptr // IAudioCaptureClient*
+	pCaptureClient       C.ma_ptr // IMMDeviceEnumerator*
+	pDeviceEnumerator    C.ma_ptr // Used for IMMNotificationClient notifications. Required for detecting default device changes.
+	// TODO 	notificationClient IMMNotificationClient  // HANDLE
+	hEventPlayback                   C.ma_handle // Auto reset. Initialized to signaled.
+	hEventCapture                    C.ma_handle // Auto reset. Initialized to unsignaled.
+	actualBufferSizeInFramesPlayback u32 // Value from GetBufferSize(). internalPeriodSizeInFrames is not set to the _actual_ buffer size when low-latency shared mode is being used due to the way the IAudioClient3 API works.
+	actualBufferSizeInFramesCapture  u32
+	originalPeriodSizeInFrames       u32
+	originalPeriodSizeInMilliseconds u32
+	originalPeriods                  u32
+	originalPerformanceProfile       PerformanceProfile
+	periodSizeInFramesPlayback       u32
+	periodSizeInFramesCapture        u32
+	pMappedBufferCapture             voidptr
+	mappedBufferCaptureCap           u32
+	mappedBufferCaptureLen           u32
+	pMappedBufferPlayback            voidptr
+	mappedBufferPlaybackCap          u32
+	mappedBufferPlaybackLen          u32
+	// TODO MA_ATOMIC(4, ma_bool32) isStartedCapture
+	// TODO MA_ATOMIC(4, ma_bool32) isStartedPlayback
+	noAutoConvertSRC               u8 // When set to true, disables the use of AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM.
+	noDefaultQualitySRC            u8 // When set to true, disables the use of AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY.
+	noHardwareOffloading           u8
+	allowCaptureAutoStreamRouting  u8
+	allowPlaybackAutoStreamRouting u8
+	isDetachedPlayback             u8
+	isDetachedCapture              u8
+	// TODO 	wasapi C.}
+	// TODO 	#ifdef C.#endif  // MA_SUPPORT_DSOUND
+	pPlayback              C.ma_ptr // LPDIRECTSOUNDBUFFER
+	pPlaybackPrimaryBuffer C.ma_ptr // LPDIRECTSOUNDBUFFER
+	pPlaybackBuffer        C.ma_ptr // LPDIRECTSOUNDCAPTURE
+	pCapture               C.ma_ptr // LPDIRECTSOUNDCAPTUREBUFFER
+	pCaptureBuffer         C.ma_ptr
+	// TODO 	dsound C.}
+	hDevicePlayback              C.ma_handle // HWAVEIN
+	hDeviceCapture               C.ma_handle // HANDLE
+	fragmentSizeInFrames         u32
+	iNextHeaderPlayback          u32 // [0,periods). Used as an index into pWAVEHDRPlayback.
+	iNextHeaderCapture           u32 // [0,periods). Used as an index into pWAVEHDRCapture.
+	headerFramesConsumedPlayback u32 // The number of PCM frames consumed in the buffer in pWAVEHEADER[iNextHeader].
+	headerFramesConsumedCapture  u32 // ^^^
+	pWAVEHDRPlayback             &u8 = unsafe { nil } // One instantiation for each period.
+	pWAVEHDRCapture              &u8 = unsafe { nil } // One instantiation for each period.
+	pIntermediaryBufferPlayback  &u8 = unsafe { nil }
+	pIntermediaryBufferCapture   &u8 = unsafe { nil }
+	_pHeapData                   &u8 = unsafe { nil } // Used internally and is used for the heap allocated data for the intermediary buffer and the WAVEHDR structures.
+	// TODO 	winmm C.}
+	pPCMPlayback                C.ma_ptr // snd_pcm_t*
+	pPCMCapture                 C.ma_ptr // struct pollfd*
+	pPollDescriptorsPlayback    voidptr  // struct pollfd*
+	pPollDescriptorsCapture     voidptr
+	pollDescriptorCountPlayback int
+	pollDescriptorCountCapture  int
+	wakeupfdPlayback            int // eventfd for waking up from poll() when the playback device is stopped.
+	wakeupfdCapture             int // eventfd for waking up from poll() when the capture device is stopped.
+	isUsingMMapPlayback         u8
+	isUsingMMapCapture          u8
+	// TODO 	alsa C.}
+	pMainLoop       C.ma_ptr // pa_context*
+	pPulseContext   C.ma_ptr // pa_stream*
+	pStreamPlayback C.ma_ptr // pa_stream*
+	pStreamCapture  C.ma_ptr
+	// TODO 	pulse C.}
+	pClient         C.ma_ptr  // jack_port_t*
+	ppPortsPlayback &C.ma_ptr = unsafe { nil } // jack_port_t*
+	ppPortsCapture  &C.ma_ptr = unsafe { nil }
+	// TODO 	jack C.}
+	deviceObjectIDCapture     u32      // AudioUnit
+	audioUnitPlayback         C.ma_ptr // AudioUnit
+	audioUnitCapture          C.ma_ptr // AudioBufferList*
+	pAudioBufferList          C.ma_ptr // Only used for input devices.
+	audioBufferCapInFrames    u32      // Only used for input devices. The capacity in frames of each buffer in pAudioBufferList.
+	isDefaultPlaybackDevice   u32
+	isDefaultCaptureDevice    u32
+	isSwitchingPlaybackDevice u32     // <-- Set to true when the default device has changed and miniaudio is in the process of switching.
+	isSwitchingCaptureDevice  u32     // <-- Set to true when the default device has changed and miniaudio is in the process of switching.
+	pNotificationHandler      voidptr // Only used on mobile platforms. Obj-C object for handling route changes.
+	// TODO 	coreaudio C.}
+	handleCapture     C.ma_ptr
+	isStartedPlayback u32
+	isStartedCapture  u32
+	// TODO 	sndio C.}
+	fdCapture int
+	// TODO 	audio4 C.}
+	// TODO 	oss C.}
+	usage                   AaudioUsage
+	contentType             AaudioContentType
+	inputPreset             AaudioInputPreset
+	noAutoStartAfterReroute u32
+	// TODO 	aaudio C.}
+	pOutputMixObj              C.ma_ptr // SLOutputMixItf
+	pOutputMix                 C.ma_ptr // SLObjectItf
+	pAudioPlayerObj            C.ma_ptr // SLPlayItf
+	pAudioPlayer               C.ma_ptr // SLObjectItf
+	pAudioRecorderObj          C.ma_ptr // SLRecordItf
+	pAudioRecorder             C.ma_ptr // SLAndroidSimpleBufferQueueItf
+	pBufferQueuePlayback       C.ma_ptr // SLAndroidSimpleBufferQueueItf
+	pBufferQueueCapture        C.ma_ptr
+	isDrainingCapture          u32
+	isDrainingPlayback         u32
+	currentBufferIndexPlayback u32
+	currentBufferIndexCapture  u32
+	pBufferPlayback            &u8 = unsafe { nil } // This is malloc()'d and is used for storing audio data. Typed as ma_uint8 for easy offsetting.
+	pBufferCapture             &u8 = unsafe { nil }
+	// TODO 	opensl C.}
+	indexCapture int
+	// TODO 	webaudio C.}
+	operationEvent                       Event
+	operationCompletionEvent             Event
+	operationSemaphore                   Semaphore
+	operation                            u32
+	operationResult                      Result
+	timer                                Timer
+	priorRunTime                         f64
+	currentPeriodFramesRemainingPlayback u32
+	currentPeriodFramesRemainingCapture  u32
+	lastProcessedFramePlayback           u64
+	lastProcessedFrameCapture            u64
+	// TODO MA_ATOMIC(4, ma_bool32) isStarted
+	// TODO 	null_device C.}
+	*/
+}
+
+pub type Device = C.ma_device
 
 // C: `MA_API ma_context_config ma_context_config_init(void)`
 fn C.ma_context_config_init() ContextConfig
@@ -6914,6 +7637,7 @@ pub const data_source_self_managed_range_and_loop_point = 0x00000001
 
 [typedef]
 struct C.ma_data_source_vtable {
+pub mut:
 	onRead          fn (p_data_source voidptr, p_frames_out voidptr, frame_count u64, p_frames_read &u64) Result // onRead)(ma_data_source*
 	onSeek          fn (p_data_source voidptr, frame_index u64) Result // onSeek)(ma_data_source*
 	onGetDataFormat fn (p_data_source voidptr, p_format &Format, p_channels &u32, p_sample_rate &u32, p_channel_map &u8, channel_map_cap usize) Result // onGetDataFormat)(ma_data_source*
@@ -6931,7 +7655,7 @@ pub type DataSourceGetNextProc = fn (p_data_source voidptr) voidptr
 
 [typedef]
 struct C.ma_data_source_config {
-	// TODO 	ma_data_source_vtable* C. // vtable
+	// TODO 	ma_data_source_vtable* C.  // vtable
 }
 
 pub type DataSourceConfig = C.ma_data_source_config
@@ -6946,7 +7670,8 @@ pub fn data_source_config_init() DataSourceConfig {
 
 [typedef]
 struct C.ma_data_source_base {
-	// TODO 	ma_data_source_vtable* C. // vtable
+pub mut:
+	// TODO 	ma_data_source_vtable* C.  // vtable
 	rangeBegInFrames u64
 	rangeEndInFrames u64     // Set to -1 for unranged (default).
 	loopBegInFrames  u64     // Relative to rangeBegInFrames.
@@ -7143,13 +7868,14 @@ pub fn data_source_get_next_callback(const_p_data_source voidptr) C.ma_data_sour
 
 [typedef]
 struct C.ma_audio_buffer_ref {
+pub mut:
 	ds           DataSourceBase
 	format       Format
 	channels     u32
 	sampleRate   u32
 	cursor       u64
 	sizeInFrames u64
-	// TODO 	void* C. // pData
+	// TODO 	void* C.  // pData
 }
 
 pub type AudioBufferRef = C.ma_audio_buffer_ref
@@ -7246,11 +7972,12 @@ pub fn audio_buffer_ref_get_available_frames(const_p_audio_buffer_ref &AudioBuff
 
 [typedef]
 struct C.ma_audio_buffer_config {
+pub mut:
 	format       Format
 	channels     u32
 	sampleRate   u32
 	sizeInFrames u64
-	// TODO 	void* C. // pData If set to NULL, will allocate a block of memory for you.
+	// TODO 	void* C.  // pData If set to NULL, will allocate a block of memory for you.
 	allocationCallbacks AllocationCallbacks
 }
 
@@ -7267,10 +7994,11 @@ pub fn audio_buffer_config_init(format Format, channels u32, size_in_frames u64,
 
 [typedef]
 struct C.ma_audio_buffer {
+pub mut:
 	ref                 AudioBufferRef
 	allocationCallbacks AllocationCallbacks
 	ownsData            u32 // Used to control whether or not miniaudio owns the data buffer. If set to true, pData will be freed in ma_audio_buffer_uninit().
-	// TODO 	_pExtraData [1]u8 // For allocating a buffer with the memory located directly after the other memory of the structure.
+	// TODO 	_pExtraData [1]u8  // For allocating a buffer with the memory located directly after the other memory of the structure.
 }
 
 pub type AudioBuffer = C.ma_audio_buffer
@@ -7381,12 +8109,18 @@ pub fn audio_buffer_get_available_frames(const_p_audio_buffer &AudioBuffer, p_av
 }
 
 [typedef]
-struct C.ma_paged_audio_buffer_page {}
+struct C.ma_paged_audio_buffer_page {
+pub mut:
+	// TODO MA_ATOMIC(MA_SIZEOF_PTR, ma_paged_audio_buffer_page*) pNext
+	sizeInFrames u64
+	// TODO 	pAudioData [1]u8
+}
 
 pub type PagedAudioBufferPage = C.ma_paged_audio_buffer_page
 
 [typedef]
 struct C.ma_paged_audio_buffer_data {
+pub mut:
 	format   Format
 	channels u32
 	head     PagedAudioBufferPage // Dummy head for the lock-free algorithm. Always has a size of 0.
@@ -7471,7 +8205,8 @@ pub fn paged_audio_buffer_data_allocate_and_append_page(p_data &PagedAudioBuffer
 
 [typedef]
 struct C.ma_paged_audio_buffer_config {
-	pData &PagedAudioBufferData // Must not be null.
+pub mut:
+	pData &PagedAudioBufferData = unsafe { nil } // Must not be null.
 }
 
 pub type PagedAudioBufferConfig = C.ma_paged_audio_buffer_config
@@ -7486,9 +8221,10 @@ pub fn paged_audio_buffer_config_init(p_data &PagedAudioBufferData) PagedAudioBu
 
 [typedef]
 struct C.ma_paged_audio_buffer {
+pub mut:
 	ds             DataSourceBase
-	pData          &PagedAudioBufferData // Audio data is read from here. Cannot be null.
-	pCurrent       &PagedAudioBufferPage
+	pData          &PagedAudioBufferData = unsafe { nil } // Audio data is read from here. Cannot be null.
+	pCurrent       &PagedAudioBufferPage = unsafe { nil }
 	relativeCursor u64 // Relative to the current page.
 	absoluteCursor u64
 }
@@ -7559,6 +8295,7 @@ pub enum SeekOrigin {
 
 [typedef]
 struct C.ma_file_info {
+pub mut:
 	sizeInBytes u64
 }
 
@@ -7566,6 +8303,7 @@ pub type FileInfo = C.ma_file_info
 
 [typedef]
 struct C.ma_vfs_callbacks {
+pub mut:
 	onOpen  fn (p_vfs voidptr, const_p_file_path &char, open_mode u32, p_file &C.ma_vfs_file) Result // onOpen)
 	onOpenW fn (p_vfs voidptr, const_p_file_path &u16, open_mode u32, p_file &C.ma_vfs_file) Result  // onOpenW)(ma_vfs*
 	onClose fn (p_vfs voidptr, file C.ma_vfs_file) Result // onClose)(ma_vfs*
@@ -7652,6 +8390,7 @@ pub fn vfs_open_and_read_file(p_vfs voidptr, const_p_file_path &char, pp_data vo
 
 [typedef]
 struct C.ma_default_vfs {
+pub mut:
 	cb                  VfsCallbacks
 	allocationCallbacks AllocationCallbacks // Only used for the wchar_t version of open() on non-Windows platforms.
 }
@@ -7688,12 +8427,8 @@ pub enum EncodingFormat {
 }
 
 [typedef]
-struct C.ma_decoder {}
-
-pub type Decoder = C.ma_decoder
-
-[typedef]
 struct C.ma_decoding_backend_config {
+pub mut:
 	preferredFormat Format
 	seekPointCount  u32 // Set to > 0 to generate a seektable if the decoding backend supports it.
 }
@@ -7710,6 +8445,7 @@ pub fn decoding_backend_config_init(preferred_format Format, seek_point_count u3
 
 [typedef]
 struct C.ma_decoding_backend_vtable {
+pub mut:
 	onInit       fn (p_user_data voidptr, on_read C.ma_read_proc, on_seek C.ma_seek_proc, on_tell C.ma_tell_proc, p_read_seek_tell_user_data voidptr, const_p_config &DecodingBackendConfig, const_p_allocation_callbacks &AllocationCallbacks, pp_backend voidptr) Result // onInit
 	onInitFile   fn (p_user_data voidptr, const_p_file_path &char, const_p_config &DecodingBackendConfig, const_p_allocation_callbacks &AllocationCallbacks, pp_backend voidptr) Result // onInitFile Optional.
 	onInitFileW  fn (p_user_data voidptr, const_p_file_path &u16, const_p_config &DecodingBackendConfig, const_p_allocation_callbacks &AllocationCallbacks, pp_backend voidptr) Result  // onInitFileW Optional.
@@ -7732,22 +8468,55 @@ pub type DecoderTellProc = fn (p_decoder &Decoder, p_cursor &i64) Result
 
 [typedef]
 struct C.ma_decoder_config {
+pub mut:
 	format                 Format // Set to 0 or ma_format_unknown to use the stream's internal format.
 	channels               u32    // Set to 0 to use the stream's internal channels.
 	sampleRate             u32    // Set to 0 to use the stream's internal sample rate.
-	pChannelMap            &u8
+	pChannelMap            &u8 = unsafe { nil }
 	channelMixMode         ChannelMixMode
 	ditherMode             DitherMode
 	resampling             ResamplerConfig
 	allocationCallbacks    AllocationCallbacks
 	encodingFormat         EncodingFormat
 	seekPointCount         u32 // When set to > 0, specifies the number of seek points to use for the generation of a seek table. Not all decoding backends support this.
-	ppCustomBackendVTables &&DecodingBackendVtable
+	ppCustomBackendVTables &&DecodingBackendVtable = unsafe { nil }
 	customBackendCount     u32
 	pCustomBackendUserData voidptr
 }
 
 pub type DecoderConfig = C.ma_decoder_config
+
+[typedef]
+struct C.ma_decoder {
+pub mut:
+	ds       DataSourceBase
+	pBackend voidptr // The decoding backend we'll be pulling data from.
+	// TODO 	ma_decoding_backend_vtable* C.  // pBackendVTable The vtable for the decoding backend. This needs to be stored so we can access the onUninit() callback.
+	pBackendUserData       voidptr
+	onRead                 C.ma_decoder_read_proc
+	onSeek                 C.ma_decoder_seek_proc
+	onTell                 C.ma_decoder_tell_proc
+	pUserData              voidptr
+	readPointerInPCMFrames u64 // In output sample rate. Used for keeping track of how many frames are available for decoding.
+	outputFormat           Format
+	outputChannels         u32
+	outputSampleRate       u32
+	converter              DataConverter // Data conversion is achieved by running frames through this.
+	pInputCache            voidptr       // In input format. Can be null if it's not needed.
+	inputCacheCap          u64 // The capacity of the input cache.
+	inputCacheConsumed     u64 // The number of frames that have been consumed in the cache. Used for determining the next valid frame.
+	inputCacheRemaining    u64 // The number of valid frames remaining in the cahce.
+	allocationCallbacks    AllocationCallbacks
+	// TODO 	 C.union
+	// file C.ma_vfs_file
+	// TODO 	vfs C.}
+	// dataSize       usize
+	// currentReadPos usize
+	// TODO 	memory C.}  // Only used for decoders that were opened against a block of memory.
+	// TODO 	data C.}
+}
+
+pub type Decoder = C.ma_decoder
 
 // C: `MA_API ma_decoder_config ma_decoder_config_init(ma_format outputFormat, ma_uint32 outputChannels, ma_uint32 outputSampleRate)`
 fn C.ma_decoder_config_init(output_format Format, output_channels u32, output_sample_rate u32) DecoderConfig
@@ -7917,11 +8686,6 @@ pub fn decode_memory(const_p_data voidptr, data_size usize, p_config &DecoderCon
 	return C.ma_decode_memory(const_p_data, data_size, p_config, p_frame_count_out, pp_pcm_frames_out)
 }
 
-[typedef]
-struct C.ma_encoder {}
-
-pub type Encoder = C.ma_encoder
-
 // EncoderWriteProc is currently undocumented
 // C: typedef ma_result (* ma_encoder_write_proc)           (ma_encoder* pEncoder, const void* pBufferIn, size_t bytesToWrite, size_t* pBytesWritten);
 pub type EncoderWriteProc = fn (p_encoder &Encoder, const_p_buffer_in voidptr, bytes_to_write usize, p_bytes_written &usize) Result
@@ -7944,6 +8708,7 @@ pub type EncoderWritePcmFramesProc = fn (p_encoder &Encoder, const_p_frames_in v
 
 [typedef]
 struct C.ma_encoder_config {
+pub mut:
 	encodingFormat      EncodingFormat
 	format              Format
 	channels            u32
@@ -7960,6 +8725,25 @@ fn C.ma_encoder_config_init(encoding_format EncodingFormat, format Format, chann
 pub fn encoder_config_init(encoding_format EncodingFormat, format Format, channels u32, sample_rate u32) EncoderConfig {
 	return C.ma_encoder_config_init(encoding_format, format, channels, sample_rate)
 }
+
+[typedef]
+struct C.ma_encoder {
+pub mut:
+	config           EncoderConfig
+	onWrite          C.ma_encoder_write_proc
+	onSeek           C.ma_encoder_seek_proc
+	onInit           C.ma_encoder_init_proc
+	onUninit         C.ma_encoder_uninit_proc
+	onWritePCMFrames C.ma_encoder_write_pcm_frames_proc
+	pUserData        voidptr
+	pInternalEncoder voidptr // <-- The drwav/drflac/stb_vorbis/etc. objects.
+	// TODO 	 C.union
+	file C.ma_vfs_file
+	// TODO 	vfs C.}
+	// TODO 	data C.}
+}
+
+pub type Encoder = C.ma_encoder
 
 // C: `MA_API ma_result ma_encoder_init(ma_encoder_write_proc onWrite, ma_encoder_seek_proc onSeek, void* pUserData, const ma_encoder_config* pConfig, ma_encoder* pEncoder)`
 fn C.ma_encoder_init(on_write C.ma_encoder_write_proc, on_seek C.ma_encoder_seek_proc, p_user_data voidptr, const_p_config &EncoderConfig, p_encoder &Encoder) Result
@@ -8027,6 +8811,7 @@ pub enum WaveformType {
 
 [typedef]
 struct C.ma_waveform_config {
+pub mut:
 	format     Format
 	channels   u32
 	sampleRate u32
@@ -8048,6 +8833,7 @@ pub fn waveform_config_init(format Format, channels u32, sample_rate u32, @type 
 
 [typedef]
 struct C.ma_waveform {
+pub mut:
 	ds      DataSourceBase
 	config  WaveformConfig
 	advance f64
@@ -8129,6 +8915,7 @@ pub enum NoiseType {
 
 [typedef]
 struct C.ma_noise_config {
+pub mut:
 	format            Format
 	channels          u32
 	@type             NoiseType
@@ -8149,15 +8936,16 @@ pub fn noise_config_init(format Format, channels u32, @type NoiseType, seed int,
 
 [typedef]
 struct C.ma_noise {
+pub mut:
 	ds     DataSourceVtable
 	config NoiseConfig
 	lcg    Lcg
 	// TODO 	 C.union
-	accumulation &f64
-	counter      &u32
+	accumulation &f64 = unsafe { nil }
+	counter      &u32 = unsafe { nil }
 	// TODO 	pink C.}
 	// TODO 	brownian C.}
-	// TODO 	state C.} // Memory management.
+	// TODO 	state C.}  // Memory management.
 	_pHeap    voidptr
 	_ownsHeap u32
 }
@@ -8232,31 +9020,6 @@ pub fn noise_set_type(p_noise &Noise, @type NoiseType) Result {
 TODO Non-numerical: #define MA_NO_RESOURCE_MANAGER
 */
 
-[typedef]
-struct C.ma_resource_manager {}
-
-pub type ResourceManager = C.ma_resource_manager
-
-[typedef]
-struct C.ma_resource_manager_data_buffer_node {}
-
-pub type ResourceManagerDataBufferNode = C.ma_resource_manager_data_buffer_node
-
-[typedef]
-struct C.ma_resource_manager_data_buffer {}
-
-pub type ResourceManagerDataBuffer = C.ma_resource_manager_data_buffer
-
-[typedef]
-struct C.ma_resource_manager_data_stream {}
-
-pub type ResourceManagerDataStream = C.ma_resource_manager_data_stream
-
-[typedef]
-struct C.ma_resource_manager_data_source {}
-
-pub type ResourceManagerDataSource = C.ma_resource_manager_data_source
-
 // ResourceManagerDataSourceFlags is C.ma_resource_manager_data_source_flags
 pub enum ResourceManagerDataSourceFlags {
 	resource_manager_data_source_flag_stream = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM // 0x00000001, When set, does not load the entire data source in memory. Disk I/O will happen on job threads.
@@ -8268,14 +9031,16 @@ pub enum ResourceManagerDataSourceFlags {
 
 [typedef]
 struct C.ma_resource_manager_pipeline_stage_notification {
+pub mut:
 	pNotification voidptr
-	pFence        &Fence
+	pFence        &Fence = unsafe { nil }
 }
 
 pub type ResourceManagerPipelineStageNotification = C.ma_resource_manager_pipeline_stage_notification
 
 [typedef]
 struct C.ma_resource_manager_pipeline_notifications {
+pub mut:
 	init ResourceManagerPipelineStageNotification // Initialization of the decoder.
 	done ResourceManagerPipelineStageNotification // Decoding fully completed.
 }
@@ -8351,9 +9116,10 @@ pub enum ResourceManagerFlags {
 
 [typedef]
 struct C.ma_resource_manager_data_source_config {
-	// TODO 	char* C. // pFilePath
-	// TODO 	wchar_t* C. // pFilePathW
-	// TODO 	ma_resource_manager_pipeline_notifications* C. // pNotifications
+pub mut:
+	// TODO 	char* C.  // pFilePath
+	// TODO 	wchar_t* C.  // pFilePathW
+	// TODO 	ma_resource_manager_pipeline_notifications* C.  // pNotifications
 	initialSeekPointInPCMFrames u64
 	rangeBegInPCMFrames         u64
 	rangeEndInPCMFrames         u64
@@ -8383,6 +9149,7 @@ pub enum ResourceManagerDataSupplyType {
 
 [typedef]
 struct C.ma_resource_manager_data_supply {
+pub mut:
 	// TODO MA_ATOMIC(4, ma_resource_manager_data_supply_type) type
 	// TODO 	 C.union
 	sizeInBytes usize
@@ -8400,9 +9167,87 @@ struct C.ma_resource_manager_data_supply {
 pub type ResourceManagerDataSupply = C.ma_resource_manager_data_supply
 
 [typedef]
+struct C.ma_resource_manager_data_buffer_node {
+pub mut:
+	hashedName32 u32 // The hashed name. This is the key.
+	refCount     u32
+	// TODO MA_ATOMIC(4, ma_result) result
+	// TODO MA_ATOMIC(4, ma_uint32) executionCounter
+	// TODO MA_ATOMIC(4, ma_uint32) executionPointer
+	isDataOwnedByResourceManager u32 // Set to true when the underlying data buffer was allocated the resource manager. Set to false if it is owned by the application (via ma_resource_manager_register_*()).
+	data                         ResourceManagerDataSupply
+	pParent                      &ResourceManagerDataBufferNode = unsafe { nil }
+	pChildLo                     &ResourceManagerDataBufferNode = unsafe { nil }
+	pChildHi                     &ResourceManagerDataBufferNode = unsafe { nil }
+}
+
+pub type ResourceManagerDataBufferNode = C.ma_resource_manager_data_buffer_node
+
+[typedef]
+struct C.ma_resource_manager_data_buffer {
+pub mut:
+	ds               DataSourceBase   // Base data source. A data buffer is a data source.
+	pResourceManager &ResourceManager = unsafe { nil } // A pointer to the resource manager that owns this buffer.
+	pNode            &ResourceManagerDataBufferNode = unsafe { nil } // The data node. This is reference counted and is what supplies the data.
+	flags            u32                            // The flags that were passed used to initialize the buffer.
+	// TODO MA_ATOMIC(4, ma_uint32) executionCounter
+	// TODO MA_ATOMIC(4, ma_uint32) executionPointer
+	seekTargetInPCMFrames  u64 // Only updated by the public API. Never written nor read from the job thread.
+	seekToCursorOnNextRead u32 // On the next read we need to seek to the frame cursor.
+	// TODO MA_ATOMIC(4, ma_result) result
+	// TODO MA_ATOMIC(4, ma_bool32) isLooping
+	isConnectorInitialized u32 // Used for asynchronous loading to ensure we don't try to initialize the connector multiple times while waiting for the node to fully load.
+	// TODO 	 C.union  // Supply type is ma_resource_manager_data_supply_type_encoded
+	buffer      AudioBuffer      // Supply type is ma_resource_manager_data_supply_type_decoded
+	pagedBuffer PagedAudioBuffer // Supply type is ma_resource_manager_data_supply_type_decoded_paged
+	// TODO 	connector C.}  // Connects this object to the node's data supply.
+}
+
+pub type ResourceManagerDataBuffer = C.ma_resource_manager_data_buffer
+
+[typedef]
+struct C.ma_resource_manager_data_stream {
+pub mut:
+	ds                     DataSourceBase   // Base data source. A data stream is a data source.
+	pResourceManager       &ResourceManager = unsafe { nil } // A pointer to the resource manager that owns this data stream.
+	flags                  u32     // The flags that were passed used to initialize the stream.
+	decoder                Decoder // Used for filling pages with data. This is only ever accessed by the job thread. The public API should never touch this.
+	isDecoderInitialized   u32     // Required for determining whether or not the decoder should be uninitialized in MA_JOB_TYPE_RESOURCE_MANAGER_FREE_DATA_STREAM.
+	totalLengthInPCMFrames u64     // This is calculated when first loaded by the MA_JOB_TYPE_RESOURCE_MANAGER_LOAD_DATA_STREAM.
+	relativeCursor         u32     // The playback cursor, relative to the current page. Only ever accessed by the public API. Never accessed by the job thread.
+	// TODO MA_ATOMIC(8, ma_uint64) absoluteCursor
+	currentPageIndex u32 // Toggles between 0 and 1. Index 0 is the first half of pPageData. Index 1 is the second half. Only ever accessed by the public API. Never accessed by the job thread.
+	// TODO MA_ATOMIC(4, ma_uint32) executionCounter
+	// TODO MA_ATOMIC(4, ma_uint32) executionPointer
+	// TODO MA_ATOMIC(4, ma_bool32) isLooping
+	pPageData voidptr // Buffer containing the decoded data of each page. Allocated once at initialization time.
+	// TODO MA_ATOMIC(4, ma_uint32) pageFrameCount[2]
+	// TODO MA_ATOMIC(4, ma_result) result
+	// TODO MA_ATOMIC(4, ma_bool32) isDecoderAtEnd
+	// TODO MA_ATOMIC(4, ma_bool32) isPageValid[2]
+	// TODO MA_ATOMIC(4, ma_bool32) seekCounter
+}
+
+pub type ResourceManagerDataStream = C.ma_resource_manager_data_stream
+
+[typedef]
+struct C.ma_resource_manager_data_source {
+pub mut:
+	// TODO 	 C.union
+	stream ResourceManagerDataStream
+	// TODO 	backend C.}  // Must be the first item because we need the first item to be the data source callbacks for the buffer or stream.
+	flags u32 // The flags that were passed in to ma_resource_manager_data_source_init().
+	// TODO MA_ATOMIC(4, ma_uint32) executionCounter
+	// TODO MA_ATOMIC(4, ma_uint32) executionPointer
+}
+
+pub type ResourceManagerDataSource = C.ma_resource_manager_data_source
+
+[typedef]
 struct C.ma_resource_manager_config {
+pub mut:
 	allocationCallbacks            AllocationCallbacks
-	pLog                           &Log
+	pLog                           &Log = unsafe { nil }
 	decodedFormat                  Format // The decoded format to use. Set to ma_format_unknown (default) to use the file's native format.
 	decodedChannels                u32    // The decoded channel count to use. Set to 0 (default) to use the file's native channel count.
 	decodedSampleRate              u32    // the decoded sample rate to use. Set to 0 (default) to use the file's native sample rate.
@@ -8410,7 +9255,7 @@ struct C.ma_resource_manager_config {
 	jobQueueCapacity               u32    // The maximum number of jobs that can fit in the queue at a time. Defaults to MA_JOB_TYPE_RESOURCE_MANAGER_QUEUE_CAPACITY. Cannot be zero.
 	flags                          u32
 	pVFS                           voidptr // Can be NULL in which case defaults will be used.
-	ppCustomDecodingBackendVTables &&DecodingBackendVtable
+	ppCustomDecodingBackendVTables &&DecodingBackendVtable = unsafe { nil }
 	customDecodingBackendCount     u32
 	pCustomDecodingBackendUserData voidptr
 }
@@ -8424,6 +9269,20 @@ fn C.ma_resource_manager_config_init() ResourceManagerConfig
 pub fn resource_manager_config_init() ResourceManagerConfig {
 	return C.ma_resource_manager_config_init()
 }
+
+[typedef]
+struct C.ma_resource_manager {
+pub mut:
+	config              ResourceManagerConfig
+	pRootDataBufferNode &ResourceManagerDataBufferNode = unsafe { nil } // The root buffer in the binary tree.
+	// TODO 	MA_NO_THREADING C.#ifndef  // For synchronizing access to the data buffer binary tree.
+	// TODO 	jobThreads [MA_RESOURCE_MANAGER_MAX_JOB_THREAD_COUNT]C.ma_thread  // The threads for executing jobs.
+	// TODO 	 C.#endif  // Multi-consumer, multi-producer job queue for managing jobs for asynchronous decoding and streaming.
+	defaultVFS DefaultVfs // Only used if a custom VFS is not specified.
+	log        Log        // Only used if no log was specified in the config.
+}
+
+pub type ResourceManager = C.ma_resource_manager
 
 // C: `MA_API ma_result ma_resource_manager_init(const ma_resource_manager_config* pConfig, ma_resource_manager* pResourceManager)`
 fn C.ma_resource_manager_init(const_p_config &ResourceManagerConfig, p_resource_manager &ResourceManager) Result
@@ -8931,11 +9790,6 @@ pub const max_node_local_bus_count = 2
 // Use this when the bus count is determined by the node instance rather than the vtable.
 pub const node_bus_count_unknown = 255
 
-[typedef]
-struct C.ma_node_graph {}
-
-pub type NodeGraph = C.ma_node_graph
-
 // NodeFlags is C.ma_node_flags
 pub enum NodeFlags {
 	node_flag_passthrough = C.MA_NODE_FLAG_PASSTHROUGH // 0x00000001,
@@ -8953,6 +9807,7 @@ pub enum NodeState {
 
 [typedef]
 struct C.ma_node_vtable {
+pub mut:
 	onProcess                    fn (p_node voidptr, const_pp_frames_in &&f32, p_frame_count_in &u32, pp_frames_out &&f32, p_frame_count_out &u32) // onProcess)(ma_node*A callback for retrieving the number of a input frames that are required to output thespecified number of output frames. You would only want to implement this when the node performsresampling. This is optional, even for nodes that perform resampling, but it does offer asmall reduction in latency as it allows miniaudio to calculate the exact number of input framesto read at a time instead of having to estimate.
 	onGetRequiredInputFrameCount fn (p_node voidptr, output_frame_count u32, p_input_frame_count &u32) Result // onGetRequiredInputFrameCount)(ma_node*The number of input buses. This is how many sub-buffers will be contained in the `ppFramesIn`parameters of the callbacks above.
 	inputBusCount                u8 // The number of output buses. This is how many sub-buffers will be contained in the `ppFramesOut`parameters of the callbacks above.
@@ -8964,11 +9819,12 @@ pub type NodeVtable = C.ma_node_vtable
 
 [typedef]
 struct C.ma_node_config {
-	// TODO 	ma_node_vtable* C. // vtable Should never be null. Initialization of the node will fail if so.
+pub mut:
+	// TODO 	ma_node_vtable* C.  // vtable Should never be null. Initialization of the node will fail if so.
 	initialState   NodeState // Defaults to ma_node_state_started.
 	inputBusCount  u32       // Only used if the vtable specifies an input bus count of `MA_NODE_BUS_COUNT_UNKNOWN`, otherwise must be set to `MA_NODE_BUS_COUNT_UNKNOWN` (default).
 	outputBusCount u32       // Only used if the vtable specifies an output bus count of `MA_NODE_BUS_COUNT_UNKNOWN`, otherwisebe set to `MA_NODE_BUS_COUNT_UNKNOWN` (default).
-	// TODO 	ma_uint32* C. // pInputChannels The number of elements are determined by the input bus count as determined by the vtable, or `inputBusCount` if the vtable specifies `MA_NODE_BUS_COUNT_UNKNOWN`.
+	// TODO 	ma_uint32* C.  // pInputChannels The number of elements are determined by the input bus count as determined by the vtable, or `inputBusCount` if the vtable specifies `MA_NODE_BUS_COUNT_UNKNOWN`.
 }
 
 pub type NodeConfig = C.ma_node_config
@@ -8982,17 +9838,57 @@ pub fn node_config_init() NodeConfig {
 }
 
 [typedef]
-struct C.ma_node_output_bus {}
+struct C.ma_node_output_bus {
+pub mut:
+	pNode          voidptr // The node that owns this output bus. The input node. Will be null for dummy head and tail nodes.
+	outputBusIndex u8      // The index of the output bus on pNode that this output bus represents.
+	channels       u8      // The number of channels in the audio stream for this bus.
+	// TODO MA_ATOMIC(1, ma_uint8) inputNodeInputBusIndex
+	// TODO MA_ATOMIC(4, ma_uint32) flags
+	// TODO MA_ATOMIC(4, ma_uint32) refCount
+	// TODO MA_ATOMIC(4, ma_bool32) isAttached
+	// TODO MA_ATOMIC(4, ma_spinlock) lock
+	// TODO MA_ATOMIC(4, float) volume
+	// TODO MA_ATOMIC(MA_SIZEOF_PTR, ma_node_output_bus*) pNext
+	// TODO MA_ATOMIC(MA_SIZEOF_PTR, ma_node_output_bus*) pPrev
+	// TODO MA_ATOMIC(MA_SIZEOF_PTR, ma_node*) pInputNode
+}
 
 pub type NodeOutputBus = C.ma_node_output_bus
 
 [typedef]
-struct C.ma_node_input_bus {}
+struct C.ma_node_input_bus {
+pub mut:
+	head NodeOutputBus // Dummy head node for simplifying some lock-free thread-safety stuff.
+	// TODO MA_ATOMIC(4, ma_uint32) nextCounter
+	// TODO MA_ATOMIC(4, ma_spinlock) lock
+	channels u8 // The number of channels in the audio stream for this bus.
+}
 
 pub type NodeInputBus = C.ma_node_input_bus
 
 [typedef]
-struct C.ma_node_base {}
+struct C.ma_node_base {
+pub mut:
+	pNodeGraph &NodeGraph = unsafe { nil } // The graph this node belongs to.
+	// TODO 	ma_node_vtable* C.  // vtable
+	pCachedData                 &f32 = unsafe { nil } // Allocated on the heap. Fixed size. Needs to be stored on the heap because reading from output buses is done in separate function calls.
+	cachedDataCapInFramesPerBus u16  // The capacity of the input data cache in frames, per bus.
+	cachedFrameCountOut         u16
+	cachedFrameCountIn          u16
+	consumedFrameCountIn        u16 // These variables are read and written between different threads.
+	// TODO MA_ATOMIC(4, ma_node_state) state
+	// TODO MA_ATOMIC(8, ma_uint64) stateTimes[2]
+	// TODO MA_ATOMIC(8, ma_uint64) localTime
+	inputBusCount  u32
+	outputBusCount u32
+	pInputBuses    &NodeInputBus  = unsafe { nil }
+	pOutputBuses   &NodeOutputBus = unsafe { nil } // Memory management.
+	// TODO 	_inputBuses [MA_MAX_NODE_LOCAL_BUS_COUNT]NodeInputBus
+	// TODO 	_outputBuses [MA_MAX_NODE_LOCAL_BUS_COUNT]NodeOutputBus
+	_pHeap    voidptr        // A heap allocation for internal use only. pInputBuses and/or pOutputBuses will point to this if the bus count exceeds MA_MAX_NODE_LOCAL_BUS_COUNT.
+	_ownsHeap u32     // If set to true, the node owns the heap allocation and _pHeap will be freed in ma_node_uninit().
+}
 
 pub type NodeBase = C.ma_node_base
 
@@ -9175,6 +10071,7 @@ pub fn node_set_time(p_node voidptr, local_time u64) Result {
 
 [typedef]
 struct C.ma_node_graph_config {
+pub mut:
 	channels             u32
 	nodeCacheCapInFrames u16
 }
@@ -9188,6 +10085,17 @@ fn C.ma_node_graph_config_init(channels u32) NodeGraphConfig
 pub fn node_graph_config_init(channels u32) NodeGraphConfig {
 	return C.ma_node_graph_config_init(channels)
 }
+
+[typedef]
+struct C.ma_node_graph {
+pub mut:
+	base                 NodeBase // The node graph itself is a node so it can be connected as an input to different node graph. This has zero inputs and calls ma_node_graph_read_pcm_frames() to generate it's output.
+	endpoint             NodeBase // Special node that all nodes eventually connect to. Data is read from this node in ma_node_graph_read_pcm_frames().
+	nodeCacheCapInFrames u16      // Read and written by multiple threads.
+	// TODO MA_ATOMIC(4, ma_bool32) isReading
+}
+
+pub type NodeGraph = C.ma_node_graph
 
 // C: `MA_API ma_result ma_node_graph_init(const ma_node_graph_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_node_graph* pNodeGraph)`
 fn C.ma_node_graph_init(const_p_config &NodeGraphConfig, const_p_allocation_callbacks &AllocationCallbacks, p_node_graph &NodeGraph) Result
@@ -9247,6 +10155,7 @@ pub fn node_graph_set_time(p_node_graph &NodeGraph, global_time u64) Result {
 
 [typedef]
 struct C.ma_data_source_node_config {
+pub mut:
 	nodeConfig  NodeConfig
 	pDataSource voidptr
 }
@@ -9263,6 +10172,7 @@ pub fn data_source_node_config_init(p_data_source voidptr) DataSourceNodeConfig 
 
 [typedef]
 struct C.ma_data_source_node {
+pub mut:
 	base        NodeBase
 	pDataSource voidptr
 }
@@ -9304,6 +10214,7 @@ pub fn data_source_node_is_looping(p_data_source_node &DataSourceNode) u32 {
 
 [typedef]
 struct C.ma_splitter_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	channels   u32
 }
@@ -9320,6 +10231,7 @@ pub fn splitter_node_config_init(channels u32) SplitterNodeConfig {
 
 [typedef]
 struct C.ma_splitter_node {
+pub mut:
 	base NodeBase
 }
 
@@ -9344,6 +10256,7 @@ pub fn splitter_node_uninit(p_splitter_node &SplitterNode, const_p_allocation_ca
 
 [typedef]
 struct C.ma_biquad_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	biquad     BiquadConfig
 }
@@ -9360,6 +10273,7 @@ pub fn biquad_node_config_init(channels u32, b0 f32, b1 f32, b2 f32, a0 f32, a1 
 
 [typedef]
 struct C.ma_biquad_node {
+pub mut:
 	baseNode NodeBase
 	biquad   Biquad
 }
@@ -9393,6 +10307,7 @@ pub fn biquad_node_uninit(p_node &BiquadNode, const_p_allocation_callbacks &Allo
 
 [typedef]
 struct C.ma_lpf_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	lpf        LpfConfig
 }
@@ -9409,6 +10324,7 @@ pub fn lpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64,
 
 [typedef]
 struct C.ma_lpf_node {
+pub mut:
 	baseNode NodeBase
 	lpf      Lpf
 }
@@ -9442,6 +10358,7 @@ pub fn lpf_node_uninit(p_node &LpfNode, const_p_allocation_callbacks &Allocation
 
 [typedef]
 struct C.ma_hpf_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	hpf        HpfConfig
 }
@@ -9458,6 +10375,7 @@ pub fn hpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64,
 
 [typedef]
 struct C.ma_hpf_node {
+pub mut:
 	baseNode NodeBase
 	hpf      Hpf
 }
@@ -9491,6 +10409,7 @@ pub fn hpf_node_uninit(p_node &HpfNode, const_p_allocation_callbacks &Allocation
 
 [typedef]
 struct C.ma_bpf_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	bpf        BpfConfig
 }
@@ -9507,6 +10426,7 @@ pub fn bpf_node_config_init(channels u32, sample_rate u32, cutoff_frequency f64,
 
 [typedef]
 struct C.ma_bpf_node {
+pub mut:
 	baseNode NodeBase
 	bpf      Bpf
 }
@@ -9540,6 +10460,7 @@ pub fn bpf_node_uninit(p_node &BpfNode, const_p_allocation_callbacks &Allocation
 
 [typedef]
 struct C.ma_notch_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	notch      NotchConfig
 }
@@ -9556,6 +10477,7 @@ pub fn notch_node_config_init(channels u32, sample_rate u32, q f64, frequency f6
 
 [typedef]
 struct C.ma_notch_node {
+pub mut:
 	baseNode NodeBase
 	notch    Notch2
 }
@@ -9589,6 +10511,7 @@ pub fn notch_node_uninit(p_node &NotchNode, const_p_allocation_callbacks &Alloca
 
 [typedef]
 struct C.ma_peak_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	peak       PeakConfig
 }
@@ -9605,6 +10528,7 @@ pub fn peak_node_config_init(channels u32, sample_rate u32, gain_db f64, q f64, 
 
 [typedef]
 struct C.ma_peak_node {
+pub mut:
 	baseNode NodeBase
 	peak     Peak2
 }
@@ -9638,6 +10562,7 @@ pub fn peak_node_uninit(p_node &PeakNode, const_p_allocation_callbacks &Allocati
 
 [typedef]
 struct C.ma_loshelf_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	loshelf    LoshelfConfig
 }
@@ -9654,6 +10579,7 @@ pub fn loshelf_node_config_init(channels u32, sample_rate u32, gain_db f64, q f6
 
 [typedef]
 struct C.ma_loshelf_node {
+pub mut:
 	baseNode NodeBase
 	loshelf  Loshelf2
 }
@@ -9687,6 +10613,7 @@ pub fn loshelf_node_uninit(p_node &LoshelfNode, const_p_allocation_callbacks &Al
 
 [typedef]
 struct C.ma_hishelf_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	hishelf    HishelfConfig
 }
@@ -9703,6 +10630,7 @@ pub fn hishelf_node_config_init(channels u32, sample_rate u32, gain_db f64, q f6
 
 [typedef]
 struct C.ma_hishelf_node {
+pub mut:
 	baseNode NodeBase
 	hishelf  Hishelf2
 }
@@ -9736,6 +10664,7 @@ pub fn hishelf_node_uninit(p_node &HishelfNode, const_p_allocation_callbacks &Al
 
 [typedef]
 struct C.ma_delay_node_config {
+pub mut:
 	nodeConfig NodeConfig
 	delay      DelayConfig
 }
@@ -9752,6 +10681,7 @@ pub fn delay_node_config_init(channels u32, sample_rate u32, delay_in_frames u32
 
 [typedef]
 struct C.ma_delay_node {
+pub mut:
 	baseNode NodeBase
 	delay    Delay
 }
@@ -9823,16 +10753,6 @@ pub fn delay_node_get_decay(const_p_delay_node &DelayNode) f32 {
 	return C.ma_delay_node_get_decay(const_p_delay_node)
 }
 
-[typedef]
-struct C.ma_engine {}
-
-pub type Engine = C.ma_engine
-
-[typedef]
-struct C.ma_sound {}
-
-pub type Sound = C.ma_sound
-
 // SoundFlags is C.ma_sound_flags
 pub enum SoundFlags {
 	sound_flag_stream = C.MA_SOUND_FLAG_STREAM // 0x00000001, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM
@@ -9858,7 +10778,8 @@ pub enum EngineNodeType {
 
 [typedef]
 struct C.ma_engine_node_config {
-	pEngine                  &Engine
+pub mut:
+	pEngine                  &Engine = unsafe { nil }
 	@type                    EngineNodeType
 	channelsIn               u32
 	channelsOut              u32
@@ -9880,8 +10801,9 @@ pub fn engine_node_config_init(p_engine &Engine, @type EngineNodeType, flags u32
 
 [typedef]
 struct C.ma_engine_node {
+pub mut:
 	baseNode    NodeBase // Must be the first member for compatiblity with the ma_node API.
-	pEngine     &Engine  // A pointer to the engine. Set based on the value from the config.
+	pEngine     &Engine = unsafe { nil } // A pointer to the engine. Set based on the value from the config.
 	sampleRate  u32      // The sample rate of the input data. For sounds backed by a data source, this will be the data source's sample rate. Otherwise it'll be the engine's sample rate.
 	fader       Fader
 	resampler   LinearResampler // For pitch shift.
@@ -9935,8 +10857,9 @@ pub const sound_source_channel_count = 0xFFFFFFFF
 
 [typedef]
 struct C.ma_sound_config {
-	// TODO 	char* C. // pFilePath Set this to load from the resource manager.
-	// TODO 	wchar_t* C. // pFilePathW Set this to load from the resource manager.
+pub mut:
+	// TODO 	char* C.  // pFilePath Set this to load from the resource manager.
+	// TODO 	wchar_t* C.  // pFilePathW Set this to load from the resource manager.
 	pDataSource                    voidptr // Set this to load from an existing data source.
 	pInitialAttachment             voidptr // If set, the sound will be attached to an input of this node. This can be set to a ma_sound. If set to NULL, the sound will be attached directly to the endpoint unless MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT is set in `flags`.
 	initialAttachmentInputBusIndex u32     // The index of the input bus of pInitialAttachment to attach the sound to.
@@ -9949,7 +10872,7 @@ struct C.ma_sound_config {
 	loopPointBegInPCMFrames        u64
 	loopPointEndInPCMFrames        u64
 	isLooping                      u32
-	pDoneFence                     &Fence // Released when the resource manager has finished decoding the entire sound. Not used with streams.
+	pDoneFence                     &Fence = unsafe { nil } // Released when the resource manager has finished decoding the entire sound. Not used with streams.
 }
 
 pub type SoundConfig = C.ma_sound_config
@@ -9963,7 +10886,25 @@ pub fn sound_config_init() SoundConfig {
 }
 
 [typedef]
-struct C.ma_sound_inlined {}
+struct C.ma_sound {
+pub mut:
+	engineNode  EngineNode // Must be the first member for compatibility with the ma_node API.
+	pDataSource voidptr
+	// TODO MA_ATOMIC(8, ma_uint64) seekTarget
+	// TODO MA_ATOMIC(4, ma_bool32) atEnd
+	ownsDataSource u8 // We're declaring a resource manager data source object here to save us a malloc when loading asound via the resource manager, which I* think* will be the most common scenario.
+	// TODO 	MA_NO_RESOURCE_MANAGER C.#ifndef
+}
+
+pub type Sound = C.ma_sound
+
+[typedef]
+struct C.ma_sound_inlined {
+pub mut:
+	sound Sound
+	pNext &SoundInlined = unsafe { nil }
+	pPrev &SoundInlined = unsafe { nil }
+}
 
 pub type SoundInlined = C.ma_sound_inlined
 
@@ -9977,11 +10918,12 @@ pub fn sound_group_config_init() C.ma_sound_group_config {
 
 [typedef]
 struct C.ma_engine_config {
+pub mut:
 	// TODO #if !defined(MA_NO_RESOURCE_MANAGER)     ma_resource_manager* pResourceManager
 	// TODO #endif #if !defined(MA_NO_DEVICE_IO)     ma_context* pContext
-	pDevice           &Device   // If set, the caller is responsible for calling ma_engine_data_callback() in the device's data callback.
-	pPlaybackDeviceID &DeviceId // The ID of the playback device to use with the default listener.
-	// TODO 	 C.#endif // When set to NULL, will use the context's log.
+	pDevice           &Device   = unsafe { nil } // If set, the caller is responsible for calling ma_engine_data_callback() in the device's data callback.
+	pPlaybackDeviceID &DeviceId = unsafe { nil } // The ID of the playback device to use with the default listener.
+	// TODO 	 C.#endif  // When set to NULL, will use the context's log.
 	listenerCount                u32 // Must be between 1 and MA_ENGINE_MAX_LISTENERS.
 	channels                     u32 // The number of channels to use when mixing and spatializing. When set to 0, will use the native channel count of the device.
 	sampleRate                   u32 // The sample rate. When set to 0 will use the native channel count of the device.
@@ -10005,6 +10947,28 @@ fn C.ma_engine_config_init() EngineConfig
 pub fn engine_config_init() EngineConfig {
 	return C.ma_engine_config_init()
 }
+
+[typedef]
+struct C.ma_engine {
+pub mut:
+	nodeGraph NodeGraph // An engine is a node graph. It should be able to be plugged into any ma_node_graph API (with a cast) which means this must be the first member of this struct.
+	// TODO #if !defined(MA_NO_RESOURCE_MANAGER)     ma_resource_manager* pResourceManager
+	// TODO #endif #if !defined(MA_NO_DEVICE_IO)     ma_device* pDevice
+	// TODO 	 C.#endif
+	sampleRate    u32
+	listenerCount u32
+	// TODO 	listeners [MA_ENGINE_MAX_LISTENERS]SpatializerListener
+	allocationCallbacks AllocationCallbacks
+	ownsResourceManager u8
+	ownsDevice          u8
+	inlinedSoundLock    u32 // For synchronizing access so the inlined sound list.
+	pInlinedSoundHead   &SoundInlined = unsafe { nil } // The first inlined sound. Inlined sounds are tracked in a linked list.
+	// TODO MA_ATOMIC(4, ma_uint32) inlinedSoundCount
+	gainSmoothTimeInFrames u32           // The number of frames to interpolate the gain of spatialized sounds across.
+	monoExpansionMode      MonoExpansionMode
+}
+
+pub type Engine = C.ma_engine
 
 // C: `MA_API ma_result ma_engine_init(const ma_engine_config* pConfig, ma_engine* pEngine)`
 fn C.ma_engine_init(const_p_config &EngineConfig, p_engine &Engine) Result
