@@ -1,0 +1,46 @@
+lib_name = 'miniaudio'
+
+[api]
+    export = 'MA_API'
+    inline = 'MA_INLINE'
+
+[prefix]
+	struct = 'ma_'
+	enum = 'ma_'
+	define = 'MA_'
+	function = 'ma_'
+
+[rewrite]
+
+    [rewrite.value]
+    [rewrite.value.const]
+        'null' = 'unsafe{ nil }'
+        'version_string' = "'${version_major}.${version_minor}.$version_revision'"
+
+[inject]
+    '0' = """
+[typedef]
+struct C.ma_data_source {}
+
+pub type DataSource = C.ma_data_source
+"""
+
+[primitives]
+	ma_uint64 = 'u64'
+	ma_int64 = 'i64'
+	ma_uint32 = 'u32'
+	ma_int32 = 'int'
+	ma_uint16 = 'u16'
+	ma_int16 = 'i16'
+	ma_uint8 = 'u8'
+	ma_int8 = 'i8'
+	ma_bool32 = 'bool'
+	ma_bool8 = 'bool'
+
+[skip]
+    typedefs = ['IMMNotificationClient']
+    keywords = []
+    files = []
+
+[stop-marker]
+	line_starts_with = '#endif  /* miniaudio_h */'

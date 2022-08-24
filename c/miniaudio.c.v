@@ -6,7 +6,6 @@ module c
 
 pub const used_import = 1
 
-// #flag -I ./miniaudio/c // for the wrapper code
 #flag -I @VMODROOT/miniaudio
 $if linux {
 	#flag -lpthread -lm -ldl
@@ -16,17 +15,10 @@ $if macos {
 	#flag -lpthread -lm
 }
 
-// Enables FLAC decoding.
-//#flag -D  DR_FLAC_IMPLEMENTATION
-// #include "extras/dr_flac.h"
-
-// Enables MP3 decoding.
-//#flag -D  DR_MP3_IMPLEMENTATION
-// #include "extras/dr_mp3.h"
-
-// Enables WAV decoding.
-//#flag -D  DR_WAV_IMPLEMENTATION
-// #include "extras/dr_wav.h"
+$if miniaudio_use_vorbis ? {
+	#flag -D STB_VORBIS_HEADER_ONLY
+	#include "extras/stb_vorbis.c" // Enables Vorbis decoding.
+}
 
 $if debug {
 	#flag -D MA_DEBUG_OUTPUT
@@ -36,4 +28,10 @@ $if debug {
 // #flag -D MA_NO_PULSEAUDIO
 #flag -D MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
-// #include "../miniaudio_wrap.h" // for wrapper code
+
+$if miniaudio_use_vorbis ? {
+	// stb_vorbis implementation must come after the implementation of miniaudio.
+ 	#insert @VMODROOT/undef_stb_vorbis.c
+	#include "extras/stb_vorbis.c"
+}
+
