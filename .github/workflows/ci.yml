@@ -46,6 +46,6 @@ jobs:
           v test-fmt
           v fmt -verify .
 
-      - name: Run tests
-        run: v -d ci test miniaudio
+      # - name: Run tests
+      #   run: v -d ci test miniaudio
 
