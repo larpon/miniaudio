@@ -103,61 +103,61 @@ pub enum LogLevel {
 
 // ChannelPosition is C._ma_channel_position
 pub enum ChannelPosition {
-	channel_none = C.MA_CHANNEL_NONE // 0,
-	channel_mono = C.MA_CHANNEL_MONO // 1,
-	channel_front_left = C.MA_CHANNEL_FRONT_LEFT // 2,
-	channel_front_right = C.MA_CHANNEL_FRONT_RIGHT // 3,
-	channel_front_center = C.MA_CHANNEL_FRONT_CENTER // 4,
-	channel_lfe = C.MA_CHANNEL_LFE // 5,
-	channel_back_left = C.MA_CHANNEL_BACK_LEFT // 6,
-	channel_back_right = C.MA_CHANNEL_BACK_RIGHT // 7,
-	channel_front_left_center = C.MA_CHANNEL_FRONT_LEFT_CENTER // 8,
-	channel_front_right_center = C.MA_CHANNEL_FRONT_RIGHT_CENTER // 9,
-	channel_back_center = C.MA_CHANNEL_BACK_CENTER // 10,
-	channel_side_left = C.MA_CHANNEL_SIDE_LEFT // 11,
-	channel_side_right = C.MA_CHANNEL_SIDE_RIGHT // 12,
-	channel_top_center = C.MA_CHANNEL_TOP_CENTER // 13,
-	channel_top_front_left = C.MA_CHANNEL_TOP_FRONT_LEFT // 14,
-	channel_top_front_center = C.MA_CHANNEL_TOP_FRONT_CENTER // 15,
-	channel_top_front_right = C.MA_CHANNEL_TOP_FRONT_RIGHT // 16,
-	channel_top_back_left = C.MA_CHANNEL_TOP_BACK_LEFT // 17,
-	channel_top_back_center = C.MA_CHANNEL_TOP_BACK_CENTER // 18,
-	channel_top_back_right = C.MA_CHANNEL_TOP_BACK_RIGHT // 19,
-	channel_aux_0 = C.MA_CHANNEL_AUX_0 // 20,
-	channel_aux_1 = C.MA_CHANNEL_AUX_1 // 21,
-	channel_aux_2 = C.MA_CHANNEL_AUX_2 // 22,
-	channel_aux_3 = C.MA_CHANNEL_AUX_3 // 23,
-	channel_aux_4 = C.MA_CHANNEL_AUX_4 // 24,
-	channel_aux_5 = C.MA_CHANNEL_AUX_5 // 25,
-	channel_aux_6 = C.MA_CHANNEL_AUX_6 // 26,
-	channel_aux_7 = C.MA_CHANNEL_AUX_7 // 27,
-	channel_aux_8 = C.MA_CHANNEL_AUX_8 // 28,
-	channel_aux_9 = C.MA_CHANNEL_AUX_9 // 29,
-	channel_aux_10 = C.MA_CHANNEL_AUX_10 // 30,
-	channel_aux_11 = C.MA_CHANNEL_AUX_11 // 31,
-	channel_aux_12 = C.MA_CHANNEL_AUX_12 // 32,
-	channel_aux_13 = C.MA_CHANNEL_AUX_13 // 33,
-	channel_aux_14 = C.MA_CHANNEL_AUX_14 // 34,
-	channel_aux_15 = C.MA_CHANNEL_AUX_15 // 35,
-	channel_aux_16 = C.MA_CHANNEL_AUX_16 // 36,
-	channel_aux_17 = C.MA_CHANNEL_AUX_17 // 37,
-	channel_aux_18 = C.MA_CHANNEL_AUX_18 // 38,
-	channel_aux_19 = C.MA_CHANNEL_AUX_19 // 39,
-	channel_aux_20 = C.MA_CHANNEL_AUX_20 // 40,
-	channel_aux_21 = C.MA_CHANNEL_AUX_21 // 41,
-	channel_aux_22 = C.MA_CHANNEL_AUX_22 // 42,
-	channel_aux_23 = C.MA_CHANNEL_AUX_23 // 43,
-	channel_aux_24 = C.MA_CHANNEL_AUX_24 // 44,
-	channel_aux_25 = C.MA_CHANNEL_AUX_25 // 45,
-	channel_aux_26 = C.MA_CHANNEL_AUX_26 // 46,
-	channel_aux_27 = C.MA_CHANNEL_AUX_27 // 47,
-	channel_aux_28 = C.MA_CHANNEL_AUX_28 // 48,
-	channel_aux_29 = C.MA_CHANNEL_AUX_29 // 49,
-	channel_aux_30 = C.MA_CHANNEL_AUX_30 // 50,
-	channel_aux_31 = C.MA_CHANNEL_AUX_31 // 51,
-	channel_left = C.MA_CHANNEL_LEFT // MA_CHANNEL_FRONT_LEFT,
-	channel_right = C.MA_CHANNEL_RIGHT // MA_CHANNEL_FRONT_RIGHT,
-	channel_position_count = C.MA_CHANNEL_POSITION_COUNT // (MA_CHANNEL_AUX_31 + 1),
+	@none = C.MA_CHANNEL_NONE // 0,
+	mono = C.MA_CHANNEL_MONO // 1,
+	front_left = C.MA_CHANNEL_FRONT_LEFT // 2,
+	front_right = C.MA_CHANNEL_FRONT_RIGHT // 3,
+	front_center = C.MA_CHANNEL_FRONT_CENTER // 4,
+	lfe = C.MA_CHANNEL_LFE // 5,
+	back_left = C.MA_CHANNEL_BACK_LEFT // 6,
+	back_right = C.MA_CHANNEL_BACK_RIGHT // 7,
+	front_left_center = C.MA_CHANNEL_FRONT_LEFT_CENTER // 8,
+	front_right_center = C.MA_CHANNEL_FRONT_RIGHT_CENTER // 9,
+	back_center = C.MA_CHANNEL_BACK_CENTER // 10,
+	side_left = C.MA_CHANNEL_SIDE_LEFT // 11,
+	side_right = C.MA_CHANNEL_SIDE_RIGHT // 12,
+	top_center = C.MA_CHANNEL_TOP_CENTER // 13,
+	top_front_left = C.MA_CHANNEL_TOP_FRONT_LEFT // 14,
+	top_front_center = C.MA_CHANNEL_TOP_FRONT_CENTER // 15,
+	top_front_right = C.MA_CHANNEL_TOP_FRONT_RIGHT // 16,
+	top_back_left = C.MA_CHANNEL_TOP_BACK_LEFT // 17,
+	top_back_center = C.MA_CHANNEL_TOP_BACK_CENTER // 18,
+	top_back_right = C.MA_CHANNEL_TOP_BACK_RIGHT // 19,
+	aux_0 = C.MA_CHANNEL_AUX_0 // 20,
+	aux_1 = C.MA_CHANNEL_AUX_1 // 21,
+	aux_2 = C.MA_CHANNEL_AUX_2 // 22,
+	aux_3 = C.MA_CHANNEL_AUX_3 // 23,
+	aux_4 = C.MA_CHANNEL_AUX_4 // 24,
+	aux_5 = C.MA_CHANNEL_AUX_5 // 25,
+	aux_6 = C.MA_CHANNEL_AUX_6 // 26,
+	aux_7 = C.MA_CHANNEL_AUX_7 // 27,
+	aux_8 = C.MA_CHANNEL_AUX_8 // 28,
+	aux_9 = C.MA_CHANNEL_AUX_9 // 29,
+	aux_10 = C.MA_CHANNEL_AUX_10 // 30,
+	aux_11 = C.MA_CHANNEL_AUX_11 // 31,
+	aux_12 = C.MA_CHANNEL_AUX_12 // 32,
+	aux_13 = C.MA_CHANNEL_AUX_13 // 33,
+	aux_14 = C.MA_CHANNEL_AUX_14 // 34,
+	aux_15 = C.MA_CHANNEL_AUX_15 // 35,
+	aux_16 = C.MA_CHANNEL_AUX_16 // 36,
+	aux_17 = C.MA_CHANNEL_AUX_17 // 37,
+	aux_18 = C.MA_CHANNEL_AUX_18 // 38,
+	aux_19 = C.MA_CHANNEL_AUX_19 // 39,
+	aux_20 = C.MA_CHANNEL_AUX_20 // 40,
+	aux_21 = C.MA_CHANNEL_AUX_21 // 41,
+	aux_22 = C.MA_CHANNEL_AUX_22 // 42,
+	aux_23 = C.MA_CHANNEL_AUX_23 // 43,
+	aux_24 = C.MA_CHANNEL_AUX_24 // 44,
+	aux_25 = C.MA_CHANNEL_AUX_25 // 45,
+	aux_26 = C.MA_CHANNEL_AUX_26 // 46,
+	aux_27 = C.MA_CHANNEL_AUX_27 // 47,
+	aux_28 = C.MA_CHANNEL_AUX_28 // 48,
+	aux_29 = C.MA_CHANNEL_AUX_29 // 49,
+	aux_30 = C.MA_CHANNEL_AUX_30 // 50,
+	aux_31 = C.MA_CHANNEL_AUX_31 // 51,
+	left = C.MA_CHANNEL_LEFT // MA_CHANNEL_FRONT_LEFT,
+	right = C.MA_CHANNEL_RIGHT // MA_CHANNEL_FRONT_RIGHT,
+	position_count = C.MA_CHANNEL_POSITION_COUNT // (MA_CHANNEL_AUX_31 + 1),
 }
 
 // Result is C.ma_result
@@ -7842,8 +7842,8 @@ pub fn paged_audio_buffer_get_length_in_pcm_frames(p_paged_audio_buffer &PagedAu
 
 // OpenModeFlags is C.ma_open_mode_flags
 pub enum OpenModeFlags {
-	open_mode_read = C.MA_OPEN_MODE_READ // 0x00000001,
-	open_mode_write = C.MA_OPEN_MODE_WRITE // 0x00000002,
+	read = C.MA_OPEN_MODE_READ // 0x00000001,
+	write = C.MA_OPEN_MODE_WRITE // 0x00000002,
 }
 
 // SeekOrigin is C.ma_seek_origin
@@ -8579,11 +8579,11 @@ TODO Non-numerical: #define MA_NO_RESOURCE_MANAGER
 
 // ResourceManagerDataSourceFlags is C.ma_resource_manager_data_source_flags
 pub enum ResourceManagerDataSourceFlags {
-	resource_manager_data_source_flag_stream = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM // 0x00000001, When set, does not load the entire data source in memory. Disk I/O will happen on job threads.
-	resource_manager_data_source_flag_decode = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE // 0x00000002, Decode data before storing in memory. When set, decoding is done at the resource manager level rather than the mixing thread. Results in faster mixing, but higher memory usage.
-	resource_manager_data_source_flag_async = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC // 0x00000004, When set, the resource manager will load the data source asynchronously.
-	resource_manager_data_source_flag_wait_init = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT // 0x00000008, When set, waits for initialization of the underlying data source before returning from ma_resource_manager_data_source_init().
-	resource_manager_data_source_flag_unknown_length = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_UNKNOWN_LENGTH // 0x00000010, Gives the resource manager a hint that the length of the data source is unknown and calling `ma_data_source_get_length_in_pcm_frames()` should be avoided.
+	stream = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM // 0x00000001, When set, does not load the entire data source in memory. Disk I/O will happen on job threads.
+	decode = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE // 0x00000002, Decode data before storing in memory. When set, decoding is done at the resource manager level rather than the mixing thread. Results in faster mixing, but higher memory usage.
+	async = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC // 0x00000004, When set, the resource manager will load the data source asynchronously.
+	wait_init = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT // 0x00000008, When set, waits for initialization of the underlying data source before returning from ma_resource_manager_data_source_init().
+	unknown_length = C.MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_UNKNOWN_LENGTH // 0x00000010, Gives the resource manager a hint that the length of the data source is unknown and calling `ma_data_source_get_length_in_pcm_frames()` should be avoided.
 }
 
 [typedef]
@@ -8666,9 +8666,9 @@ pub const resource_manager_max_job_thread_count = 64
 // ResourceManagerFlags is C.ma_resource_manager_flags
 pub enum ResourceManagerFlags {
 	// 0x00000001, Indicates ma_resource_manager_next_job() should not block. Only valid when the job thread count is 0.
-	resource_manager_flag_non_blocking = C.MA_RESOURCE_MANAGER_FLAG_NON_BLOCKING
+	non_blocking = C.MA_RESOURCE_MANAGER_FLAG_NON_BLOCKING
 	// 0x00000002, Disables any kind of multithreading. Implicitly enables MA_RESOURCE_MANAGER_FLAG_NON_BLOCKING.
-	resource_manager_flag_no_threading = C.MA_RESOURCE_MANAGER_FLAG_NO_THREADING
+	no_threading = C.MA_RESOURCE_MANAGER_FLAG_NO_THREADING
 }
 
 [typedef]
@@ -9341,11 +9341,11 @@ pub const node_bus_count_unknown = 255
 
 // NodeFlags is C.ma_node_flags
 pub enum NodeFlags {
-	node_flag_passthrough = C.MA_NODE_FLAG_PASSTHROUGH // 0x00000001,
-	node_flag_continuous_processing = C.MA_NODE_FLAG_CONTINUOUS_PROCESSING // 0x00000002,
-	node_flag_allow_null_input = C.MA_NODE_FLAG_ALLOW_NULL_INPUT // 0x00000004,
-	node_flag_different_processing_rates = C.MA_NODE_FLAG_DIFFERENT_PROCESSING_RATES // 0x00000008,
-	node_flag_silent_output = C.MA_NODE_FLAG_SILENT_OUTPUT // 0x00000010,
+	passthrough = C.MA_NODE_FLAG_PASSTHROUGH // 0x00000001,
+	continuous_processing = C.MA_NODE_FLAG_CONTINUOUS_PROCESSING // 0x00000002,
+	allow_null_input = C.MA_NODE_FLAG_ALLOW_NULL_INPUT // 0x00000004,
+	different_processing_rates = C.MA_NODE_FLAG_DIFFERENT_PROCESSING_RATES // 0x00000008,
+	silent_output = C.MA_NODE_FLAG_SILENT_OUTPUT // 0x00000010,
 }
 
 // NodeState is C.ma_node_state
@@ -10304,13 +10304,13 @@ pub fn delay_node_get_decay(const_p_delay_node &DelayNode) f32 {
 
 // SoundFlags is C.ma_sound_flags
 pub enum SoundFlags {
-	sound_flag_stream = C.MA_SOUND_FLAG_STREAM // 0x00000001, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM
-	sound_flag_decode = C.MA_SOUND_FLAG_DECODE // 0x00000002, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE
-	sound_flag_async = C.MA_SOUND_FLAG_ASYNC // 0x00000004, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC
-	sound_flag_wait_init = C.MA_SOUND_FLAG_WAIT_INIT // 0x00000008, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT
-	sound_flag_no_default_attachment = C.MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT // 0x00000010, Do not attach to the endpoint by default. Useful for when setting up nodes in a complex graph system.
-	sound_flag_no_pitch = C.MA_SOUND_FLAG_NO_PITCH // 0x00000020, Disable pitch shifting with ma_sound_set_pitch() and ma_sound_group_set_pitch(). This is an optimization.
-	sound_flag_no_spatialization = C.MA_SOUND_FLAG_NO_SPATIALIZATION // 0x00000040, Disable spatialization.
+	stream = C.MA_SOUND_FLAG_STREAM // 0x00000001, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM
+	decode = C.MA_SOUND_FLAG_DECODE // 0x00000002, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE
+	async = C.MA_SOUND_FLAG_ASYNC // 0x00000004, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC
+	wait_init = C.MA_SOUND_FLAG_WAIT_INIT // 0x00000008, MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT
+	no_default_attachment = C.MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT // 0x00000010, Do not attach to the endpoint by default. Useful for when setting up nodes in a complex graph system.
+	no_pitch = C.MA_SOUND_FLAG_NO_PITCH // 0x00000020, Disable pitch shifting with ma_sound_set_pitch() and ma_sound_group_set_pitch(). This is an optimization.
+	no_spatialization = C.MA_SOUND_FLAG_NO_SPATIALIZATION // 0x00000040, Disable spatialization.
 }
 
 pub const engine_max_listeners = 4
