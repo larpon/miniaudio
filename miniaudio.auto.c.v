@@ -9,6 +9,27 @@ pub const used_import = c.used_import
 // miniaudio.h
 //
 
+// C typedef aliases used
+// ma_bool8 -> ma_uint8 -> u8
+// ma_bool32 -> ma_uint32 -> u32
+// ma_handle -> void* -> voidptr
+// ma_ptr -> void* -> voidptr
+// wchar_t -> ma_uint16 -> u16
+// ma_channel -> ma_uint8 -> u8
+// ma_spinlock -> ma_uint32 -> u32
+// ma_thread -> ma_pthread_t -> C.ma_pthread_t
+// ma_mutex -> ma_pthread_mutex_t -> C.ma_pthread_mutex_t
+// ma_event -> ma_handle -> C.ma_handle
+// ma_semaphore -> ma_handle -> C.ma_handle
+// ma_resampling_backend -> void ->
+// ma_async_notification -> void ->
+// ma_data_source -> void ->
+// ma_vfs -> void ->
+// ma_vfs_file -> ma_handle -> C.ma_handle
+// ma_node -> void ->
+// ma_sound_group_config -> ma_sound_config -> SoundConfig
+// ma_sound_group -> ma_sound -> Sound
+
 [typedef]
 struct C.ma_data_source {}
 
