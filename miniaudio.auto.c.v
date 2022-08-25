@@ -4848,12 +4848,12 @@ pub type DeviceInfo = C.ma_device_info
 
 struct C.playback {
 pub mut:
-	pDeviceID &DeviceId
-	format Format
-	channels u32
-	pChannelMap &C.ma_channel
+	pDeviceID      &DeviceId
+	format         Format
+	channels       u32
+	pChannelMap    &C.ma_channel
 	channelMixMode C.ma_channel_mix_mode
-	shareMode C.ma_share_mode
+	shareMode      C.ma_share_mode
 }
 
 pub type Playback = C.playback
