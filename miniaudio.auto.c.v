@@ -14,6 +14,30 @@ struct C.ma_data_source {}
 
 pub type DataSource = C.ma_data_source
 
+struct C.playback {
+pub mut:
+	pDeviceID      &DeviceId
+	format         Format
+	channels       u32
+	pChannelMap    &C.ma_channel
+	channelMixMode C.ma_channel_mix_mode
+	shareMode      C.ma_share_mode
+}
+
+pub type Playback = C.playback
+
+struct C.capture {
+pub mut:
+	pDeviceID      &DeviceId
+	format         Format
+	channels       u32
+	pChannelMap    &C.ma_channel
+	channelMixMode C.ma_channel_mix_mode
+	shareMode      C.ma_share_mode
+}
+
+pub type Capture = C.capture
+
 /*
 TODO Non-numerical: #define miniaudio_h
 */
@@ -4846,18 +4870,6 @@ pub mut:
 
 pub type DeviceInfo = C.ma_device_info
 
-struct C.playback {
-pub mut:
-	pDeviceID      &DeviceId
-	format         Format
-	channels       u32
-	pChannelMap    &C.ma_channel
-	channelMixMode C.ma_channel_mix_mode
-	shareMode      C.ma_share_mode
-}
-
-pub type Playback = C.playback
-
 [typedef]
 struct C.ma_device_config {
 pub mut:
@@ -4876,9 +4888,8 @@ pub mut:
 	stopCallback              C.ma_stop_proc
 	pUserData                 voidptr
 	resampling                ResamplerConfig
-	// struct {
+	// TODO// struct {
 	//  const ma_device_id*; pDeviceID ma_format; format ma_uint32; channels ma_channel*; pChannelMap ma_channel_mix_mode; channelMixMode ma_share_mode; shareMode }; playback
-	playback Playback
 	// TODO// struct {
 	//  const ma_device_id*; pDeviceID ma_format; format ma_uint32; channels ma_channel*; pChannelMap ma_channel_mix_mode; channelMixMode ma_share_mode; shareMode }; capture
 	// TODO// struct {
@@ -4893,6 +4904,8 @@ pub mut:
 	//  ma_opensl_stream_type streamType; ma_opensl_recording_preset recordingPreset; } opensl
 	// TODO// struct {
 	//  ma_aaudio_usage usage; ma_aaudio_content_type contentType; ma_aaudio_input_preset inputPreset; ma_bool32 noAutoStartAfterReroute; } aaudio
+	playback Playback // NOTE Added from chew config
+	capture  Capture  // NOTE Added from chew config
 }
 
 pub type DeviceConfig = C.ma_device_config
