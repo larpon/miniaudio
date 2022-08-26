@@ -14,7 +14,9 @@ fn main() {
 		panic('Failed to initialize audio engine.')
 	}
 
-	ma.engine_play_sound(engine, wav_file.str, ma.null)
+	if ma.engine_play_sound(engine, wav_file.str, ma.null) != .success {
+		panic('Failed to load and play "$wav_file".')
+	}
 
 	time.sleep(1200 * time.millisecond)
 
