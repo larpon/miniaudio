@@ -41,7 +41,7 @@ pub fn sound(filename string) &Sound {
 	result := int(C.ma_decoder_init_file(filename.str, &decoder_config, decoder))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			' Failed to init decoder from "$filename" (ma_decoder_init_file ${c.translate_error_code(result)} )')
+			' Failed to init decoder from "${filename}" (ma_decoder_init_file ${c.translate_error_code(result)} )')
 		exit(1)
 	}
 	$if debug {
@@ -570,7 +570,7 @@ pub fn (mut ab AudioBuffer) seek_frame(pcm_frame u64) {
 	result := int(C.ma_decoder_seek_to_pcm_frame(ab.decoder, pcm_frame))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			': failed to seek device to PCM frame $pcm_frame (ma_decoder_seek_to_pcm_frame ${c.translate_error_code(result)})')
+			': failed to seek device to PCM frame ${pcm_frame} (ma_decoder_seek_to_pcm_frame ${c.translate_error_code(result)})')
 		// d.free() // TODO
 		exit(1)
 	}
@@ -588,7 +588,7 @@ pub fn (ab AudioBuffer) pcm_frames() u64 {
 	result := int(C.ma_decoder_get_length_in_pcm_frames(ab.decoder, &length))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
-			': failed to get length in PCM frame $ab.decoder (ma_decoder_get_length_in_pcm_frames ${c.translate_error_code(result)})')
+			': failed to get length in PCM frame ${ab.decoder} (ma_decoder_get_length_in_pcm_frames ${c.translate_error_code(result)})')
 		// d.free() // TODO
 		exit(1)
 	}

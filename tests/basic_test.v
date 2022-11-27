@@ -23,7 +23,7 @@ fn test_basics() {
 	decoder := ma.Decoder{}
 	result := ma.decoder_init_file(wav_file.str, C.NULL, &decoder)
 	if result != .success {
-		panic('Could not load file: $wav_file ${int(result)}')
+		panic('Could not load file: ${wav_file} ${int(result)}')
 	}
 
 	mut device_config := ma.device_config_init(.playback)

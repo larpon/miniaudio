@@ -25,6 +25,12 @@ $if debug {
 	#flag -D MA_LOG_LEVEL_VERBOSE
 }
 
+$if gcboehm ? {
+	#define MA_MALLOC GC_MALLOC
+	#define MA_REALLOC GC_REALLOC
+	#define MA_FREE GC_FREE
+}
+
 // #flag -D MA_NO_PULSEAUDIO
 #flag -D MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"

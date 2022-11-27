@@ -28,7 +28,7 @@ fn main() {
 	sound := &ma.Sound{}
 
 	if ma.sound_init_from_file(engine, wav_file.str, 0, ma.null, ma.null, sound) != .success {
-		panic('Failed to initialize sound "$wav_file"')
+		panic('Failed to initialize sound "${wav_file}"')
 	}
 
 	// We'll build our graph starting from the end so initialize the delay node now. The output of
