@@ -144,14 +144,13 @@ fn (mut d AudioDevice) init_mutex() {
 		return
 	}
 	// Init audio mutex
-	mutex := &C.ma_mutex{}
-	result := int(C.ma_mutex_init(mutex))
+	d.mutex = unsafe { malloc(sizeof(C.ma_mutex)) }
+	result := int(C.ma_mutex_init(d.mutex))
 	if result != C.MA_SUCCESS {
 		eprintln('ERROR ' + @MOD + '::' + @FN +
 			' Failed to initialize audio mutex.  (ma_mutex_init ${c.translate_error_code(result)} ')
 		exit(1)
 	}
-	d.mutex = mutex
 	$if debug {
 		println('INFO ' + @MOD + '::' + @FN + ' Initialized mutex ' + ptr_str(d.mutex))
 	}
