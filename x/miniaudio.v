@@ -351,7 +351,7 @@ fn log_callback(p_context &C.ma_context, p_device &C.ma_device, logLevel u32, me
 fn data_callback(p_device &C.ma_device, p_output voidptr, p_input voidptr, frame_count u32) {
 	// Most of this function is heavily inspired, if not outright copied
 	// from raylib: https://github.com/raysan5/raylib/blob/c20ccfe274f94d29dcf1a1f84048a57d56dedce6/src/raudio.c#L275
-	d := &AudioDevice(p_device.pUserData)
+	d := unsafe { &AudioDevice(p_device.pUserData) }
 	if d == C.NULL {
 		return
 	}
