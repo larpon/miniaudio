@@ -17046,7 +17046,9 @@ DEVICE I/O
     #include <objbase.h>
     #include <mmreg.h>
     #include <mmsystem.h>
-	#include <mmdeviceapi.h>
+    // _v__start_patch
+    #include <mmdeviceapi.h>
+    // _v__end_patch
 #endif
 
 #if defined(MA_APPLE) && (__MAC_OS_X_VERSION_MIN_REQUIRED < 101200)
