@@ -227,19 +227,19 @@ pub enum Status {
 
 pub enum DeviceType {
 	playback = C.ma_device_type_playback
-	capture = C.ma_device_type_capture
-	duplex = 3 // C.ma_device_type_playback | C.ma_device_type_capture, /* 3 */
+	capture  = C.ma_device_type_capture
+	duplex   = 3 // C.ma_device_type_playback | C.ma_device_type_capture, /* 3 */
 	loopback = C.ma_device_type_loopback
 }
 
 pub enum Format {
 	unknown = C.ma_format_unknown
-	u8 = C.ma_format_u8
-	s16 = C.ma_format_s16
-	s24 = C.ma_format_s24
-	s32 = C.ma_format_s32
-	f32 = C.ma_format_f32
-	count = C.ma_format_count
+	u8      = C.ma_format_u8
+	s16     = C.ma_format_s16
+	s24     = C.ma_format_s24
+	s32     = C.ma_format_s32
+	f32     = C.ma_format_f32
+	count   = C.ma_format_count
 }
 
 struct C.ma_pcm_converter {}
