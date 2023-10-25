@@ -29,16 +29,18 @@ pub type Channel = u8
 // ma_thread -> ma_pthread_t -> C.ma_pthread_t
 pub type C.ma_thread = voidptr // C.ma_pthread_t -> C.ma_handle
 
-// ma_mutex -> ma_pthread_mutex_t -> C.ma_pthread_mutex_t
-pub type C.ma_mutex = C.pthread_mutex_t
-
+[typedef]
 pub struct C.pthread_mutex_t {}
 
 pub type C.ma_pthread_mutex_t = C.pthread_mutex_t
 
+[typedef]
 pub struct C.pthread_cond_t {}
 
 pub type C.ma_pthread_cond_t = C.pthread_cond_t
+
+// ma_mutex -> ma_pthread_mutex_t -> C.ma_pthread_mutex_t
+pub type C.ma_mutex = C.pthread_mutex_t
 
 // ma_event -> ma_handle -> C.ma_handle
 // ma_semaphore -> ma_handle -> C.ma_handle
@@ -61,7 +63,7 @@ pub type C.ma_sound_group = C.ma_sound
 pub struct C.va_list {}
 
 [typedef]
-struct C.ma_data_source {}
+pub struct C.ma_data_source {}
 
 pub type DataSource = C.ma_data_source
 
