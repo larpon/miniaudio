@@ -2,6 +2,8 @@
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
+[deprecated: 'use main miniaudio module instead']
+[deprecated_after: '2024-05-06']
 module x
 
 import c
@@ -287,9 +289,9 @@ pub fn (mut d AudioDevice) free() {
 	// C.ma_decoder_uninit(d.decoder)
 	C.ma_context_uninit(d.context)
 	C.ma_mutex_uninit(d.mutex)
-	d.context = &C.ma_context(0)
-	d.mutex = &C.ma_mutex(0)
-	d.device = &C.ma_device(0)
+	d.context = &C.ma_context(unsafe{nil})
+	d.mutex = &C.ma_mutex(unsafe{nil})
+	d.device = &C.ma_device(unsafe{nil})
 	// d.decoder = 0
 }
 

@@ -29,19 +29,6 @@ pub type Channel = u8
 // ma_thread -> ma_pthread_t -> C.ma_pthread_t
 pub type C.ma_thread = voidptr // C.ma_pthread_t -> C.ma_handle
 
-[typedef]
-pub struct C.pthread_mutex_t {}
-
-pub type C.ma_pthread_mutex_t = C.pthread_mutex_t
-
-[typedef]
-pub struct C.pthread_cond_t {}
-
-pub type C.ma_pthread_cond_t = C.pthread_cond_t
-
-// ma_mutex -> ma_pthread_mutex_t -> C.ma_pthread_mutex_t
-pub type C.ma_mutex = C.pthread_mutex_t
-
 // ma_event -> ma_handle -> C.ma_handle
 // ma_semaphore -> ma_handle -> C.ma_handle
 // ma_resampling_backend -> void ->
@@ -382,6 +369,7 @@ pub enum ThreadPriority {
 	default  = C.ma_thread_priority_default // 0,
 }
 
+/* See miniaudio_default.c.v and miniaudio_windows.c.v
 [typedef]
 struct C.ma_event {
 pub mut:
@@ -389,9 +377,10 @@ pub mut:
 	@lock C.ma_pthread_mutex_t
 	cond  C.ma_pthread_cond_t
 }
-
+*/
 pub type Event = C.ma_event
 
+/* See miniaudio_default.c.v and miniaudio_windows.c.v
 [typedef]
 struct C.ma_semaphore {
 pub mut:
@@ -399,6 +388,7 @@ pub mut:
 	@lock C.ma_pthread_mutex_t
 	cond  C.ma_pthread_cond_t
 }
+*/
 
 pub type Semaphore = C.ma_semaphore
 
