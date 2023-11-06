@@ -289,9 +289,9 @@ pub fn (mut d AudioDevice) free() {
 	// C.ma_decoder_uninit(d.decoder)
 	C.ma_context_uninit(d.context)
 	C.ma_mutex_uninit(d.mutex)
-	d.context = &C.ma_context(unsafe{nil})
-	d.mutex = &C.ma_mutex(unsafe{nil})
-	d.device = &C.ma_device(unsafe{nil})
+	d.context = &C.ma_context(unsafe { nil })
+	d.mutex = &C.ma_mutex(unsafe { nil })
+	d.device = &C.ma_device(unsafe { nil })
 	// d.decoder = 0
 }
 

@@ -369,7 +369,8 @@ pub enum ThreadPriority {
 	default  = C.ma_thread_priority_default // 0,
 }
 
-/* See miniaudio_default.c.v and miniaudio_windows.c.v
+/*
+See miniaudio_default.c.v and miniaudio_windows.c.v
 [typedef]
 struct C.ma_event {
 pub mut:
@@ -380,7 +381,8 @@ pub mut:
 */
 pub type Event = C.ma_event
 
-/* See miniaudio_default.c.v and miniaudio_windows.c.v
+/*
+See miniaudio_default.c.v and miniaudio_windows.c.v
 [typedef]
 struct C.ma_semaphore {
 pub mut:

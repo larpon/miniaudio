@@ -7,7 +7,7 @@ module miniaudio
 
 // C typedef aliases used
 
-pub type C.ma_mutex = C.ma_handle
+pub type C.ma_mutex = voidptr
 
 [typedef]
 pub struct C.ma_event {}
