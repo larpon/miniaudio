@@ -9,8 +9,8 @@ module miniaudio
 
 pub type C.ma_mutex = voidptr
 
-[typedef]
+@[typedef]
 pub struct C.ma_event {}
 
-[typedef]
+@[typedef]
 pub struct C.ma_semaphore {}

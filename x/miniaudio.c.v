@@ -246,7 +246,7 @@ struct C.ma_pcm_converter {}
 
 type PCMConverter = C.ma_pcm_converter
 
-[heap]
+@[heap]
 struct C.ma_decoder {
 	outputFormat     int // Format //C.ma_format
 	outputChannels   u32 // C.ma_uint32
@@ -264,7 +264,7 @@ mut:
 
 type Playback = C.playback
 
-[typedef]
+@[typedef]
 struct C.ma_device {
 mut:
 	pUserData voidptr
@@ -273,14 +273,14 @@ mut:
 
 type Device = C.ma_device
 
-[typedef]
+@[typedef]
 struct C.ma_context {
 	// logCallback voidptr // C.ma_log_proc
 }
 
 type Context = C.ma_context
 
-[typedef]
+@[typedef]
 struct C.ma_context_config {
 	// mut:
 	// logCallback voidptr // C.ma_log_proc
@@ -288,12 +288,12 @@ struct C.ma_context_config {
 
 type ContextConfig = C.ma_context_config
 
-[typedef]
+@[typedef]
 struct C.ma_mutex {}
 
 type Mutex = C.ma_mutex
 
-[typedef]
+@[typedef]
 struct C.ma_decoder_config {
 	outputFormat     int // Format //C.ma_format
 	outputChannels   u32 // C.ma_uint32
@@ -302,7 +302,7 @@ struct C.ma_decoder_config {
 
 type DecoderConfig = C.ma_decoder_config
 
-[typedef]
+@[typedef]
 struct C.ma_device_config {
 mut:
 	deviceType               C.ma_device_type

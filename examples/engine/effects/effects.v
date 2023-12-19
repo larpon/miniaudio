@@ -10,10 +10,8 @@ import os
 import time
 import miniaudio as ma
 
-const (
-	delay_sec = f32(0.2)
-	decay     = f32(0.25)
-)
+const delay_sec = f32(0.2)
+const decay = f32(0.25)
 
 fn main() {
 	basedir := os.real_path(os.join_path(os.dir(@FILE), '..', '..', '..'))

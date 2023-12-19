@@ -7,12 +7,12 @@ module miniaudio
 
 // C typedef aliases used
 
-[typedef]
+@[typedef]
 pub struct C.pthread_mutex_t {}
 
 pub type C.ma_pthread_mutex_t = C.pthread_mutex_t
 
-[typedef]
+@[typedef]
 pub struct C.pthread_cond_t {}
 
 pub type C.ma_pthread_cond_t = C.pthread_cond_t
@@ -20,7 +20,7 @@ pub type C.ma_pthread_cond_t = C.pthread_cond_t
 // ma_mutex -> ma_pthread_mutex_t -> C.ma_pthread_mutex_t
 pub type C.ma_mutex = C.pthread_mutex_t
 
-[typedef]
+@[typedef]
 pub struct C.ma_event {
 pub mut:
 	value u32
@@ -28,7 +28,7 @@ pub mut:
 	cond  C.ma_pthread_cond_t
 }
 
-[typedef]
+@[typedef]
 pub struct C.ma_semaphore {
 pub mut:
 	value int

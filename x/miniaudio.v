@@ -2,8 +2,8 @@
 // Use of this source code is governed by an MIT license file distributed with this software package
 // miniaudio (https://github.com/dr-soft/miniaudio) by David Reid (dr-soft)
 // is licensed under the unlicense and, are thus, in the publiic domain.
-[deprecated: 'use main miniaudio module instead']
-[deprecated_after: '2024-05-06']
+@[deprecated: 'use main miniaudio module instead']
+@[deprecated_after: '2024-05-06']
 module x
 
 import c
@@ -102,7 +102,7 @@ fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 //
 // AudioDevice
 //
-[heap]
+@[heap]
 pub struct AudioDevice {
 mut:
 	context        &C.ma_context
@@ -513,7 +513,7 @@ fn (s Stream) audio_buffer() AudioBuffer {
 /*
 * AudioBuffer
 */
-[heap]
+@[heap]
 struct AudioBuffer {
 mut:
 	// dsp                         C.ma_pcm_converter // PCM data converter
