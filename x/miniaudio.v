@@ -13,10 +13,10 @@ import c
 //
 pub fn device() &AudioDevice {
 	mut d := &AudioDevice{
-		context: 0
-		mutex: 0
-		device: 0
-		vol: 1.0
+		context:     0
+		mutex:       0
+		device:      0
+		vol:         1.0
 		initialized: false
 	}
 	d.init_context()
@@ -89,7 +89,7 @@ pub fn sound_from_memory(data []byte) &Sound {
 
 fn audio_buffer(decoder &C.ma_decoder) &AudioBuffer {
 	ab := &AudioBuffer{
-		volume: 1.0
+		volume:  1.0
 		decoder: decoder
 		// mutex: sync.new_mutex()
 	}
