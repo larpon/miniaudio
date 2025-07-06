@@ -17,7 +17,7 @@ fn test_basics() {
 		assert true
 		return
 	}
-	basedir := os.real_path(os.join_path(os.dir(@FILE), '..'))
+	basedir := os.real_path(os.join_path(@DIR, '..'))
 	wav_file := os.join_path(basedir, 'assets', 'audio.wav')
 	// flac_file := os.join_path(basedir, 'assets', 'audio.flac')
 	// mp3_file := os.join_path(basedir, 'assets', 'audio.mp3')
