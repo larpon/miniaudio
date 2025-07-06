@@ -14,7 +14,7 @@ const delay_sec = f32(0.2)
 const decay = f32(0.25)
 
 fn main() {
-	basedir := os.real_path(os.join_path(os.dir(@FILE), '..', '..', '..'))
+	basedir := os.real_path(os.join_path(@DIR, '..', '..', '..'))
 	wav_file := os.join_path(basedir, 'assets', 'audio.wav')
 
 	engine := &ma.Engine{}
